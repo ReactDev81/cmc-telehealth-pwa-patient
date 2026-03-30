@@ -80,18 +80,23 @@ export function Header() {
       icon: <LayoutDashboard className="h-4 w-4" />,
     },
     {
-      title: "My Schedules",
-      href: "/my-schedules",
+      title: "Find Doctors",
+      href: "/find-doctors",
       icon: <Calendar className="h-4 w-4" />,
     },
     {
-      title: "Appointments",
+      title: "My Appointments",
       href: "/appointments",
       icon: <UserIcon className="h-4 w-4" />,
     },
     {
-      title: "Feedbacks",
-      href: "/feedbacks",
+      title: "Medical Records",
+      href: "/medical-records",
+      icon: <MessageSquare className="h-4 w-4" />,
+    },
+    {
+      title: "Prescriptions",
+      href: "/prescriptions",
       icon: <MessageSquare className="h-4 w-4" />,
     },
   ];
