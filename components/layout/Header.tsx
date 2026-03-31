@@ -34,6 +34,8 @@ import {
   Menu,
   MessageSquare,
   Settings,
+  Pill,
+  ClipboardPlus,
   User as UserIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -97,12 +99,12 @@ export function Header() {
     {
       title: "Medical Records",
       href: "/medical-records",
-      icon: <MessageSquare className="h-4 w-4" />,
+      icon: <ClipboardPlus className="h-4 w-4" />,
     },
     {
-      title: "Prescriptions",
-      href: "/prescriptions",
-      icon: <MessageSquare className="h-4 w-4" />,
+      title: "My Medicines",
+      href: "/my-medicines",
+      icon: <Pill className="h-4 w-4" />,
     },
 
   ];

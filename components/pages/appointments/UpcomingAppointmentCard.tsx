@@ -63,11 +63,6 @@ const UpcomingAppointmentCard = ({
                             <Star className="w-3 h-3 fill-primary text-primary" />
                             <span className="text-xs font-bold text-primary">{doctor?.rating}</span>
                         </div>
-                        {doctor?.reviews && (
-                            <span className="text-[10px] text-on-surface-variant/60">
-                                ({doctor.reviews} reviews)
-                            </span>
-                        )}
                     </div>
                 </div>
 
