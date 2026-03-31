@@ -8,7 +8,17 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV !== "development"
   },
-  turbopack: {}
+  turbopack: {},
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'telehealthwebapplive.cmcludhiana.in',
+        port: '',
+        pathname: '/storage/**',
+      },
+    ],
+  },
 };
 
 const withPWA = withPWAInit({

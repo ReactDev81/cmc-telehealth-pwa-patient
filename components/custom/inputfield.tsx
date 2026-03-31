@@ -13,6 +13,7 @@ type InputFieldProps = {
     className?: string;
     disabled?: boolean;
     validation?: RegisterOptions;
+    inputClassName?: string;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -24,6 +25,7 @@ const InputField: React.FC<InputFieldProps> = ({
     className = "",
     disabled = false,
     validation,
+    inputClassName = "",
 }) => {
     const {
         register,
@@ -55,7 +57,7 @@ const InputField: React.FC<InputFieldProps> = ({
                 placeholder={placeholder}
                 disabled={disabled}
                 aria-invalid={!!errorMessage}
-                className={`font-source-sans bg-accent/30 text-foreground border ${errorMessage ? "border-destructive" : "border-border"
+                className={`font-source-sans ${inputClassName || 'bg-accent/30 text-foreground border'} ${errorMessage ? "border-destructive" : inputClassName ? '' : "border-border"
                     } focus:ring-1 focus:ring-primary focus:border-transparent ${type === 'password' ? 'pr-10' : ''}`}
             />
 
