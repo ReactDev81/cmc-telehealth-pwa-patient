@@ -57,7 +57,7 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
-            console.log("Selected file:", e.target.files[0]); // 👈 DEBUG
+            
             setAvatarFile(e.target.files[0]);
         }
     };
@@ -83,8 +83,7 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
         try {
             setLoading(true);
 
-            // 🔥 1. PERSONAL INFO UPDATE
-            const personalPayload = {
+            const payload = {
                 group: "personal_information",
                 first_name: formData.first_name,
                 last_name: formData.last_name,
@@ -94,38 +93,19 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
                 ...(avatarFile && { avatar: avatarFile }),
             };
 
-            const personalRes = await updatePatientPersonalInfo(user.id, personalPayload);
+            const response = await updatePatientPersonalInfo(user.id, payload);
 
-            console.log("PERSONAL RESPONSE:", personalRes);
+            console.log("PERSONAL RESPONSE:", response);
 
-            // 🔥 2. ADDRESS UPDATE (NEW)
-            const addressPayload = {
-                group: "address",
-                address: user?.address?.address || "",
-                area: user?.address?.area || "",
-                landmark: user?.address?.landmark || "",
-                city: user?.address?.city || "",
-                state: user?.address?.state || "",
-                pincode: user?.address?.pincode || "",
-            };
-
-            const addressRes = await updatePatientPersonalInfo(user.id, addressPayload);
-
-            console.log("ADDRESS RESPONSE:", addressRes);
-
-            // ✅ CONTEXT UPDATE (MERGE BOTH)
+            // ✅ sirf personal data update hoga
             await updateUser({
                 ...user,
-                ...personalRes,
-                address: {
-                    ...user?.address,
-                    ...addressRes,
-                },
+                ...response,
             });
 
-            // ✅ SUCCESS DIALOG
+            // ✅ success dialog
             setDialogType("success");
-            setDialogMessage("Profile & Address updated successfully");
+            setDialogMessage("Profile updated successfully");
             setDialogOpen(true);
 
         } catch (err: any) {
