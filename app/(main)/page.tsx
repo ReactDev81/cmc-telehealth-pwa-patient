@@ -1,5 +1,4 @@
 "use client";
-
 import { Advertisements } from "@/components/pages/Dashboard/Advertisements";
 import { AvailableDoctors } from "@/components/pages/Dashboard/AvailableDoctors";
 import { QuickLinks } from "@/components/pages/Dashboard/QuickLinks";
@@ -9,18 +8,14 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/userContext";
 import { usePatientHome } from "@/queries/usePatientHome";
 import { MappedAppointment } from "@/types/home";
-
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
-
 type Page = string;
-
 export default function Home() {
   const { user } = useAuth();
   const [page, setPage] = useState<Page | null>(null);
   const { data, isLoading, isError } = usePatientHome();
   const homeData = data?.data;
-
   // Map API upcoming_appointments → MappedAppointment shape for UpcomingAppointments component
   const appointments: MappedAppointment[] = (
     homeData?.upcoming_appointments ?? []
@@ -39,7 +34,6 @@ export default function Home() {
       languages: appt.doctor.languages_known,
     },
   }));
-
   // Map API advertisements → Advertisement shape
   const advertisements = (homeData?.advertisements ?? []).map((ad) => ({
     id: ad.id,
@@ -48,7 +42,6 @@ export default function Home() {
     image: ad.image,
     link: ad.link,
   }));
-
   // Map API patient_reviews → Testimonial shape for TestimonialsCarousel
   const testimonials = (homeData?.patient_reviews ?? []).map((r) => ({
     id: r.id,
@@ -63,7 +56,6 @@ export default function Home() {
     doctorImage: r.doctor_avatar,
     time: r.created_at,
   }));
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -71,7 +63,6 @@ export default function Home() {
       </div>
     );
   }
-
   if (isError || !homeData) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -81,7 +72,6 @@ export default function Home() {
       </div>
     );
   }
-
   return (
     <div className="space-y-12">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -102,7 +92,6 @@ export default function Home() {
           Book Appointment
         </Button>
       </header>
-
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8">
           <UpcomingAppointments
@@ -121,7 +110,6 @@ export default function Home() {
           />
         </div>
       </div>
-
       <AvailableDoctors
         doctors={homeData.available_doctors}
         onBookNow={(doctorId: string) => {
@@ -131,10 +119,8 @@ export default function Home() {
           setPage && setPage("all-doctors");
         }}
       />
-
       {/* Advertisements */}
       <Advertisements ads={advertisements} />
-
       {/* Testimonials */}
       <TestimonialsCarousel testimonials={testimonials} />
     </div>
