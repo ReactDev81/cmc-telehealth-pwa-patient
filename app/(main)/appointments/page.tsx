@@ -20,12 +20,12 @@ const AppointmentsPage = () => {
 
     const handleManageAppointment = (appointmentId: string) => {
         setSelectedAppointment(appointmentId);
-        console.log('Manage appointment:', appointmentId);
+        // console.log('Manage appointment:', appointmentId);
     };
 
     const handleViewDetails = (appointmentId: string) => {
         setSelectedAppointment(appointmentId);
-        console.log('View details:', appointmentId);
+        // console.log('View details:', appointmentId);
     };
 
     const handlePageChange = (page: number) => {
@@ -158,7 +158,7 @@ const AppointmentsPage = () => {
                     })}
                 </div>
 
-                {pagination && pagination.total_pages > 1 && (
+                {pagination && pagination.last_page > 1 && (
                     <PaginationControls
                         currentPage={pagination.current_page}
                         totalPages={pagination.last_page}

@@ -1,15 +1,8 @@
 import { Stethoscope } from 'lucide-react';
+import type { AppointmentDoctor } from '@/types/appointment-summary';
 
 interface DoctorInfoCardProps {
-  doctor: {
-    id: string;
-    name: string;
-    image: string;
-    specialty: string;
-    experience: string;
-    languages: string[];
-    rating?: number;
-  };
+  doctor: AppointmentDoctor;
 }
 
 const DoctorInfoCard = ({ doctor }: DoctorInfoCardProps) => {
@@ -18,7 +11,7 @@ const DoctorInfoCard = ({ doctor }: DoctorInfoCardProps) => {
       <div className="flex gap-6 items-start mb-8">
         <div className="w-24 h-24 rounded-3xl overflow-hidden shadow-xl ring-4 ring-white">
           <img 
-            src={doctor.image} 
+            src={doctor.avatar} 
             alt={doctor.name} 
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
@@ -28,21 +21,19 @@ const DoctorInfoCard = ({ doctor }: DoctorInfoCardProps) => {
           <div className="flex items-center gap-2 text-emerald-600 mb-1">
             <Stethoscope className="w-4 h-4" />
             <span className="text-xs font-bold uppercase tracking-widest">
-              {doctor.specialty}
+              {doctor.department}
             </span>
           </div>
           <h2 className="text-2xl font-bold font-headline text-primary mb-1">
             {doctor.name}
           </h2>
           <p className="text-on-surface-variant text-sm font-medium">
-            {doctor.experience} Experience • {doctor.languages?.join(', ')}
+            {doctor.years_experience} Experience
           </p>
-          {doctor.rating && (
-            <div className="flex items-center gap-1 mt-2">
-              <span className="text-amber-500">★</span>
-              <span className="text-sm font-medium">{doctor.rating}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-1 mt-2">
+            <span className="text-amber-500">★</span>
+            <span className="text-sm font-medium">{doctor.review?.length || 0} reviews</span>
+          </div>
         </div>
       </div>
     </div>

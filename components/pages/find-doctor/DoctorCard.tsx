@@ -62,7 +62,7 @@ const DoctorCard = ({ doctor, onBook, onError, onSuccess, isLoading = false }: D
               <Clock className="w-3 h-3" /> {doctor.years_experience} exp.
             </span>
             <span className="flex items-center gap-1">
-              <Languages className="w-3 h-3" /> {doctor.languages?.join(', ')}
+              <Languages className="w-3 h-3" /> {doctor.languages_known?.join(', ')}
             </span>
           </div>
         </div>

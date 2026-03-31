@@ -18,10 +18,10 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
 
     const { updateUser } = useAuth();
 
-    console.log(" user data:", user);
+    // console.log(" user data:", user);
 
 
-    console.log("user.id:", user.id);
+    // console.log("user.id:", user.id);
 
     const [formData, setFormData] = useState({
         first_name: user?.first_name || "",
@@ -57,7 +57,6 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
-            
             setAvatarFile(e.target.files[0]);
         }
     };
@@ -98,6 +97,26 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
             console.log("PERSONAL RESPONSE:", response);
 
             // ✅ sirf personal data update hoga
+// =======
+//             // console.log("PERSONAL RESPONSE:", personalRes);
+
+//             // 🔥 2. ADDRESS UPDATE (NEW)
+//             const addressPayload = {
+//                 group: "address",
+//                 address: user?.address?.address || "",
+//                 area: user?.address?.area || "",
+//                 landmark: user?.address?.landmark || "",
+//                 city: user?.address?.city || "",
+//                 state: user?.address?.state || "",
+//                 pincode: user?.address?.pincode || "",
+//             };
+
+//             const addressRes = await updatePatientPersonalInfo(user.id, addressPayload);
+
+//             // console.log("ADDRESS RESPONSE:", addressRes);
+
+//             // ✅ CONTEXT UPDATE (MERGE BOTH)
+// >>>>>>> Stashed changes
             await updateUser({
                 ...user,
                 ...response,

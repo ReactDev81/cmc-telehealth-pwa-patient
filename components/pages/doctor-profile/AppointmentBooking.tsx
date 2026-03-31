@@ -52,7 +52,7 @@ const AppointmentBooking = ({ doctor, onBookingSuccess, onBookingError }: Appoin
 
     bookAppointment(payload, {
       onSuccess: (response) => {
-        console.log("response : ", response);
+        // console.log("response : ", response);
         const appointmentId = response?.data?.appointment?.id;
         const appointmentData = response?.data;
         if (appointmentId && appointmentData) {

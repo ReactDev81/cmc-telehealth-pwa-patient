@@ -5,7 +5,7 @@ export interface Doctor {
   avatar: string;
   rating: number;
   years_experience: string;
-  languages: string[];
+  languages_known: string[];
   consultation_fee: number;
   consultation_type_label: string[];
   hospital?: string;

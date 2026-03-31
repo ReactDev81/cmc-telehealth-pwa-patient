@@ -70,7 +70,7 @@ export default function ManageAddressForm({ user }: ManageAddressFormProps) {
 
             const response = await updatePatientPersonalInfo(user.id, payload);
 
-            console.log("API RESPONSE:", response);
+            // console.log("API RESPONSE:", response);
 
             // ✅ CONTEXT UPDATE (CORRECT FIX)
             updateUser({
