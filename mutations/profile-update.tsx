@@ -1,23 +1,31 @@
 import api from "@/lib/axios";
 
-//! Update patient personal info only
 export const updatePatientPersonalInfo = async (
     userId: string | number,
-    payload: {
-        first_name?: string;
-        last_name?: string;
-        email?: string;
-        phone?: string;
-        date_of_birth?: string;
-        bio?: string;
-    }
+    payload: any
 ) => {
     try {
-        const { data } = await api.put(`/patient/${userId}`, payload);
-        // PUT request to {{baseUrl}}/patient/:user_id
+        const formData = new FormData();
+
+        // ✅ Sirf jo payload me hai wahi bhejo
+        Object.keys(payload).forEach((key) => {
+            if (payload[key] !== undefined && payload[key] !== null) {
+                formData.append(key, payload[key]);
+            }
+        });
+
+        const { data } = await api.post(`/patient/${userId}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
         return data?.data;
     } catch (err: any) {
-        console.error(`Error updating personal info for user ${userId}:`, err.response || err);
+        console.error(
+            `Error updating user ${userId}:`,
+            err.response?.data || err
+        );
         throw err;
     }
 };

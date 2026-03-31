@@ -1,100 +1,213 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { updatePatientPersonalInfo } from "@/mutations/profile-update";
+import { useAuth } from "@/context/userContext";
+import CustomDialog from "@/components/custom/Dialogboxs";
+import { CheckCircle, XCircle } from "lucide-react";
 
 interface ManageAddressFormProps {
     user: any;
 }
 
 export default function ManageAddressForm({ user }: ManageAddressFormProps) {
-    const address = user?.address || {};
+
+    const { updateUser } = useAuth();
+
+    // ✅ FORM STATE
+    const [formData, setFormData] = useState({
+        address: "",
+        area: "",
+        landmark: "",
+        city: "",
+        state: "",
+        pincode: "",
+    });
+
+    const [loading, setLoading] = useState(false);
+
+    // ✅ DIALOG STATE
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState("");
+    const [dialogType, setDialogType] = useState<"success" | "danger">("success");
+
+    // ✅ USER DATA SYNC
+    useEffect(() => {
+        if (user?.address) {
+            setFormData({
+                address: user.address.address || "",
+                area: user.address.area || "",
+                landmark: user.address.landmark || "",
+                city: user.address.city || "",
+                state: user.address.state || "",
+                pincode: user.address.pincode || "",
+            });
+        }
+    }, [user]);
+
+    // ✅ HANDLE CHANGE
+    const handleChange = (field: string, value: string) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+    };
+
+    // ✅ SAVE FUNCTION
+    const handleSave = async () => {
+        try {
+            setLoading(true);
+
+            const payload = {
+                group: "address", // 🔥 VERY IMPORTANT
+                address: formData.address,
+                area: formData.area,
+                landmark: formData.landmark,
+                city: formData.city,
+                state: formData.state,
+                pincode: formData.pincode,
+            };
+
+            const response = await updatePatientPersonalInfo(user.id, payload);
+
+            console.log("API RESPONSE:", response);
+
+            // ✅ CONTEXT UPDATE (CORRECT FIX)
+            updateUser({
+                ...user,
+                address: {
+                    ...user?.address,
+                    ...response,
+                },
+            });
+
+            // ✅ INSTANT UI UPDATE
+            setFormData((prev) => ({
+                ...prev,
+                ...response,
+            }));
+
+            // ✅ SUCCESS DIALOG
+            setDialogType("success");
+            setDialogMessage("Address updated successfully!");
+            setDialogOpen(true);
+
+        } catch (err: any) {
+            console.error("Error updating address:", err);
+
+            const errorMsg =
+                err?.response?.data?.errors?.message ||
+                err?.response?.data?.message ||
+                "Something went wrong";
+
+            // ❌ ERROR DIALOG
+            setDialogType("danger");
+            setDialogMessage(errorMsg);
+            setDialogOpen(true);
+
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="w-full mt-7">
-            <div className="p-0">
-                <div className="space-y-6">
-                    {/* House/Floor/Flat Number */}
-                    <div className="space-y-2">
-                        <Label className="text-sm text-primary font-bold">
-                            House / Floor / Flat Number <span className="text-red-500">*</span>
-                        </Label>
-                        <Input
-                            type="text"
-                            defaultValue={address.address || ""}
-                            placeholder="Type Here"
-                            className="h-11 rounded-lg bg-gray-50 border-primary"
-                        />
-                    </div>
 
-                    {/* Area Details with location info */}
-                    <div className="space-y-2">
-                        <Label className="text-sm text-primary font-bold">Area Details</Label>
-                        <Input
-                            type="text"
-                            defaultValue={address.area || "364, Sector32A, Ludhiana, PUNJAB, 141010"}
-                            className="h-11 rounded-lg bg-gray-50 border-primary"
-                        />
-                        <div className="flex items-center gap-2 mt-1">
-                            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </div>
-                    </div>
+            <div className="space-y-6">
 
-                    {/* Landmark with distance */}
-                    <div className="space-y-2">
-                        <Label className="text-sm text-primary font-bold">Landmark</Label>
-                        <Input
-                            type="text"
-                            defaultValue={address.landmark || "Decathlon Production Office Ludhiana"}
-                            className="h-11 rounded-lg bg-gray-50 border-primary"
-                        />
-                        <div className="flex items-center gap-1 mt-1">
-                            <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    {/* Pincode, City, State in grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <Label className="text-sm text-primary font-bold">Pincode</Label>
-                            <Input
-                                type="text"
-                                defaultValue={address.pincode || "141003"}
-                                className="h-11 rounded-lg bg-gray-50 border-primary"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-sm text-primary font-bold">City</Label>
-                            <Input
-                                type="text"
-                                defaultValue={address.city || "Ludhiana"}
-                                className="h-11 rounded-lg bg-gray-50 border-primary"
-                            />
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <Label className="text-sm text-primary font-bold">State</Label>
-                        <Input
-                            type="text"
-                            defaultValue={address.state || "141003"}
-                            className="h-11 rounded-lg bg-gray-50 border-primary"
-                        />
-                    </div>
-
-                    {/* Action Buttons */}
-                   
-                       
-                        <Button className="py-6 w-full font-bold text-sm">Save & Next</Button>
-                    
+                {/* Address */}
+                <div className="space-y-2">
+                    <Label className="text-sm text-primary font-bold">
+                        House / Floor / Flat Number
+                    </Label>
+                    <Input
+                        value={formData.address}
+                        onChange={(e) => handleChange("address", e.target.value)}
+                        className="h-11 rounded-lg bg-gray-50 border-primary"
+                    />
                 </div>
+
+                {/* Area */}
+                <div className="space-y-2">
+                    <Label className="text-sm text-primary font-bold">Area</Label>
+                    <Input
+                        value={formData.area}
+                        onChange={(e) => handleChange("area", e.target.value)}
+                        className="h-11 rounded-lg bg-gray-50 border-primary"
+                    />
+                </div>
+
+                {/* Landmark */}
+                <div className="space-y-2">
+                    <Label className="text-sm text-primary font-bold">Landmark</Label>
+                    <Input
+                        value={formData.landmark}
+                        onChange={(e) => handleChange("landmark", e.target.value)}
+                        className="h-11 rounded-lg bg-gray-50 border-primary"
+                    />
+                </div>
+
+                {/* Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div className="space-y-2">
+                        <Label className="text-sm text-primary font-bold">Pincode</Label>
+                        <Input
+                            value={formData.pincode}
+                            onChange={(e) => handleChange("pincode", e.target.value)}
+                            className="h-11 rounded-lg bg-gray-50 border-primary"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-sm text-primary font-bold">City</Label>
+                        <Input
+                            value={formData.city}
+                            onChange={(e) => handleChange("city", e.target.value)}
+                            className="h-11 rounded-lg bg-gray-50 border-primary"
+                        />
+                    </div>
+
+                </div>
+
+                {/* State */}
+                <div className="space-y-2">
+                    <Label className="text-sm text-primary font-bold">State</Label>
+                    <Input
+                        value={formData.state}
+                        onChange={(e) => handleChange("state", e.target.value)}
+                        className="h-11 rounded-lg bg-gray-50 border-primary"
+                    />
+                </div>
+
+                {/* Button */}
+                <div className="flex justify-end">
+                    <Button
+                        className="py-6 px-4 font-bold text-sm"
+                        onClick={handleSave}
+                        disabled={loading}
+                    >
+                        {loading ? "Saving..." : "Save"}
+                    </Button>
+                </div>
+
             </div>
+
+            {/* ✅ DIALOG */}
+            <CustomDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                icon={
+                    dialogType === "success"
+                        ? <CheckCircle className="text-green-600 w-6 h-6" />
+                        : <XCircle className="text-red-600 w-6 h-6" />
+                }
+                title={dialogType === "success" ? "Success" : "Error"}
+                description={dialogMessage}
+                confirmText="OK"
+                onConfirm={() => setDialogOpen(false)}
+                type={dialogType}
+            />
         </div>
     );
 }
