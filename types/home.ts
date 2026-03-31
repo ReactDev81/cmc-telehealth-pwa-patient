@@ -107,3 +107,22 @@ export interface GetPatientHomeResponse {
   timestamp: string;
   data: PatientHomeData;
 }
+
+// ─── UI Mapped Types ─────────────────────────────────────────────────────────
+export interface MappedAppointmentDoctor {
+  specialty?: string;
+  experience?: string;
+  languages?: string[];
+}
+
+export interface MappedAppointment {
+  id: string | number;
+  doctorId: string | number;
+  doctorName: string;
+  doctorImage: string;
+  date: string;
+  time: string;
+  type: string;
+  typeLabel: string;
+  doctor?: MappedAppointmentDoctor;
+}

@@ -1,14 +1,14 @@
-
+"use client";
 
 import { Advertisements } from "@/components/pages/Dashboard/Advertisements";
 import { AvailableDoctors } from "@/components/pages/Dashboard/AvailableDoctors";
 import { QuickLinks } from "@/components/pages/Dashboard/QuickLinks";
 import { TestimonialsCarousel } from "@/components/pages/Dashboard/TestimonialsCarousel";
-import type { Appointment } from "@/components/pages/Dashboard/UpcomingAppointments";
 import { UpcomingAppointments } from "@/components/pages/Dashboard/UpcomingAppointments";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/userContext";
 import { usePatientHome } from "@/queries/usePatientHome";
-import { Button } from "@base-ui/react";
+import { MappedAppointment } from "@/types/home";
 
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
@@ -16,13 +16,13 @@ import { useState } from "react";
 type Page = string;
 
 export default function Home() {
-  const { login, user } = useAuth();
+  const { user } = useAuth();
   const [page, setPage] = useState<Page | null>(null);
   const { data, isLoading, isError } = usePatientHome();
   const homeData = data?.data;
-  console.log(user);
-  // Map API upcoming_appointments → Appointment shape for UpcomingAppointments component
-  const appointments: Appointment[] = (
+
+  // Map API upcoming_appointments → MappedAppointment shape for UpcomingAppointments component
+  const appointments: MappedAppointment[] = (
     homeData?.upcoming_appointments ?? []
   ).map((appt) => ({
     id: appt.appointment_id,
@@ -31,7 +31,7 @@ export default function Home() {
     doctorImage: appt.doctor.avatar,
     date: appt.appointment_date_formatted,
     time: appt.appointment_time_formatted,
-    type: appt.consultation_type as "video" | "in-person" | string,
+    type: appt.consultation_type,
     typeLabel: appt.consultation_type_label,
     doctor: {
       specialty: appt.doctor.department,
@@ -96,7 +96,7 @@ export default function Home() {
         </div>
         <Button
           onClick={() => setPage && setPage("find-doctor")}
-          className="py-3 px-6 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all shadow-md flex items-center gap-2"
+          className="p-5 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-all shadow-md flex items-center gap-2"
         >
           <Plus className="w-5 h-5" />
           Book Appointment

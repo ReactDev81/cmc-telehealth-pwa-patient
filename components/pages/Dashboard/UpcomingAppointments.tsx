@@ -42,9 +42,15 @@ function AppointmentCard({
 }) {
   const doctor = appointment.doctor;
 
+  // Handler to open the appointment screen in a new tab
+  const handleViewAll = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.open("/appointments", "_blank", "noopener,noreferrer");
+  };
+
   return (
-    <Card className="relative overflow-hidden bg-primary border-0 rounded-3xl h-full min-h-[320px] flex flex-col justify-between shadow-xl">
-      <CardDescription className="relative z-10 flex flex-col justify-between  p-8 gap-8">
+    <Card className="relative overflow-hidden bg-primary border-0 rounded-3xl h-full min-h-[320px] flex flex-col justify-between shadow-xl p-8">
+      <CardDescription className="relative z-10 flex flex-col justify-between  p-0 gap-8">
         {/* Header row */}
         <div className="flex items-center justify-between">
           <Badge
@@ -55,13 +61,20 @@ function AppointmentCard({
           </Badge>
           {showViewAll && (
             <Button
+              asChild
               variant="ghost"
               size="sm"
-              onClick={onViewAll}
               className="text-xs font-bold  text-feature-green hover:underline hover:text-feature-green flex items-center gap-1 p-0 h-auto px-3 py-1 hover:bg-transparent"
             >
-              View All
-              <ArrowRight className="w-3 h-3" />
+              <a
+                href="/appointments"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleViewAll}
+              >
+                View All
+                <ArrowRight className="w-3 h-3" />
+              </a>
             </Button>
           )}
         </div>
@@ -77,17 +90,17 @@ function AppointmentCard({
             <h3 className="text-2xl font-bold text-white font-headline leading-tight mb-1">
               {appointment.doctorName}
             </h3>
-            <p className="text-white/80 text-base mb-3 text-feature-green">
+            <p className="text-base mb-3  text-feature-green/90 font-medium">
               {doctor?.specialty || "Specialist"}
             </p>
-            <div className="flex flex-wrap gap-2 text-[11px] text-feature-green/90 font-medium">
+            <div className="flex flex-wrap gap-2 text-xs text-feature-green/90 font-medium">
               {doctor?.experience && (
-                <span className="bg-white/10 px-2.5 py-1 rounded-md">
+                <span className="bg-white/10 p-1 px-2 rounded-md">
                   Exp: {doctor.experience}
                 </span>
               )}
               {doctor?.languages && doctor.languages.length > 0 && (
-                <span className="bg-white/10 px-2.5 py-1 rounded-md">
+                <span className="bg-white/10 p-1 px-2 rounded-md">
                   Lang: {doctor.languages.join(", ")}
                 </span>
               )}
@@ -95,17 +108,17 @@ function AppointmentCard({
           </div>
         </div>
       </CardDescription>
-      <CardContent>
+      <CardContent className="p-0">
         {/* Footer: Date/Time/Type + CTA */}
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-5 p-8">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-5 p-0">
           <div className="flex flex-wrap items-center gap-6">
             {/* Date */}
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/10 rounded-lg">
-                <Calendar className="w-4 h-4 text-white/80" />
+              <div className="p-2.5 bg-white/10 rounded-lg">
+                <Calendar className="w-5 h-5 text-feature-green/90" />
               </div>
               <div>
-                <p className="text-[10px] text-white/60 font-bold uppercase tracking-widest">
+                <p className="text-sm text-white/60 font-bold uppercase tracking-widest">
                   Date
                 </p>
                 <p className="text-white font-semibold text-sm">
@@ -116,10 +129,10 @@ function AppointmentCard({
             {/* Time */}
             <div className="flex items-center gap-3">
               <div className="p-2 bg-white/10 rounded-lg">
-                <Clock className="w-4 h-4 text-white/80" />
+                <Clock className="w-5 h-5 text-feature-green/90" />
               </div>
               <div>
-                <p className="text-[10px] text-white/60 font-bold uppercase tracking-widest">
+                <p className="text-sm text-white/60 font-bold uppercase tracking-widest">
                   Time
                 </p>
                 <p className="text-white font-semibold text-sm">
@@ -131,13 +144,13 @@ function AppointmentCard({
             <div className="flex items-center gap-3">
               <div className="p-2 bg-white/10 rounded-lg">
                 {appointment.type === "video" ? (
-                  <Video className="w-4 h-4 text-white/80" />
+                  <Video className="w-5 h-5 text-feature-green/90" />
                 ) : (
-                  <Calendar className="w-4 h-4 text-white/80" />
+                  <Calendar className="w-5 h-5 text-feature-green/90" />
                 )}
               </div>
               <div>
-                <p className="text-[10px] text-white/60 font-bold uppercase tracking-widest">
+                <p className="text-sm text-white/60 font-bold uppercase tracking-widest">
                   Type
                 </p>
                 <p className="text-white font-semibold text-sm capitalize">
@@ -167,6 +180,12 @@ export function UpcomingAppointments({
   onStartCall,
   onBookFirst,
 }: UpcomingAppointmentsProps) {
+  // Create a handler for opening appointments in new tab
+  const handleViewAll = () => {
+    window.open("/appointments", "_blank", "noopener,noreferrer");
+    if (onViewAll) onViewAll();
+  };
+
   // No appointments
   if (!appointments || appointments.length === 0) {
     return (
@@ -174,7 +193,7 @@ export function UpcomingAppointments({
         <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
           <Calendar className="w-8 h-8 text-muted-foreground" />
         </div>
-        <h3 className="text-xl font-bold text-primary mb-2 font-headline">
+        <h3 className="text-2xl font-bold text-primary mb-2 font-headline">
           No Upcoming Sessions
         </h3>
         <p className="text-muted-foreground mb-6">
@@ -190,31 +209,13 @@ export function UpcomingAppointments({
     );
   }
 
-  // 1 appointment — full width card
-  if (appointments.length === 1) {
-    return (
-      <AppointmentCard
-        appointment={appointments[0]}
-        onStartCall={onStartCall}
-        onViewAll={onViewAll}
-        showViewAll
-      />
-    );
-  }
-
-  // 2+ appointments — side-by-side grid (show max 2)
-  const shown = appointments.slice(0, 2);
+  // Show only one upcoming appointment (the most recent/first in list)
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {shown.map((appt, idx) => (
-        <AppointmentCard
-          key={appt.id}
-          appointment={appt}
-          onStartCall={onStartCall}
-          onViewAll={onViewAll}
-          showViewAll={idx === 0}
-        />
-      ))}
-    </div>
+    <AppointmentCard
+      appointment={appointments[0]}
+      onStartCall={onStartCall}
+      onViewAll={handleViewAll}
+      showViewAll={true}
+    />
   );
 }
