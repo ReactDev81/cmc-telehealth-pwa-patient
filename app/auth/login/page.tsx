@@ -8,6 +8,7 @@ import AuthLayout from "@/components/auth/AuthLayout"
 import { useLogin } from "@/mutations/useLogin"
 import { useAuth } from "@/context/userContext"
 import { User, UserRole } from "@/types/user-context"
+import { log } from "console"
 
 interface LoginFormData {
     email: string
@@ -18,6 +19,7 @@ const LoginPage = () => {
 
     const router = useRouter()
     const { login, user } = useAuth();
+    
     const { mutate: signIn, isPending, isError, error } = useLogin();
     const [mounted, setMounted] = useState(false)
     const [imageError, setImageError] = useState(false)

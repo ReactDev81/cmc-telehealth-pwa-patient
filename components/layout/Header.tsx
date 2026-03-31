@@ -23,9 +23,11 @@ import {
 import { useAuth } from "@/context/userContext";
 import { cn } from "@/lib/utils";
 import icon from "@/public/assets/icon/logo-light.png";
+import { useUnreadCount } from "@/queries/useNotifications";
 // import { NotificationDropdown } from "./NotificationDropdown";
 import type { NavItem } from "@/types/header";
 import {
+  Bell,
   Calendar,
   LayoutDashboard,
   LogOut,
@@ -42,6 +44,9 @@ import { useEffect, useState } from "react";
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: unreadData } = useUnreadCount();
+
+
 
   // Use actual media query for responsive check
   const [isDesktop, setIsDesktop] = useState(true);
@@ -99,6 +104,7 @@ export function Header() {
       href: "/prescriptions",
       icon: <MessageSquare className="h-4 w-4" />,
     },
+
   ];
 
   return (
@@ -148,11 +154,27 @@ export function Header() {
                 ) : null}
               </Link>
             ))}
+
           </nav>
         )}
 
+
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
+          <Link href="/notifications">
+            <div className="relative">
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5! w-5!" />
+              </Button>
+
+              {unreadData > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                  {unreadData}
+                </span>
+              )}
+
+            </div>
+          </Link>
           {/* <NotificationDropdown /> */}
           {user || initializing ? (
             <div className="flex items-center gap-3 pl-2 border-l">
