@@ -19,7 +19,7 @@ const LoginPage = () => {
 
     const router = useRouter()
     const { login, user } = useAuth();
-    
+
     const { mutate: signIn, isPending, isError, error } = useLogin();
     const [mounted, setMounted] = useState(false)
     const [imageError, setImageError] = useState(false)
@@ -64,7 +64,7 @@ const LoginPage = () => {
                     const payload = (responseData as any)?.data || responseData;
                     const user = (payload as any)?.user || payload;
                     const token = (responseData as any)?.token || (payload as any)?.token;
-                    
+
                     if (!user) {
                         console.error('User object is undefined in response:', responseData);
                         return;
@@ -92,6 +92,7 @@ const LoginPage = () => {
                             landmark: user.address?.landmark,
                             pincode: user.address?.pincode,
                             state: user.address?.state,
+                            bio: user.address?.bio,
                         },
                     };
 

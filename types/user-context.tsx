@@ -7,6 +7,7 @@ interface Address {
     landmark: string | null;
     pincode: string | null;
     state: string | null;
+    bio: string | null;
 }
 
 export interface User {
