@@ -32,7 +32,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
             </div>
           </div>
           <p className="text-xs text-on-surface-variant mb-3">
-            {formatDate(review.created_at)}
+            {review.created_at}
           </p>
           <h5 className="font-semibold text-on-surface mb-2">{review.title}</h5>
           <p className="text-on-surface-variant text-sm leading-relaxed">

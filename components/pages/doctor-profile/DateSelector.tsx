@@ -39,7 +39,7 @@ const DateSelector = ({ slots, selectedSlot, onSelectSlot }: DateSelectorProps) 
           
           return (
             <Button
-              key={slot.id}
+              key={full}
               variant={isSelected ? "default" : "ghost"}
               onClick={() => onSelectSlot(slot)}
               className={`flex-shrink-0 w-14 h-auto py-4 rounded-xl flex flex-col items-center gap-1 ${

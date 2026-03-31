@@ -1,21 +1,32 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AppointmentTypeSelector from './AppointmentTypeSelector';
 import DateSelector from './DateSelector';
 import TimeSelector from './TimeSelector';
+import { useBookAppointment } from '@/mutations/useBookAppointment';
 import type { DoctorDetailData, DoctorAvailabilitySlot } from '@/types/doctor-details';
 
 interface AppointmentBookingProps {
   doctor: DoctorDetailData;
-  onBookingSuccess: () => void;
+  onBookingSuccess: (appointmentId: string) => void;
   onBookingError: (error: string) => void;
 }
 
 const AppointmentBooking = ({ doctor, onBookingSuccess, onBookingError }: AppointmentBookingProps) => {
   const [appointmentType, setAppointmentType] = useState<'in_person' | 'video' | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<DoctorAvailabilitySlot | null>(null);
-  const [isBooking, setIsBooking] = useState(false);
+
+  const { mutate: bookAppointment, isPending: isBooking } = useBookAppointment();
+
+  // Set default appointment type: video first, then clinic
+  useEffect(() => {
+    if (doctor.appointment_types?.video) {
+      setAppointmentType('video');
+    } else if (doctor.appointment_types?.in_person) {
+      setAppointmentType('in_person');
+    }
+  }, [doctor.appointment_types]);
 
   const availableSlots = doctor.availability?.flatMap(day => day.slots) || [];
   
@@ -25,22 +36,41 @@ const AppointmentBooking = ({ doctor, onBookingSuccess, onBookingError }: Appoin
     return true;
   });
 
-  const handleBooking = async () => {
+  const handleBooking = () => {
     if (!selectedSlot) return;
     
-    setIsBooking(true);
-    try {
-      // API call to book appointment
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      onBookingSuccess();
-    } catch (error) {
-      onBookingError('Failed to book appointment. Please try again.');
-    } finally {
-      setIsBooking(false);
-    }
+    const payload = {
+      doctor_id: doctor.id,
+      availability_id: selectedSlot.id,
+      appointment_date: selectedSlot.date,
+      appointment_time: selectedSlot.start_time,
+      consultation_type: selectedSlot.consultation_type,
+      opd_type: 'general',
+    };
+
+    console.log("payload : ", payload);
+
+    bookAppointment(payload, {
+      onSuccess: (response) => {
+        console.log("response : ", response);
+        const appointmentId = response?.data?.appointment?.id;
+        const appointmentData = response?.data;
+        if (appointmentId && appointmentData) {
+          // Store in localStorage for the summary page
+          // localStorage.setItem(`appointment_${appointmentId}`, JSON.stringify(appointmentData));
+          onBookingSuccess(appointmentId);
+        } else {
+          onBookingError('Failed to get appointment details');
+        }
+      },
+      onError: (error) => {
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to book appointment. Please try again.';
+        onBookingError(errorMessage);
+      },
+    });
   };
 
-  const isBookingDisabled = !appointmentType || !selectedSlot;
+  const isBookingDisabled = !appointmentType || !selectedSlot || isBooking;
 
   return (
     <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-xl border border-outline-variant/10 space-y-8">
@@ -83,7 +113,7 @@ const AppointmentBooking = ({ doctor, onBookingSuccess, onBookingError }: Appoin
         size="lg"
         className="w-full font-bold shadow-lg hover:shadow-xl transition-all"
       >
-        {isBooking ? "Booking..." : `Book Appointment ($${selectedSlot?.consultation_fee || doctor.profile.years_experience * 10}.00)`}
+        {isBooking ? "Booking..." : `Book Appointment (₹${selectedSlot?.consultation_fee || 0}.00)`}
         <ChevronRight className="w-5 h-5 ml-2" />
       </Button>
     </div>

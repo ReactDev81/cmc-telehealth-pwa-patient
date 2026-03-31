@@ -1,52 +1,3 @@
-// "use client";
-
-// import { use } from "react";
-// import { useDoctorDetail } from "@/queries/useDoctorDetail";
-
-// interface DoctorDetailPageProps {
-//   params: Promise<{
-//     id: string;
-//   }>;
-// }
-
-// export default function DoctorDetailPage({ params }: DoctorDetailPageProps) {
-//   const { id } = use(params);
-//   const { data, isLoading, error } = useDoctorDetail(id);
-
-//   if (isLoading) return <p>Loading...</p>;
-
-//   if (error) {
-//     return (
-//       <p className="text-red-500">
-//         Something went wrong while fetching doctor details.
-//       </p>
-//     );
-//   }
-
-//   const doctor = data?.data;
-//   console.log(doctor);
-
-//   if (!doctor) return <p>No doctor found.</p>;
-
-//   return (
-//     <div className="space-y-4">
-//       <h1 className="text-2xl font-bold">{doctor.profile.name}</h1>
-//       <p>{doctor.profile.department}</p>
-//       <p>{doctor.profile.years_experience} years experience</p>
-//       <p>{doctor.about.bio}</p>
-
-//       <div>
-//         <h2 className="font-semibold">Languages</h2>
-//         <p>{doctor.languages.join(", ")}</p>
-//       </div>
-
-//       <div>
-//         <h2 className="font-semibold">Review Summary</h2>
-//         <p>
-//           {doctor.review_summary.average_rating} ({doctor.review_summary.total_reviews} reviews)
-//         </p>
-//       </div>
-//     </div>
 "use client";
 
 import React, { useState } from 'react';
@@ -89,7 +40,7 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
   const { data, error, isLoading, refetch } = useDoctorDetail(id);
   const doctor = data?.data;
 
-  const handleBookingSuccess = () => {
+  const handleBookingSuccess = (appointmentId: string) => {
     setDialogState({
       open: true,
       type: 'success',
@@ -97,8 +48,8 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
       description: 'Your appointment has been successfully scheduled. Check your email for details.',
     });
     setTimeout(() => {
-      router.push('/appointments');
-    }, 2000);
+      router.push(`/appointments/${appointmentId}`);
+    }, 1500);
   };
 
   const handleBookingError = (error: string) => {
