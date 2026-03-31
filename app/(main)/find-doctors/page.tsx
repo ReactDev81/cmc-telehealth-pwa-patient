@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useBrowseDoctors } from '@/queries/useBrowseDoctors';
 import SearchBar from '@/components/pages/find-doctor/searchBar';
 import FilterSidebar from '@/components/pages/find-doctor/FilterSidebar';
@@ -9,14 +10,11 @@ import DoctorCard from '@/components/pages/find-doctor/DoctorCard';
 import LoadingSkeleton from '@/components/pages/find-doctor/LoadingSkeleton';
 import CustomDialog from '@/components/custom/Dialogboxs';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import type { ConsultationType, SortOption, Page } from '@/types/browse-doctors';
+import type { ConsultationType, SortOption } from '@/types/browse-doctors';
 import { Button } from '@/components/ui/button';
 
-interface FindDoctorsProps {
-  setPage: (p: Page) => void;
-}
-
-const FindDoctors = ({ setPage }: FindDoctorsProps) => {
+const FindDoctors = () => {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [specialty, setSpecialty] = useState('all');
   const [consultationType, setConsultationType] = useState<ConsultationType>('all');
@@ -36,8 +34,6 @@ const FindDoctors = ({ setPage }: FindDoctorsProps) => {
 
   const { data, error, isLoading, refetch } = useBrowseDoctors();
   const doctors = data?.data || [];
-
-  console.log("doctor : ", doctors);
 
   // Filter doctors based on search and filters
   const filteredDoctors = doctors.filter((doctor) => {
@@ -89,7 +85,7 @@ const FindDoctors = ({ setPage }: FindDoctorsProps) => {
       });
       
       setTimeout(() => {
-        setPage('appointments');
+        router.push('/appointments');
       }, 2000);
     } catch (error) {
       setDialogState({

@@ -95,8 +95,6 @@ const LoginPage = () => {
                         },
                     };
 
-                    // console.log("Render Login Screen", responseData);
-
                     await login(userData, token || "");
 
                     router.push("/");

@@ -102,11 +102,8 @@ export default function Notifications() {
     const [totalPages, setTotalPages] = useState(1);
     const [meta, setMeta] = useState<any>(null);
     const { data: totalUnread = 0 } = useUnreadCount();
-    console.log(totalUnread);
 
     const { login, user } = useAuth();
-
-    console.log("user data" , user);
 
     const router = useRouter();
 

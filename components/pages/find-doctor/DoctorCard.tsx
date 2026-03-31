@@ -13,14 +13,18 @@ interface DoctorCardProps {
 
 const DoctorCard = ({ doctor, onBook, onError, onSuccess, isLoading = false }: DoctorCardProps) => {
   const router = useRouter();
+  // const handleBookNow = () => {
+  //   try {
+  //     // Add your booking logic here
+  //     onBook();
+  //     onSuccess?.();
+  //   } catch (error) {
+  //     onError?.();
+  //   }
+  //   router.push(`/find-doctors/${doctor.id}`);
+  // };
+
   const handleBookNow = () => {
-    try {
-      // Add your booking logic here
-      onBook();
-      onSuccess?.();
-    } catch (error) {
-      onError?.();
-    }
     router.push(`/find-doctors/${doctor.id}`);
   };
 

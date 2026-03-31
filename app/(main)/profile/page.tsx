@@ -9,8 +9,6 @@ import ManageAddressForm from "@/components/pages/profile/manage-address";
 
 export default function ProfileTabs() {
     const { user } = useAuth();
-
-    console.log("user data" , user);
     
 
     if (!user) return <p>Loading...</p>;

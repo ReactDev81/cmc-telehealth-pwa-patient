@@ -10,7 +10,6 @@ export const fetchNotifications = async (page = 1) => {
 //! unread count function
 export const fetchUnreadCount = async () => {
     const { data } = await api.get("/notifications/unread-count");
-    console.log("Unread Count Response:", data); // 👈 log the entire response
     return data?.data?.unread_count; // 👈 direct number return
 };
 
