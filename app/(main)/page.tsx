@@ -103,7 +103,6 @@ export default function Home() {
         </div>
         <div className="lg:col-span-4">
           <QuickLinks
-            reportSummary="Blood Work Result: Normal"
             prescriptionSummary="2 Active medications • Refill ready"
             onViewReports={() => setPage && setPage("medical-records")}
             onManageRefills={() => setPage && setPage("prescriptions")}

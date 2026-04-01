@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AuthForm from "@/components/auth/AuthForm"
 import AuthLayout from "@/components/auth/AuthLayout"
+import Link from "next/link"
 import { useLogin } from "@/mutations/useLogin"
 import { useAuth } from "@/context/userContext"
 import { User, UserRole } from "@/types/user-context"
@@ -23,7 +24,7 @@ const LoginPage = () => {
     const { mutate: signIn, isPending, isError, error } = useLogin();
     const [mounted, setMounted] = useState(false)
     const [imageError, setImageError] = useState(false)
-    const [emailverified, setEmailverified] = useState(false);
+    const [verifiedLink, setVerifiedLink] = useState<{ email: string; message: string } | null>(null);
 
     useEffect(() => {
         setMounted(true)
@@ -67,6 +68,7 @@ const LoginPage = () => {
 
                     if (!user) {
                         console.error('User object is undefined in response:', responseData);
+                        resolve();
                         return;
                     }
 
@@ -98,15 +100,30 @@ const LoginPage = () => {
 
                     await login(userData, token || "");
 
-                    router.push("/");
+                    window.location.href = "/";
 
                     resolve();
                 },
                 onError: (error: any) => {
-                    const err = (error as any)?.response?.data?.errors?.message;
-                    console.log('err', err);
-                    if (error.response?.data?.errors?.status === "verified") {
-                        setEmailverified(true);
+                    const responseData = error?.response?.data;
+                    const message = (responseData?.message || "").toLowerCase();
+                    const status = responseData?.errors?.status || responseData?.data?.status || responseData?.status || "";
+                    const code = responseData?.code || "";
+
+                    const isVerified =
+                        message.includes("verified") ||
+                        status === "verified" ||
+                        code === "ALREADY_VERIFIED";
+
+                    if (isVerified) {
+                        const userEmail = (error as any)?.config?.data ? JSON.parse((error as any).config.data).email : "";
+                        if (userEmail && typeof window !== "undefined") {
+                            localStorage.setItem('reg_email', userEmail);
+                        }
+                        setVerifiedLink({
+                            email: userEmail,
+                            message: responseData?.message || "Email is already verified. Please complete your profile."
+                        });
                     }
                     resolve();
                 },
@@ -146,13 +163,28 @@ const LoginPage = () => {
                     Sign in to your account to continue
                 </p>
 
-                {isError && (
-                    <div className="mt-3 rounded-md bg-red-50 p-3">
-                        <p className="text-sm text-red-600">
+                {isError && !verifiedLink && (
+                    <div className="mt-3 rounded-md bg-destructive/10 border border-destructive/20 p-3">
+                        <p className="text-sm text-destructive">
                             {((error as any)?.response?.data?.errors?.message ??
+                                (error as any)?.response?.data?.message ??
                                 (error as any)?.message ??
                                 "Login failed. Please check your credentials.")}
                         </p>
+                    </div>
+                )}
+
+                {verifiedLink && (
+                    <div className="mt-4 flex flex-col gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10 text-left">
+                        <p className="text-sm text-foreground font-source-sans">
+                            {verifiedLink.message}
+                        </p>
+                        <Link
+                            href="/auth/complete-profile"
+                            className="text-sm font-semibold text-primary hover:underline hover:text-primary/80 transition-colors w-fit"
+                        >
+                            Complete Your Profile Now →
+                        </Link>
                     </div>
                 )}
             </div>
@@ -164,7 +196,7 @@ const LoginPage = () => {
                 showForgotPassword={true}
                 alternateLink={{
                     text: "Don't have an account?",
-                    href: "/register",
+                    href: "/auth/register",
                     linkText: "Sign up",
                 }}
             />

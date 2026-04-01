@@ -21,6 +21,9 @@ interface CustomTabsProps {
     tabsTriggerClassName?: string;
     tabsContentClassName?: string;
     color?: string;
+    activeTabBg?: string;
+    activeTabColor?: string;
+    variant?: "default" | "pill";
 }
 
 const CustomTabs = ({
@@ -33,6 +36,9 @@ const CustomTabs = ({
     tabsTriggerClassName,
     tabsContentClassName,
     color = "primary",
+    activeTabBg,
+    activeTabColor,
+    variant = "default",
 }: CustomTabsProps) => {
 
     const [internalActiveTab, setInternalActiveTab] = React.useState(
@@ -50,27 +56,39 @@ const CustomTabs = ({
         onTabChange?.(value);
     };
 
+    const isPill = variant === "pill";
+
     return (
         <Tabs value={activeTab} onValueChange={handleTabChange} className={cn("w-full", className)}>
-
-
-            {/* <TabsList className={cn("grid w-full grid-cols-4", tabsListClassName)}> */}
-
-            <TabsList className={cn("flex justify-center items-center w-full gap-4", tabsListClassName)}>
-
+            <TabsList
+                className={cn(
+                    "w-full flex items-center justify-center transition-all duration-300",
+                    isPill
+                        ? "bg-surface-container-low py-7 rounded-2xl gap-1 px-2"
+                        : "bg-transparent gap-4",
+                    tabsListClassName
+                )}
+            >
                 {tabs.map((tab) => (
                     <TabsTrigger
                         key={tab.key}
                         value={tab.key}
                         style={{
-                            ['--tab-active-bg' as string]: `var(--${color})`,
-                            ['--tab-active-text' as string]: `var(--${color}-foreground)`,
+                            ['--tab-active-bg' as string]: activeTabBg || (isPill ? "white" : `var(--${color})`),
+                            ['--tab-active-text' as string]: activeTabColor || (isPill ? "var(--primary)" : `var(--${color}-foreground)`),
                         }}
                         className={cn(
-                            "transition-all duration-200 px-6 py-3.5",
-                            "data-[state=active]:bg-(--tab-active-bg)",
-                            "data-[state=active]:text-(--tab-active-text)",
-                            `hover:bg-${color}-50`,
+                            "transition-all duration-300 font-source-sans font-bold",
+                            isPill
+                                ? cn(
+                                    "px-8 py-5 rounded-[1.5rem] flex-1 text-[#333333]",
+                                    "data-[state=active]:bg-(--tab-active-bg) data-[state=active]:text-(--tab-active-text) data-[state=active]:shadow-sm",
+                                )
+                                : cn(
+                                    "px-6 py-3.5 rounded-xl",
+                                    "data-[state=active]:bg-(--tab-active-bg) data-[state=active]:text-(--tab-active-text)",
+                                    `hover:bg-${color}-50`
+                                ),
                             tabsTriggerClassName
                         )}
                     >
@@ -84,13 +102,12 @@ const CustomTabs = ({
                     <TabsContent
                         key={tab.key}
                         value={tab.key}
-                        className={tabsContentClassName}
+                        className={cn("mt-6 focus-visible:outline-none", tabsContentClassName)}
                     >
                         {tab.content}
                     </TabsContent>
                 )
             ))}
-
         </Tabs>
     );
 };

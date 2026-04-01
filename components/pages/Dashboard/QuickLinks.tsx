@@ -1,19 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, FileText, Pill } from "lucide-react";
+import { ArrowRight, CreditCard, Pill } from "lucide-react";
 
 interface QuickLinksProps {
-  reportSummary?: string;
   prescriptionSummary?: string;
 }
 
 export function QuickLinks() {
   // Handler to redirect to /medical-records
-  const handleViewReports = () => {
-    window.open("/medical-records", "_blank");
+  const handleViewTransactions = () => {
+    window.open("/transactions", "_blank");
   };
   const handleManageRefills = () => {
-    window.open("/prescriptions", "_blank");
+    window.open("/my-medicines", "_blank");
   };
 
   return (
@@ -24,19 +23,19 @@ export function QuickLinks() {
           <div>
             <div className="flex justify-between items-start mb-4">
               <div className="p-3 bg-primary/10 rounded-xl">
-                <FileText className="w-6 h-6 text-primary" />
+                <CreditCard className="w-6 h-6 text-primary" />
               </div>
             </div>
             <h4 className="text-xl font-bold text-foreground mb-1 font-headline">
-              Reports
+              Track Transactions
             </h4>
           </div>
           <Button
             variant="ghost"
-            onClick={handleViewReports}
+            onClick={handleViewTransactions}
             className="mt-4 w-fit p-0 h-auto text-primary font-semibold text-sm flex items-center gap-2 hover:gap-3 transition-all hover:bg-transparent"
           >
-            View all reports
+            View all transactions
             <ArrowRight className="w-4 h-4" />
           </Button>
         </CardContent>
