@@ -37,6 +37,9 @@ import {
   Pill,
   ClipboardPlus,
   User as UserIcon,
+  ChevronDown,
+  Star,
+  Banknote,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -192,44 +195,54 @@ export function Header() {
                 </span>
               </div>
 
-              <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center border border-border overflow-hidden ring-2 ring-transparent hover:ring-primary/20 transition-all cursor-pointer">
+              <div className="flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="relative h-8 w-8 rounded-full border-0 p-0 hover:bg-transparent"
+                      className="flex items-center gap-2 h-10 px-1.5 rounded-full bg-muted/50 hover:bg-muted border border-border/50 transition-all"
                     >
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="h-8 w-8 border border-background">
                         <AvatarImage src={user?.avatar || ""} alt={name} />
                         <AvatarFallback>
                           <UserIcon className="h-4 w-4 text-muted-foreground" />
                         </AvatarFallback>
                       </Avatar>
+                      <ChevronDown className="h-4 w-4 text-muted-foreground mr-1" />
                     </Button>
                   </DropdownMenuTrigger>
 
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-
-                    <DropdownMenuSeparator />
-
+                  <DropdownMenuContent className="w-56 rounded-xl p-2" align="end" sideOffset={8}>
                     <DropdownMenuGroup>
-                      <DropdownMenuItem asChild>
-                        <Link href="/profile" className="cursor-pointer">
-                          <UserIcon className="mr-2 h-4 w-4" />
-                          <span>Profile</span>
+                      <DropdownMenuItem asChild className="rounded-md cursor-pointer py-2">
+                        <Link href="/profile" className="flex items-center">
+                          <UserIcon className="mr-3 h-4 w-4 text-muted-foreground" />
+                          <span className="font-medium">My Profile</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="rounded-md cursor-pointer py-2">
+                        <Link href="/reviews" className="flex items-center">
+                          <Star className="mr-3 h-4 w-4 text-muted-foreground" />
+                          <span className="font-medium">My Reviews</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="rounded-md cursor-pointer py-2">
+                        <Link href="/transactions" className="flex items-center">
+                          <Banknote className="mr-3 h-4 w-4 text-muted-foreground" />
+                          <span className="font-medium">Transactions</span>
                         </Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
 
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="my-2" />
 
                     <DropdownMenuItem
-                      className="cursor-pointer text-destructive focus:text-destructive"
+                      className="rounded-md cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                       onClick={logout}
                       disabled={initializing}
                     >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
+                      <LogOut className="mr-3 h-4 w-4" />
+                      <span className="font-semibold">Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -240,7 +253,7 @@ export function Header() {
                     onOpenChange={setIsMobileMenuOpen}
                   >
                     <SheetTrigger asChild>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" className="h-10 w-10">
                         <Menu className="h-5 w-5" />
                       </Button>
                     </SheetTrigger>
