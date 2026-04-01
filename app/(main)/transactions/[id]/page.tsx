@@ -84,71 +84,238 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
     const [copiedId, setCopiedId] = useState(false);
     const [downloading, setDownloading] = useState(false);
 
-    const pdfRef = useRef<HTMLDivElement>(null);
+    // const handleDownloadPDF = async () => {
+    //     if (!transaction) return;
 
-    const handleDownloadPDF = async () => {
-        if (!pdfRef.current || !transaction) return;
+    //     try {
+    //         setDownloading(true);
+
+    //         // Dynamically import jspdf
+    //         const jsPDFModule = await import("jspdf");
+    //         const jsPDF = jsPDFModule.default;
+
+    //         // Create PDF with simple HTML content
+    //         const pdf = new jsPDF("p", "mm", "a4");
+
+    //         // Create HTML content for PDF
+    //         const content = `
+    //             <div style="font-family: Arial, sans-serif; padding: 20px;">
+    //                 <h2 style="color: #16a34a; margin-bottom: 10px;">
+    //                     Transaction ${transaction.status_label || transaction.status}
+    //                 </h2>
+    //                 <p style="color: #666; margin-bottom: 20px;">${transaction.date || "N/A"}</p>
+                    
+    //                 <hr style="margin: 20px 0; border-color: #e5e7eb;" />
+                    
+    //                 <div style="margin-bottom: 20px;">
+    //                     <p><strong>Amount:</strong> ₹${transaction.amount}</p>
+    //                     <p><strong>Transaction ID:</strong> ${transaction.transaction_id || "N/A"}</p>
+    //                     <p><strong>Paid To:</strong> ${transaction.paid_to || "N/A"}</p>
+    //                     ${transaction.order_id ? `<p><strong>Order ID:</strong> ${transaction.order_id}</p>` : ''}
+    //                     <p><strong>Payment Method:</strong> ${transaction.payment_method || "N/A"}</p>
+    //                 </div>
+
+    //                 ${transaction.bank_name ? `<p><strong>Bank:</strong> ${transaction.bank_name}</p>` : ''}
+    //                 ${transaction.upi_id ? `<p><strong>UPI ID:</strong> ${transaction.upi_id}</p>` : ''}
+    //                 ${transaction.patient_name ? `<p><strong>Patient:</strong> ${transaction.patient_name}</p>` : ''}
+    //                 ${transaction.doctor_name ? `<p><strong>Doctor:</strong> Dr. ${transaction.doctor_name}</p>` : ''}
+                    
+    //                 <hr style="margin: 20px 0; border-color: #e5e7eb;" />
+    //                 <p style="font-size: 12px; color: #999; text-align: center;">
+    //                     Generated on ${new Date().toLocaleString()}
+    //                 </p>
+    //             </div>
+    //         `;
+
+    //         // Add HTML to PDF
+    //         pdf.html(content, {
+    //             callback: function (pdf) {
+    //                 pdf.save(`transaction-${transaction.transaction_id || transaction.id}.pdf`);
+    //             },
+    //             x: 10,
+    //             y: 10,
+    //             width: 190,
+    //             windowWidth: 800,
+    //             html2canvas: {
+    //                 scale: 2,
+    //                 backgroundColor: "#ffffff",
+    //                 logging: false,
+    //                 // Skip problematic color functions
+    //                 onclone: (clonedDoc: Document) => {
+    //                     const style = clonedDoc.createElement('style');
+    //                     style.textContent = `
+    //                         * {
+    //                             color-scheme: only light;
+    //                         }
+    //                     `;
+    //                     clonedDoc.head.appendChild(style);
+    //                 }
+    //             }
+    //         });
+
+    //     } catch (error) {
+    //         console.error("Error generating PDF:", error);
+    //     } finally {
+    //         setDownloading(false);
+    //     }
+    // };
+
+    // Alternative simple PDF generation without html2canvas
+    const handleSimpleDownloadPDF = async () => {
+        if (!transaction) return;
 
         try {
             setDownloading(true);
-
-            // Dynamically import html2canvas and jspdf
-            const html2canvasModule = await import("html2canvas");
             const jsPDFModule = await import("jspdf");
-
-            const html2canvas = html2canvasModule.default;
             const jsPDF = jsPDFModule.default;
 
-            // Clone the element to avoid modifying the original
-            const element = pdfRef.current.cloneNode(true) as HTMLElement;
-            element.style.position = 'absolute';
-            element.style.top = '-9999px';
-            element.style.left = '-9999px';
-            element.style.width = '800px';
-            element.style.backgroundColor = '#ffffff';
-            document.body.appendChild(element);
+            const pdf = new jsPDF();
+            let yPos = 20;
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const margin = 20;
 
-            try {
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    backgroundColor: "#ffffff",
-                    useCORS: true,
-                    logging: false,
-                    // Fix for color function error
-                    onclone: (clonedDoc, element) => {
-                        // Remove any problematic styles
-                        const allElements = element.getElementsByTagName('*');
-                        for (let i = 0; i < allElements.length; i++) {
-                            const el = allElements[i] as HTMLElement;
-                            // Remove any lab color styles
-                            if (el.style.backgroundColor?.includes('lab')) {
-                                el.style.backgroundColor = '';
-                            }
-                            if (el.style.color?.includes('lab')) {
-                                el.style.color = '';
-                            }
-                        }
-                    }
-                });
+           
+            
 
-                const imgData = canvas.toDataURL("image/png");
-                const pdf = new jsPDF("p", "mm", "a4");
-                const imgWidth = 190;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            // ========== DETAILS SECTION ==========
+            // Divider line
+            pdf.setDrawColor(200, 200, 200);
+            pdf.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 8;
 
-                pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-                pdf.save(`transaction-${transaction.transaction_id || transaction.id}.pdf`);
-            } finally {
-                // Clean up
-                document.body.removeChild(element);
+            // Transaction ID
+            pdf.setFontSize(11);
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor(100, 100, 100);
+            pdf.text("Transaction Id", margin, yPos);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(transaction.transaction_id || "N/A", pageWidth - margin, yPos, { align: "right" });
+
+            yPos += 12;
+            pdf.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 8;
+
+            // Paid To
+            pdf.setFontSize(11);
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor(100, 100, 100);
+            pdf.text("Paid To", margin, yPos);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(transaction.paid_to || "N/A", pageWidth - margin, yPos, { align: "right" });
+
+            yPos += 12;
+            pdf.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 8;
+
+            // Amount
+            pdf.setFontSize(11);
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor(100, 100, 100);
+            pdf.text("Amount", margin, yPos);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(formatAmount(transaction.amount || 0), pageWidth - margin, yPos, { align: "right" });
+
+            yPos += 12;
+            pdf.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 8;
+
+            // Transaction ID (if exists and different)
+            if (transaction.transaction_id && transaction.transaction_id !== transaction.id) {
+                pdf.setFontSize(11);
+                pdf.setFont("helvetica", "normal");
+                pdf.setTextColor(100, 100, 100);
+                pdf.text("Transaction ID", margin, yPos);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(transaction.transaction_id, pageWidth - margin, yPos, { align: "right" });
+
+                yPos += 12;
+                pdf.line(margin, yPos, pageWidth - margin, yPos);
+                yPos += 8;
             }
+
+            // Order ID
+            if (transaction.order_id) {
+                pdf.setFontSize(11);
+                pdf.setFont("helvetica", "normal");
+                pdf.setTextColor(100, 100, 100);
+                pdf.text("Order ID", margin, yPos);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(transaction.order_id, pageWidth - margin, yPos, { align: "right" });
+
+                yPos += 12;
+                pdf.line(margin, yPos, pageWidth - margin, yPos);
+                yPos += 8;
+            }
+
+            // Payment Method
+            pdf.setFontSize(11);
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor(100, 100, 100);
+            pdf.text("Payment method", margin, yPos);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(transaction.payment_method || "N/A", pageWidth - margin, yPos, { align: "right" });
+
+            yPos += 12;
+            pdf.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 8;
+
+            // Bank Name
+            if (transaction.bank_name) {
+                pdf.setFontSize(11);
+                pdf.setFont("helvetica", "normal");
+                pdf.setTextColor(100, 100, 100);
+                pdf.text("Bank Name", margin, yPos);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(transaction.bank_name, pageWidth - margin, yPos, { align: "right" });
+
+                yPos += 12;
+                pdf.line(margin, yPos, pageWidth - margin, yPos);
+                yPos += 8;
+            }
+
+            // Patient Name
+            if (transaction.patient_name) {
+                pdf.setFontSize(11);
+                pdf.setFont("helvetica", "normal");
+                pdf.setTextColor(100, 100, 100);
+                pdf.text("Patient Name", margin, yPos);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(transaction.patient_name, pageWidth - margin, yPos, { align: "right" });
+
+                yPos += 12;
+                pdf.line(margin, yPos, pageWidth - margin, yPos);
+                yPos += 8;
+            }
+
+            // Doctor Name
+            if (transaction.doctor_name) {
+                pdf.setFontSize(11);
+                pdf.setFont("helvetica", "normal");
+                pdf.setTextColor(100, 100, 100);
+                pdf.text("Doctor Name", margin, yPos);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(`Dr. ${transaction.doctor_name}`, pageWidth - margin, yPos, { align: "right" });
+
+                yPos += 12;
+                pdf.line(margin, yPos, pageWidth - margin, yPos);
+                yPos += 8;
+            }
+
+            // Footer
+            yPos += 10;
+            pdf.setFontSize(8);
+            pdf.setFont("helvetica", "italic");
+            pdf.setTextColor(150, 150, 150);
+            pdf.text(`Generated on ${new Date().toLocaleString()}`, pageWidth / 2, yPos, { align: "center" });
+
+            pdf.save(`transaction-${transaction.transaction_id || transaction.id}.pdf`);
+
         } catch (error) {
             console.error("Error generating PDF:", error);
         } finally {
             setDownloading(false);
         }
     };
-
     useEffect(() => {
         const fetchTransaction = async () => {
             try {
@@ -212,7 +379,7 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
     return (
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-2xl mx-auto px-4">
-                {/* Back Button */}
+                {/* Back Button and Download */}
                 <div className="flex justify-between items-center mb-8">
                     <button
                         onClick={() => router.back()}
@@ -223,7 +390,7 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
                     </button>
 
                     <Button
-                        onClick={handleDownloadPDF}
+                        onClick={handleSimpleDownloadPDF}
                         disabled={downloading}
                         className="bg-blue-600 hover:bg-blue-700 text-white"
                     >
@@ -295,7 +462,7 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
                             </div>
                         )}
 
-                        {/* Order ID (for pending transactions or always show) */}
+                        {/* Order ID */}
                         {transaction.order_id && (
                             <div className="px-6 py-5 flex justify-between items-center">
                                 <p className="text-gray-600">Order ID</p>
@@ -309,7 +476,7 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
                             <p className="font-medium text-gray-900">{transaction.payment_method || "N/A"}</p>
                         </div>
 
-                        {/* Show Bank/UPI details based on payment method */}
+                        {/* Show Bank/UPI details */}
                         {(transaction.payment_method?.toLowerCase() !== "upi" && transaction.bank_name) ||
                             (transaction.payment_method?.toLowerCase() === "upi" && (transaction.upi_id || transaction.account_details)) ? (
                             <div className="px-6 py-5 flex justify-between items-center">
@@ -326,7 +493,7 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
                             </div>
                         ) : null}
 
-                        {/* Patient Name (if available) */}
+                        {/* Patient Name */}
                         {transaction.patient_name && (
                             <div className="px-6 py-5 flex justify-between items-center">
                                 <p className="text-gray-600">Patient Name</p>
@@ -334,7 +501,7 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
                             </div>
                         )}
 
-                        {/* Doctor Name (if available) */}
+                        {/* Doctor Name */}
                         {transaction.doctor_name && (
                             <div className="px-6 py-5 flex justify-between items-center">
                                 <p className="text-gray-600">Doctor Name</p>
@@ -373,56 +540,6 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
                             </div>
                         )}
                     </div>
-                </div>
-            </div>
-
-            {/* Hidden PDF Template */}
-            <div className="hidden">
-                <div
-                    ref={pdfRef}
-                    style={{
-                        backgroundColor: "#ffffff",
-                        color: "#000000",
-                        padding: "40px",
-                        width: "800px",
-                        fontFamily: "Arial, sans-serif"
-                    }}
-                >
-                    <h2 style={{ color: "#16a34a", fontSize: "24px", marginBottom: "10px" }}>
-                        Transaction {transaction.status_label}
-                    </h2>
-                    <p style={{ color: "#666", marginBottom: "20px" }}>{transaction.date}</p>
-
-                    <hr style={{ margin: "20px 0", borderColor: "#e5e7eb" }} />
-
-                    <div style={{ marginBottom: "20px" }}>
-                        <p><strong>Amount:</strong> ₹{transaction.amount}</p>
-                        <p><strong>Transaction ID:</strong> {transaction.transaction_id}</p>
-                        <p><strong>Paid To:</strong> {transaction.paid_to}</p>
-                        {transaction.order_id && <p><strong>Order ID:</strong> {transaction.order_id}</p>}
-                        <p><strong>Payment Method:</strong> {transaction.payment_method}</p>
-                    </div>
-
-                    {transaction.bank_name && (
-                        <p><strong>Bank:</strong> {transaction.bank_name}</p>
-                    )}
-
-                    {transaction.upi_id && (
-                        <p><strong>UPI ID:</strong> {transaction.upi_id}</p>
-                    )}
-
-                    {transaction.patient_name && (
-                        <p><strong>Patient:</strong> {transaction.patient_name}</p>
-                    )}
-
-                    {transaction.doctor_name && (
-                        <p><strong>Doctor:</strong> Dr. {transaction.doctor_name}</p>
-                    )}
-
-                    <hr style={{ margin: "20px 0", borderColor: "#e5e7eb" }} />
-                    <p style={{ fontSize: "12px", color: "#999", textAlign: "center" }}>
-                        Generated on {new Date().toLocaleString()}
-                    </p>
                 </div>
             </div>
         </div>
