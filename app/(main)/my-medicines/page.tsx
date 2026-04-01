@@ -31,7 +31,7 @@ const MyMedicines = () => {
 
     if (selectedMedicineId) {
         return (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <header className="flex items-center gap-6">
                     <button
                         onClick={() => setSelectedMedicineId(null)}
@@ -60,7 +60,7 @@ const MyMedicines = () => {
                         <Button onClick={() => setSelectedMedicineId(null)} variant="outline">Go Back</Button>
                     </div>
                 ) : (
-                    <div className="max-w-4xl space-y-8">
+                    <div className="space-y-8">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}

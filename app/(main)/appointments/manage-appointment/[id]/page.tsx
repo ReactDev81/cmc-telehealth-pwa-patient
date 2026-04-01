@@ -1,0 +1,361 @@
+"use client"
+
+import { useState, use, useEffect } from 'react';
+import { ChevronLeft, X, Upload } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useRouter } from 'next/navigation';
+import { Report } from '@/types/medical-reports';
+import { useAppointmentDetail } from '@/queries/useAppointmentSummary';
+import { useUpdateAppointmentInformation, useDeleteMedicalReport } from '@/queries/useManageAppointment';
+import { toast } from 'sonner';
+import { useMedicalReports } from '@/queries/useGetMedicalReports';
+import { useAuth } from '@/context/userContext';
+
+// Components
+import DoctorInfoCard from '@/components/pages/appointments/manage-appointment/DoctorInfoCard';
+import AppointmentInfo from '@/components/pages/appointments/manage-appointment/AppointmentInfo';
+import ReportsAndNotes from '@/components/pages/appointments/manage-appointment/ReportsAndNotes';
+import AddReportModal from '@/components/pages/appointments/manage-appointment/AddReportModal';
+
+interface PageProps {
+    params: Promise<{
+        id: string;
+    }>;
+}
+
+export default function ManageAppointment({ params }: PageProps) {
+
+    const { id: appointmentId } = use(params);
+    const router = useRouter();
+
+    // Fetch appointment details using the proper hook
+    const { data, isLoading, error } = useAppointmentDetail(appointmentId);
+    const appointment = data?.data;
+
+    const { user } = useAuth();
+
+    const { data: medicalReports, isLoading: isLoadingMedicalReports } = useMedicalReports(user?.id);
+
+    // Mutations
+    const { mutate: updateInformation, isPending: isUpdatingInfo } = useUpdateAppointmentInformation();
+    const { mutate: deleteReport } = useDeleteMedicalReport();
+
+    // console.log('data', data);
+
+    // Main State
+    const [reports, setReports] = useState<Report[]>([]);
+    const [note, setNote] = useState('');
+
+    // Sync state with API data
+    useEffect(() => {
+        if (appointment) {
+            if (appointment.medical_reports) {
+                const mappedReports: Report[] = appointment.medical_reports.map((r, index) => ({
+                    id: r.id || `api-${index}`,
+                    title: r.title || 'Medical Report',
+                    date: r.report_date || '',
+                    type: r.type_label || r.type || 'General',
+                    fileName: r.file_url ? r.file_url.split('/').pop() || 'report.pdf' : 'report.pdf',
+                    fileUrl: r.file_url
+                }));
+                setReports(mappedReports);
+            }
+            if (appointment.notes) {
+                setNote(appointment.notes);
+            }
+        }
+    }, [appointment]);
+
+    // UI State
+    const [activeMenu, setActiveMenu] = useState<string | null>(null);
+    const [showAddReport, setShowAddReport] = useState(false);
+    const [showEditReport, setShowEditReport] = useState<Report | null>(null);
+    const [showEditNote, setShowEditNote] = useState(false);
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
+    const handleDeleteReport = (id: string) => {
+        // If it's a server ID (API fallback is 'api-', local random is short), delete from server
+        if (id && !id.startsWith('api-') && id.length > 15) {
+            deleteReport(id, {
+                onSuccess: () => {
+                    toast.success('Report deleted successfully');
+                    setActiveMenu(null);
+                },
+                onError: (err) => {
+                    toast.error('Failed to delete report');
+                    console.error('Delete error:', err);
+                }
+            });
+        } else {
+            // Local-only report (newly added), just remove from state
+            setReports(prev => prev.filter(r => r.id !== id));
+            setActiveMenu(null);
+        }
+    };
+
+    const handleAddReport = (newReport: Report) => {
+        setReports(prev => [...prev, newReport]);
+    };
+
+    const handleViewReport = (report: Report) => {
+        if (report.fileUrl) {
+            window.open(report.fileUrl, '_blank');
+        } else if (report.file) {
+            // If it's a newly added file (local), we can create a temporary URL
+            const url = URL.createObjectURL(report.file);
+            window.open(url, '_blank');
+        } else {
+            toast.error('Report file is not available');
+        }
+    };
+
+    const handleModalSubmit = (newNote: string) => {
+        updateInformation({
+            appointmentId,
+            notes: newNote,
+            reports: reports.map(r => ({
+                // Use the real ID if it's not our local fallback or a short random string
+                id: (r.id && !r.id.startsWith('api-') && r.id.length > 15) ? r.id : undefined,
+                name: r.title,
+                type: r.type,
+                file: r.file
+            }))
+        }, {
+            onSuccess: () => {
+                toast.success('Information updated successfully');
+                setShowAddReport(false);
+            },
+            onError: (err: any) => {
+                toast.error('Failed to update information');
+                console.error('Update error:', err);
+            }
+        });
+    };
+
+    return (
+        <div>
+
+            {/* Header */}
+            <header className="flex items-center gap-4 mb-8">
+                <button
+                    onClick={() => router.back()}
+                    className="p-2 hover:bg-surface-container rounded-full transition-colors"
+                >
+                    <ChevronLeft className="w-6 h-6 text-primary" />
+                </button>
+                <h1 className="text-2xl font-bold font-headline text-primary tracking-tight">Manage Appointment</h1>
+            </header>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                {/* Left Column: Info */}
+                <div className="lg:col-span-7 space-y-8">
+                    <DoctorInfoCard doctor={appointment?.doctor} />
+                    <AppointmentInfo
+                        date={appointment?.schedule?.date_formatted}
+                        time={appointment?.schedule?.time_formatted}
+                        booking_type={appointment?.schedule?.consultation_type_label}
+                        patient_name={appointment?.patient?.name}
+                        patient_age={appointment?.patient?.age_formatted}
+                        patient_gender={appointment?.patient?.gender_formatted}
+                        appointment_status={appointment?.status_label}
+                    />
+                </div>
+
+                {/* Right Column: Reports & Notes */}
+                <ReportsAndNotes
+                    reports={reports}
+                    note={note}
+                    activeMenu={activeMenu}
+                    setActiveMenu={setActiveMenu}
+                    onAddReport={() => setShowAddReport(true)}
+                    onViewReport={handleViewReport}
+                    onEditReport={setShowEditReport}
+                    onDeleteReport={handleDeleteReport}
+                />
+            </div>
+
+            {/* Modals */}
+            <AnimatePresence>
+
+                {/* Add Report Modal */}
+                <AddReportModal
+                    isOpen={showAddReport}
+                    onClose={() => setShowAddReport(false)}
+                    reports={reports}
+                    onAddReport={handleAddReport}
+                    onDeleteReport={handleDeleteReport}
+                    onSubmit={handleModalSubmit}
+                    initialNote={note}
+                    isUpdating={isUpdatingInfo}
+                    patientReports={medicalReports?.data || []}
+                    isLoadingReports={isLoadingMedicalReports}
+                />
+
+                {/* Edit Report Modal */}
+                {showEditReport && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowEditReport(null)}
+                            className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-lg bg-white rounded-[40px] shadow-2xl overflow-hidden"
+                        >
+                            <div className="p-8">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h3 className="text-xl font-bold font-headline text-primary italic">Edit</h3>
+                                    <button onClick={() => setShowEditReport(null)} className="p-2 hover:bg-surface-container rounded-full">
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 italic">Report Title</label>
+                                        <input
+                                            type="text"
+                                            defaultValue={showEditReport.title}
+                                            className="w-full p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl font-bold text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500/20 italic"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 italic">Report Type</label>
+                                        <select className="w-full p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl font-bold text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500/20 italic appearance-none">
+                                            <option>{showEditReport.type}</option>
+                                            <option>Blood test</option>
+                                            <option>X-Ray Analysis</option>
+                                            <option>Mri</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 italic">Replace File (optional)</label>
+                                        <div className="p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl flex items-center justify-between italic">
+                                            <span className="text-xs text-on-surface-variant truncate max-w-[200px]">{showEditReport.fileName}</span>
+                                            <Upload className="w-4 h-4 text-emerald-600" />
+                                        </div>
+                                        <p className="text-[10px] text-on-surface-variant/60 mt-2 italic">Current file: {showEditReport.fileName}</p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 mt-10">
+                                    <button
+                                        onClick={() => setShowEditReport(null)}
+                                        className="py-4 bg-white text-primary border border-outline-variant/20 rounded-full font-bold text-sm italic hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={() => setShowEditReport(null)}
+                                        className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm italic"
+                                    >
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+
+                {/* Edit Note Modal */}
+                {showEditNote && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowEditNote(false)}
+                            className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-lg bg-white rounded-[40px] shadow-2xl overflow-hidden"
+                        >
+                            <div className="p-8">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h3 className="text-xl font-bold font-headline text-primary italic">Edit</h3>
+                                    <button onClick={() => setShowEditNote(false)} className="p-2 hover:bg-surface-container rounded-full">
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
+
+                                <div>
+                                    <label className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 italic">Notes</label>
+                                    <textarea
+                                        rows={4}
+                                        defaultValue={note}
+                                        onChange={(e) => setNote(e.target.value)}
+                                        className="w-full p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl font-bold text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500/20 italic resize-none"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 mt-10">
+                                    <button
+                                        onClick={() => setShowEditNote(false)}
+                                        className="py-4 bg-white text-primary border border-outline-variant/20 rounded-full font-bold text-sm italic hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={() => setShowEditNote(false)}
+                                        className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm italic"
+                                    >
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+
+                {/* Cancel Confirmation Modal */}
+                {showCancelConfirm && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowCancelConfirm(false)}
+                            className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-md bg-white rounded-[40px] shadow-2xl overflow-hidden"
+                        >
+                            <div className="p-10 text-center">
+                                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <X className="w-10 h-10 text-red-500" />
+                                </div>
+
+                                <h3 className="text-2xl font-bold font-headline text-primary mb-4 italic">Confirm Cancel</h3>
+                                <p className="text-on-surface-variant text-sm font-medium leading-relaxed mb-10 italic">
+                                    Cancel an existing appointment and free up the scheduled time slot.
+                                </p>
+
+                                <button
+                                    onClick={() => {
+                                        setShowCancelConfirm(false);
+                                        router.back();
+                                    }}
+                                    className="w-full py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-lg italic shadow-lg shadow-primary/10"
+                                >
+                                    Yes
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
