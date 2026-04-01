@@ -1,8 +1,8 @@
 "use client";
 
 import React from 'react';
-import { 
-  Pill, 
+import {
+  Pill,
   Clock,
   User,
   Calendar,
@@ -27,20 +27,20 @@ export const MedicineDetailsCard = ({ data, doctorName }: { data: MedicineDetail
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <header className="flex items-center gap-6">
-        <button 
+        <button
           onClick={() => router.back()}
           className="p-3 hover:bg-surface-container rounded-2xl transition-all text-primary"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-primary font-headline">Medicine Details</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-primary font-headline">Medicine Detailsdsfd</h1>
           <p className="text-on-surface-variant font-medium">Detailed information about your prescription.</p>
         </div>
       </header>
 
       {/* Main Info Card */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10"
@@ -56,7 +56,7 @@ export const MedicineDetailsCard = ({ data, doctorName }: { data: MedicineDetail
                 <p className="text-xl font-bold text-primary">{doctorName || "Your Doctor"}</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="p-4 bg-surface-container-low rounded-2xl text-on-surface-variant/50">
                 <Calendar className="w-8 h-8" />
@@ -93,7 +93,7 @@ export const MedicineDetailsCard = ({ data, doctorName }: { data: MedicineDetail
 
       {/* Doctor's Notes */}
       <div className="grid grid-cols-1 gap-6">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -109,7 +109,7 @@ export const MedicineDetailsCard = ({ data, doctorName }: { data: MedicineDetail
         </motion.div>
 
         {/* Action/Next Visit Card */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
@@ -126,7 +126,7 @@ export const MedicineDetailsCard = ({ data, doctorName }: { data: MedicineDetail
               </p>
             </div>
           </div>
-          <Button 
+          <Button
             className="w-full md:w-auto px-8 py-7 bg-white text-[#052116] font-bold rounded-2xl shadow-lg hover:bg-opacity-90 transition-all text-lg"
             onClick={() => router.push('/appointments/book')}
           >

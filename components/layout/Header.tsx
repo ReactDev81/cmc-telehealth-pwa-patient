@@ -76,7 +76,7 @@ export function Header() {
 
   const pathname = usePathname();
   const { user, initializing, logout } = useAuth();
-
+  console.table(user);
   // For notification label (Name fallback)
   const name =
     user && (user.first_name || user.last_name)
@@ -117,7 +117,7 @@ export function Header() {
       className={cn(
         "sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm",
         isScrolled
-          ? "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b"
+          ? "bg-background/95 backdrop-blur-md  supports-backdrop-filter:bg-background/60 border-b"
           : "bg-background",
       )}
     >
@@ -141,10 +141,10 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  "relative flex items-center gap-2 rounded-md px-3 py-2 text-md  font-semibold transition-colors",
                   pathname === item.href
                     ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground bg-accent hover:bg-accent hover:text-accent-foreground",
+                    : "text-black",
                 )}
               >
                 {item.icon}

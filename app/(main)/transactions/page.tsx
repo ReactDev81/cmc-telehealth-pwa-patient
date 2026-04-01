@@ -20,7 +20,6 @@ export default function Transactions() {
     const { data, isLoading } = useTransactions();
     const [activeTab, setActiveTab] = useState("All");
 
-    console.log("Transactions data:", data);
 
     if (isLoading) {
         return (
