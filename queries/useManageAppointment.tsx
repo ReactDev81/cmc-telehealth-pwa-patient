@@ -3,35 +3,35 @@ import { updateAppointmentInformation, UpdateAppointmentInformationParams, delet
 import { appointmentDetailKeys } from "@/queries/useAppointmentSummary";
 
 export const useUpdateAppointmentInformation = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: UpdateAppointmentInformationParams) => updateAppointmentInformation(data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: appointmentDetailKeys.detail(variables.appointmentId),
-      });
-    },
-  });
+    return useMutation({
+        mutationFn: (data: UpdateAppointmentInformationParams) => updateAppointmentInformation(data),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: appointmentDetailKeys.detail(variables.appointmentId),
+            });
+        },
+    });
 };
 
 export const useDeleteMedicalReport = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (reportId: string) => deleteMedicalReport(reportId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: appointmentDetailKeys.all,
-      });
-    },
-  });
+    return useMutation({
+        mutationFn: (reportId: string) => deleteMedicalReport(reportId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: appointmentDetailKeys.all,
+            });
+        },
+    });
 };
 
 export const usePatientMedicalReports = (patientId: string) => {
-  return useQuery({
-    queryKey: ['patient-medical-reports', patientId],
-    queryFn: () => getPatientMedicalReports(patientId),
-    enabled: !!patientId,
-  });
+    return useQuery({
+        queryKey: ['patient-medical-reports', patientId],
+        queryFn: () => getPatientMedicalReports(patientId),
+        enabled: !!patientId,
+    });
 };

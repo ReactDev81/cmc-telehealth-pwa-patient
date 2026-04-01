@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { X, ChevronDown, Upload, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Report, MedicalRecord } from '@/types/medical-reports';
+import { Report } from '@/types/medical-reports';
 
 interface AddReportModalProps {
     isOpen: boolean;
@@ -160,9 +160,9 @@ export default function AddReportModal({
                                                         No reports found in your records.
                                                     </div>
                                                 ) : (
-                                                    patientReports.map((record) => (
+                                                    patientReports.map((record, index) => (
                                                         <button
-                                                            key={record.id}
+                                                            key={record.id || `patient-report-${index}`}
                                                             onClick={() => handleSelectExisting(record)}
                                                             className="w-full px-6 py-4 text-left hover:bg-surface-container-low border-b border-outline-variant/5 last:border-0 transition-all font-medium text-primary"
                                                         >
@@ -240,10 +240,9 @@ export default function AddReportModal({
                             Add Report
                         </button>
 
-                        {/* List of Attached Reports */}
                         <div className="space-y-3 pt-4">
-                            {reports.map((report) => (
-                                <div key={report.id} className="p-4 border border-primary rounded-2xl flex items-center justify-between group">
+                            {reports.map((report, index) => (
+                                <div key={report.id || `attached-report-${index}`} className="p-4 border border-primary rounded-2xl flex items-center justify-between group">
                                     <div>
                                         <h4 className="font-bold text-primary">{report.title}</h4>
                                         <p className="text-xs text-on-surface-variant/60 font-medium">

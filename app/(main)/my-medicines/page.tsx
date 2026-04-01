@@ -11,7 +11,7 @@ import { MedicineActionPlan } from "@/components/pages/my-medicines/MedicineActi
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import CustomTabs from "@/components/custom/CustomTabs";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 
 const MyMedicines = () => {
     const [activeTab, setActiveTab] = useState<"current" | "past">("current");

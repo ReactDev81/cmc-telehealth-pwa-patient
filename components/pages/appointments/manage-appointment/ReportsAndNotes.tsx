@@ -52,8 +52,8 @@ export default function ReportsAndNotes({
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        {reports.map((report) => (
-                            <div key={report.id} className="p-5 bg-surface-container-low/30 rounded-3xl border border-outline-variant/5 relative">
+                        {reports.map((report, index) => (
+                            <div key={report.id || `report-${index}`} className="p-5 bg-surface-container-low/30 rounded-3xl border border-outline-variant/5 relative">
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
                                         <h4 className="font-bold text-primary text-sm mb-1">{report.title}</h4>

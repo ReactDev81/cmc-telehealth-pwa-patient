@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, use, useEffect } from 'react';
-import { ChevronLeft, X, Upload } from 'lucide-react';
+import { ChevronLeft, X, Upload, ChevronDown } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { Report } from '@/types/medical-reports';
@@ -23,6 +23,15 @@ interface PageProps {
     }>;
 }
 
+const REPORT_TYPES = [
+    "Blood Test",
+    "X-Ray",
+    "MRI Scan",
+    "Ultrasound",
+    "Prescription",
+    "Other"
+];
+
 export default function ManageAppointment({ params }: PageProps) {
 
     const { id: appointmentId } = use(params);
@@ -42,9 +51,28 @@ export default function ManageAppointment({ params }: PageProps) {
 
     // console.log('data', data);
 
-    // Main State
     const [reports, setReports] = useState<Report[]>([]);
     const [note, setNote] = useState('');
+
+    // UI State
+    const [activeMenu, setActiveMenu] = useState<string | null>(null);
+    const [showAddReport, setShowAddReport] = useState(false);
+    const [showEditReport, setShowEditReport] = useState<Report | null>(null);
+    const [showEditNote, setShowEditNote] = useState(false);
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
+    // Edit Modal State
+    const [editTitle, setEditTitle] = useState('');
+    const [editType, setEditType] = useState('');
+    const [editFile, setEditFile] = useState<File | null>(null);
+
+    useEffect(() => {
+        if (showEditReport) {
+            setEditTitle(showEditReport.title);
+            setEditType(showEditReport.type);
+            setEditFile(null);
+        }
+    }, [showEditReport]);
 
     // Sync state with API data
     useEffect(() => {
@@ -65,13 +93,6 @@ export default function ManageAppointment({ params }: PageProps) {
             }
         }
     }, [appointment]);
-
-    // UI State
-    const [activeMenu, setActiveMenu] = useState<string | null>(null);
-    const [showAddReport, setShowAddReport] = useState(false);
-    const [showEditReport, setShowEditReport] = useState<Report | null>(null);
-    const [showEditNote, setShowEditNote] = useState(false);
-    const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
     const handleDeleteReport = (id: string) => {
         // If it's a server ID (API fallback is 'api-', local random is short), delete from server
@@ -107,6 +128,46 @@ export default function ManageAppointment({ params }: PageProps) {
         } else {
             toast.error('Report file is not available');
         }
+    };
+
+    const handleSaveEditedReport = () => {
+        if (!showEditReport) return;
+
+        const updatedReports = reports.map(r => {
+            if (r.id === showEditReport.id) {
+                return {
+                    ...r,
+                    title: editTitle,
+                    type: editType,
+                    file: editFile || r.file,
+                    fileName: editFile ? editFile.name : r.fileName
+                };
+            }
+            return r;
+        });
+
+        setReports(updatedReports);
+
+        // Trigger backend update
+        updateInformation({
+            appointmentId,
+            notes: note,
+            reports: updatedReports.map(r => ({
+                id: (r.id && !r.id.startsWith('api-') && r.id.length > 15) ? r.id : undefined,
+                name: r.title,
+                type: r.type,
+                file: r.file
+            }))
+        }, {
+            onSuccess: () => {
+                toast.success('Report updated successfully');
+                setShowEditReport(null);
+            },
+            onError: (err) => {
+                toast.error('Failed to update report');
+                console.error('Update report error:', err);
+            }
+        });
     };
 
     const handleModalSubmit = (newNote: string) => {
@@ -221,26 +282,45 @@ export default function ManageAppointment({ params }: PageProps) {
                                         <label className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 italic">Report Title</label>
                                         <input
                                             type="text"
-                                            defaultValue={showEditReport.title}
+                                            value={editTitle}
+                                            onChange={(e) => setEditTitle(e.target.value)}
                                             className="w-full p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl font-bold text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500/20 italic"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 italic">Report Type</label>
-                                        <select className="w-full p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl font-bold text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500/20 italic appearance-none">
-                                            <option>{showEditReport.type}</option>
-                                            <option>Blood test</option>
-                                            <option>X-Ray Analysis</option>
-                                            <option>Mri</option>
-                                        </select>
+                                        <div className="relative">
+                                            <select
+                                                value={editType}
+                                                onChange={(e) => setEditType(e.target.value)}
+                                                className="w-full p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl font-bold text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500/20 italic appearance-none"
+                                            >
+                                                <option value="">Select an option</option>
+                                                {REPORT_TYPES.map(type => (
+                                                    <option key={type} value={type}>{type}</option>
+                                                ))}
+                                            </select>
+                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-outline-variant pointer-events-none" />
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 italic">Replace File (optional)</label>
-                                        <div className="p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl flex items-center justify-between italic">
-                                            <span className="text-xs text-on-surface-variant truncate max-w-[200px]">{showEditReport.fileName}</span>
-                                            <Upload className="w-4 h-4 text-emerald-600" />
+                                        <div className="relative group">
+                                            <input
+                                                type="file"
+                                                onChange={(e) => setEditFile(e.target.files?.[0] || null)}
+                                                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                            />
+                                            <div className="p-4 bg-surface-container-low border border-outline-variant/10 rounded-2xl flex items-center justify-between italic group-hover:bg-surface-container-low/80 transition-all">
+                                                <span className="text-xs text-on-surface-variant truncate max-w-[200px]">
+                                                    {editFile ? editFile.name : (showEditReport.fileName || 'report.pdf')}
+                                                </span>
+                                                <Upload className="w-4 h-4 text-emerald-600" />
+                                            </div>
                                         </div>
-                                        <p className="text-[10px] text-on-surface-variant/60 mt-2 italic">Current file: {showEditReport.fileName}</p>
+                                        <p className="text-[10px] text-on-surface-variant/60 mt-2 italic">
+                                            Current file: {showEditReport.fileName || 'report.pdf'}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -252,8 +332,8 @@ export default function ManageAppointment({ params }: PageProps) {
                                         Cancel
                                     </button>
                                     <button
-                                        onClick={() => setShowEditReport(null)}
-                                        className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm italic"
+                                        onClick={handleSaveEditedReport}
+                                        className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm italic hover:bg-emerald-950 transition-all flex items-center justify-center"
                                     >
                                         Update
                                     </button>
