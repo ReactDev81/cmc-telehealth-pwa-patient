@@ -1,4 +1,5 @@
 import { Doctor, Appointment } from "./types/appointment";
+import { MedicalRecord } from "./types/medical-reports";
 
 export const DOCTORS: Doctor[] = [
     {
@@ -109,5 +110,33 @@ export const APPOINTMENTS: Appointment[] = [
         status: 'cancelled',
         type: 'video',
         reason: 'Skin rash'
+    }
+];
+
+
+export const MEDICAL_RECORDS: MedicalRecord[] = [
+    {
+        id: 'rec-1',
+        title: 'Complete Blood Count',
+        date: 'Oct 15, 2024',
+        doctor: 'Dr. Sarah Chen',
+        type: 'Lab Result',
+        status: 'Final'
+    },
+    {
+        id: 'rec-2',
+        title: 'Lisinopril 10mg Refill',
+        date: 'Oct 12, 2024',
+        doctor: 'Dr. Sarah Chen',
+        type: 'Prescription',
+        status: 'Final'
+    },
+    {
+        id: 'rec-3',
+        title: 'Chest X-Ray',
+        date: 'Sep 20, 2024',
+        doctor: 'Dr. Marcus Thorne',
+        type: 'Imaging',
+        status: 'Final'
     }
 ];

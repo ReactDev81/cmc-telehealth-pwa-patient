@@ -60,10 +60,14 @@ export interface AppointmentPayment {
 
 export interface AppointmentMedicalReport {
   id?: string;
-  report_name?: string;
-  report_type?: string;
+  title?: string;
+  type?: string;
+  type_label?: string;
   report_date?: string;
+  report_date_formatted?: string;
   status?: string;
+  file_url?: string;
+  doctor_name?: string;
   files?: {
     url: string;
     name: string;

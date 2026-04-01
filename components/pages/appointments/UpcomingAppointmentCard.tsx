@@ -1,6 +1,7 @@
 'use client';
 import { Calendar, Clock, Star, Video, ChevronRight, Phone, Calendar as CalendarIcon } from 'lucide-react';
 import { Doctor, Appointment } from '@/types/appointment';
+import { useRouter } from 'next/navigation';
 
 interface UpcomingAppointmentCardProps {
     appointment: Appointment;
@@ -21,6 +22,9 @@ const UpcomingAppointmentCard = ({
     joinUrl,
     call_now
 }: UpcomingAppointmentCardProps) => {
+
+    const router = useRouter();
+
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="p-6">
@@ -99,7 +103,7 @@ const UpcomingAppointmentCard = ({
                         </button>
                     )}
                     <button
-                        onClick={() => onManageClick(appointment.id)}
+                        onClick={() => router.push(`/appointments/manage-appointment/${appointment.id}`)}
                         className="flex-1 py-3.5 bg-[#0A2E1F] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-all"
                     >
                         Manage Appointment
