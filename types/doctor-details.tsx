@@ -72,6 +72,7 @@ export interface DoctorDetailData {
   id: string;
   slug: string;
   user_id: string;
+  status: string;
   profile: DoctorProfileInfo;
   about: DoctorAboutInfo;
   education: DoctorEducationItem[];

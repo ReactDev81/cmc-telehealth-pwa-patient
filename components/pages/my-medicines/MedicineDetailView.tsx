@@ -1,124 +1,189 @@
-"use client";
+'use client';
 
+import { DetailHeader } from '@/components/custom/DetailHeader';
+import { MedicineActionPlan } from '@/components/pages/my-medicines/MedicineActionPlan';
+import { MedicineItem } from '@/components/pages/my-medicines/MedicineItem';
+import { Button } from '@/components/ui/button';
+import { usePrescriptionDetail } from '@/queries/usePrescriptionDetail';
 import {
-    Pill,
-    ChevronLeft,
-    Loader2,
     AlertCircle,
-    Stethoscope,
     Calendar as CalendarIcon,
+    ExternalLink,
     FileText,
-} from "lucide-react";
-import { usePrescriptionDetail } from "@/queries/usePrescriptionDetail";
-import { MedicineItem } from "@/components/pages/my-medicines/MedicineItem";
-import { MedicineActionPlan } from "@/components/pages/my-medicines/MedicineActionPlan";
-import { Button } from "@/components/ui/button";
-import { motion } from "motion/react";
+    Loader2,
+    Pill,
+    Stethoscope,
+} from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface MedicineDetailViewProps {
     prescriptionId: string;
     onBack: () => void;
     symptoms?: string;
-    showHeader?: boolean;
+    showTopHeader?: boolean;
+    showDoctorHead?: boolean;
+    cardGrid?: string;
+    footerActionGrid?: string;
+    doctorUserId?: string;
 }
 
-export const MedicineDetailView = ({ prescriptionId, onBack, symptoms, showHeader = true }: MedicineDetailViewProps) => {
+export const MedicineDetailView = ({
+    prescriptionId,
+    onBack,
+    symptoms,
+    showTopHeader = true,
+    showDoctorHead = true,
+    cardGrid = 'grid-cols-1 gap-6',
+    footerActionGrid = 'grid-cols-1 gap-6',
+    doctorUserId,
+}: MedicineDetailViewProps) => {
     const {
         data: detailResponse,
         isLoading: isDetailLoading,
         isError: isDetailError,
         error: detailError,
     } = usePrescriptionDetail(prescriptionId);
-
     return (
         <div className="space-y-8 animate-in max-w-5xl  mx-auto fade-in slide-in-from-bottom-4 duration-500">
-            {showHeader && (
-                <header className="flex items-center gap-6">
-                    <button
-                        onClick={onBack}
-                        className="p-3 hover:bg-surface-container rounded-2xl transition-all text-primary"
-                    >
-                        <ChevronLeft className="w-6 h-6" />
-                    </button>
-
-                    <header className="flex gap-6">
-                        <div>
-                            <h1 className="text-3xl font-extrabold tracking-tight text-primary font-headline">Medicine Details</h1>
-                            <p className="text-on-surface-variant font-medium">
-                                {symptoms || "Detailed information about your prescription."}
-                            </p>
-                        </div>
-                    </header>
-                </header>
+            {showTopHeader && (
+                <DetailHeader
+                    title="Medicine Details"
+                    subtitle="Detailed information about your prescription."
+                    onBack={onBack}
+                />
             )}
-
             {isDetailLoading ? (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4">
                     <Loader2 className="w-10 h-10 text-primary animate-spin" />
-                    <p className="text-on-surface-variant font-medium">Loading details...</p>
+                    <p className="text-on-surface-variant font-medium">
+                        Loading details...
+                    </p>
                 </div>
             ) : isDetailError || !detailResponse?.success ? (
                 <div className="text-center py-20 bg-destructive/5 rounded-[2rem] border border-dashed border-destructive/20 space-y-4">
                     <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
-                    <h3 className="text-xl font-bold text-destructive">Failed to load details</h3>
+                    <h3 className="text-xl font-bold text-destructive">
+                        Failed to load details
+                    </h3>
                     <p className="text-on-surface-variant max-w-md mx-auto">
-                        {detailError?.message || "There was an error fetching medication details."}
+                        {detailError?.message ||
+                            'There was an error fetching medication details.'}
                     </p>
-                    <Button onClick={onBack} variant="outline">Go Back</Button>
+                    <Button onClick={onBack} variant="outline">
+                        Go Back
+                    </Button>
                 </div>
             ) : (
                 <div className="space-y-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10"
-                    >
-                        <div className="space-y-8">
-                            <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-outline-variant/10">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl">
-                                        <Stethoscope className="w-8 h-8" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-0.5">Doctor</p>
-                                        <p className="text-xl font-bold text-primary">{detailResponse.data.doctor_name}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <div className="p-4 bg-surface-container-low rounded-2xl text-on-surface-variant/50">
-                                        <CalendarIcon className="w-8 h-8" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-0.5">Duration</p>
-                                        <p className="text-xl font-bold text-primary">{detailResponse.data.medicines[0]?.date || "N/A"}</p>
-                                    </div>
-                                </div>
-                                {detailResponse.data.pdf_url && (
-                                    <Button asChild variant="outline" className="rounded-2xl border-primary/20 h-14 px-6 gap-2 hover:bg-primary/5">
-                                        <a href={detailResponse.data.pdf_url} target="_blank" rel="noopener noreferrer">
-                                            <FileText className="w-5 h-5 text-primary" />
-                                            <span className="font-bold text-primary">View PDF</span>
-                                        </a>
-                                    </Button>
+                    {detailResponse.data.medicines.length > 1 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white rounded-[2.5rem] p-5 sm:p-8 shadow-sm border border-outline-variant/10"
+                        >
+                            <div className="space-y-8">
+                                {showDoctorHead && (
+                                    <>
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-8 border-b border-outline-variant/10">
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-3 sm:p-4 bg-emerald-50 text-emerald-600 rounded-2xl shrink-0">
+                                                    <Stethoscope className="w-7 h-7 sm:w-8 h-8" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-0.5">
+                                                        Doctor
+                                                    </p>
+                                                    <p className="text-lg sm:text-xl font-bold text-primary leading-tight">
+                                                        {
+                                                            detailResponse.data
+                                                                .doctor_name
+                                                        }
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-3 sm:p-4 bg-surface-container-low rounded-2xl text-on-surface-variant/50 shrink-0">
+                                                    <CalendarIcon className="w-7 h-7 sm:w-8 h-8" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60 mb-0.5">
+                                                        Prescribed at
+                                                    </p>
+                                                    <p className="text-lg sm:text-xl font-bold text-primary leading-tight">
+                                                        {detailResponse.data
+                                                            .medicines[0]
+                                                            ?.date || 'N/A'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            {detailResponse.data.pdf_url && (
+                                                <Button
+                                                    asChild
+                                                    variant="outline"
+                                                    className="rounded-2xl border-primary/20 h-12 sm:h-14 px-5 sm:px-6 gap-2 hover:bg-primary/5 w-full sm:w-auto"
+                                                >
+                                                    <a
+                                                        href={
+                                                            detailResponse.data
+                                                                .pdf_url
+                                                        }
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <FileText className="w-5 h-5 text-primary" />
+                                                        <span className="font-bold text-primary">
+                                                            View PDF
+                                                        </span>
+                                                    </a>
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </>
                                 )}
-                            </div>
-                            <div className="space-y-6">
-                                <h3 className="text-xl font-bold text-primary font-headline flex items-center gap-2">
-                                    <Pill className="w-6 h-6" />
-                                    Prescribed Medicines
-                                </h3>
-                                <div className="grid grid-cols-1 gap-4">
-                                    {detailResponse.data.medicines.map((med, idx) => (
-                                        <MedicineItem key={idx} medicine={med} />
-                                    ))}
+
+                                <div className="space-y-6">
+                                    <div className="flex justify-between">
+                                        <h3 className="text-xl font-bold text-primary font-headline flex items-center gap-2">
+                                            <Pill className="w-6 h-6" />
+                                            Prescribed Medicines
+                                        </h3>
+                                        {!showDoctorHead &&
+                                            detailResponse.data.pdf_url && (
+                                                <a
+                                                    href={
+                                                        detailResponse.data
+                                                            .pdf_url
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2  text-primary px-5 py-2.5 rounded-lg font-bold text-sm  outline transition-all whitespace-nowrap"
+                                                >
+                                                    <span className="font-bold text-primary flex items-center gap-2">
+                                                        View PDF{' '}
+                                                        <ExternalLink className="w-5 h-5" />
+                                                    </span>
+                                                </a>
+                                            )}
+                                    </div>
+                                    <div className={`grid ${cardGrid}`}>
+                                        {detailResponse.data.medicines.map(
+                                            (med, idx) => (
+                                                <MedicineItem
+                                                    key={idx}
+                                                    medicine={med}
+                                                />
+                                            ),
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    )}
                     <MedicineActionPlan
                         conclusion={detailResponse.data.instructions_by_doctor}
                         nextVisitDate={detailResponse.data.next_visit_date}
-                        doctor_id={detailResponse.data.doctor_id}
+                        doctor_id={doctorUserId || detailResponse.data.doctor_id}
+                        footerActionGridClassName={footerActionGrid}
                     />
                 </div>
             )}

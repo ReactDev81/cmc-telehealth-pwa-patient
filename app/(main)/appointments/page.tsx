@@ -22,7 +22,6 @@ const AppointmentsPage = () => {
 
     const handleManageAppointment = (appointmentId: string) => {
         setSelectedAppointment(appointmentId);
-        // console.log('Manage appointment:', appointmentId);
     };
 
     const handleViewDetails = (id: string) => {

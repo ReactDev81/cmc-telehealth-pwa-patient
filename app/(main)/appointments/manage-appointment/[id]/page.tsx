@@ -51,7 +51,6 @@ export default function ManageAppointment({ params }: PageProps) {
     const { mutate: deleteReport } = useDeleteMedicalReport();
     const { mutate: cancelAppointment, isPending: isCancelling } = useCancelAppointment();
 
-    // console.log('data', data);
 
     const [reports, setReports] = useState<Report[]>([]);
     const [note, setNote] = useState('');

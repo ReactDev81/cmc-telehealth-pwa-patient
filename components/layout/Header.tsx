@@ -58,7 +58,7 @@ export function Header() {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
+            setIsDesktop(window.innerWidth >= 1200); // lg breakpoint
         };
         handleResize();
         window.addEventListener("resize", handleResize);
@@ -282,7 +282,7 @@ export function Header() {
 
                                             <Separator className="my-4" />
 
-                                            <nav className="flex flex-col gap-2">
+                                            <nav className="flex flex-col gap-2 p-5">
                                                 {navItems.map((item) => (
                                                     <Link
                                                         key={item.href}

@@ -41,7 +41,6 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
 
     const { data, error, isLoading, refetch } = useDoctorDetail(id);
     const doctor = data?.data;
-
     const handleBookingSuccess = (appointmentId: string) => {
         setDialogState({
             open: true,

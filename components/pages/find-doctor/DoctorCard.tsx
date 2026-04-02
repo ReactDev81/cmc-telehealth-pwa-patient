@@ -13,22 +13,11 @@ interface DoctorCardProps {
 
 const DoctorCard = ({ doctor, onBook, onError, onSuccess, isLoading = false }: DoctorCardProps) => {
   const router = useRouter();
-  // const handleBookNow = () => {
-  //   try {
-  //     // Add your booking logic here
-  //     onBook();
-  //     onSuccess?.();
-  //   } catch (error) {
-  //     onError?.();
-  //   }
-  //   router.push(`/find-doctors/${doctor.id}`);
-  // };
 
   const handleBookNow = () => {
     router.push(`/find-doctors/${doctor.id}`);
   };
 
-  console.log("doctor : ", doctor.speciality);
 
   return (
     <div className="bg-surface-container-lowest p-6 rounded-3xl shadow-sm border border-outline-variant/10 hover:shadow-md transition-shadow group">

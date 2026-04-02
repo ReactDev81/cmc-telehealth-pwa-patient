@@ -42,9 +42,9 @@ export const MedicineCard = ({ prescription, status, onViewDetail }: MedicineCar
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <Badge
                 variant="secondary"
-                className="p-4 bg-surface-container-low rounded-xl font-semibold text-sm border-none transition-colors"
+                className="p-3 md:p-4 bg-surface-container-low rounded-xl font-semibold text-sm border-none transition-colors"
               >
-                <User className="w-6 h-6 mr-1 text-muted-foreground/80" />
+                <User className="w-5 h-5 md:w-6 md:h-6 mr-1 text-muted-foreground/80" />
                 {prescription.doctor_name}
               </Badge>
 
@@ -52,10 +52,10 @@ export const MedicineCard = ({ prescription, status, onViewDetail }: MedicineCar
               <Badge
                 variant="secondary"
                 className={cn(
-                  "p-4 bg-surface-container-low rounded-xl font-semibold text-sm border-none transition-colors",
+                  "p-3 md:p-4 bg-surface-container-low rounded-xl font-semibold text-sm border-none transition-colors",
                 )}
               >
-                <Calendar className="w-6 h-6 mr-1 text-muted-foreground/80" />
+                <Calendar className="w-5 h-5 md:w-6 md:h-6 mr-1 text-muted-foreground/80" />
                 {prescription.timing || "Prescribed"}
               </Badge>
             </div>

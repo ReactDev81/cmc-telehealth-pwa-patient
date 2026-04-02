@@ -22,7 +22,7 @@ export function Advertisements({ ads }: AdvertisementsProps) {
   }
 
   return (
-    <section className="mt-8 bg-[#103228] w-full py-6 px-4 md:px-8 rounded-xl flex flex-col shadow-sm max-w-full overflow-hidden">
+    <section className="mt-8 bg-primary w-full py-6 px-4 md:px-8 rounded-xl flex flex-col shadow-sm max-w-full overflow-hidden">
       <h3 className="text-lg md:text-xl font-semibold text-white mb-6">
         Safe & Advanced Surgical Care
       </h3>

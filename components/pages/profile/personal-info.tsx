@@ -18,11 +18,6 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
 
     const { updateUser } = useAuth();
 
-    // console.log(" user data:", user);
-
-
-    // console.log("user.id:", user.id);
-
     const [formData, setFormData] = useState({
         first_name: user?.first_name || "",
         last_name: user?.last_name || "",
@@ -42,7 +37,7 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
                 first_name: user.first_name || "",
                 last_name: user.last_name || "",
                 email: user.email || "",
-                mobile_no: user.mobile_no || "", 
+                mobile_no: user.mobile_no || "",
                 date_of_birth: user.date_of_birth || "",
                 bio: user.bio || "",
                 avatar: user?.avatar || "",
@@ -94,29 +89,6 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
 
             const response = await updatePatientPersonalInfo(user.id, payload);
 
-            console.log("PERSONAL RESPONSE:", response);
-
-            // ✅ sirf personal data update hoga
-// =======
-//             // console.log("PERSONAL RESPONSE:", personalRes);
-
-//             // 🔥 2. ADDRESS UPDATE (NEW)
-//             const addressPayload = {
-//                 group: "address",
-//                 address: user?.address?.address || "",
-//                 area: user?.address?.area || "",
-//                 landmark: user?.address?.landmark || "",
-//                 city: user?.address?.city || "",
-//                 state: user?.address?.state || "",
-//                 pincode: user?.address?.pincode || "",
-//             };
-
-//             const addressRes = await updatePatientPersonalInfo(user.id, addressPayload);
-
-//             // console.log("ADDRESS RESPONSE:", addressRes);
-
-//             // ✅ CONTEXT UPDATE (MERGE BOTH)
-// >>>>>>> Stashed changes
             await updateUser({
                 ...user,
                 ...response,

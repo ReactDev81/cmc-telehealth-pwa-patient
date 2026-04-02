@@ -84,7 +84,6 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
                 setLoading(true);
                 const { id } = await params;
                 const data = await fetchTransactionById(id, "");
-                console.log("detail data", data);
                 setTransaction(data);
             } catch (err: any) {
                 console.error("Failed to fetch transaction:", err);

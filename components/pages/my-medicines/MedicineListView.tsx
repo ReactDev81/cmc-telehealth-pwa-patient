@@ -29,7 +29,7 @@ export const MedicineListView = ({ onViewDetail }: MedicineListViewProps) => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <header>
                 <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary mb-2 font-headline">
-                    My Medicines
+                    Medicines
                 </h1>
                 <p className="text-on-surface-variant text-lg">
                     Track your current and past medications.

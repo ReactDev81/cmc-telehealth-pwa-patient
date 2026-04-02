@@ -244,10 +244,7 @@ export default function Notifications() {
                         <Card
                             key={item.id}
                             className={`group hover:shadow-md transition-all rounded-4xl duration-300 cursor-pointer ${!item.is_read ? 'bg-muted/5' : ''}`}
-                            onClick={() => {
-                                console.log("View notification:", item.id);
-                                // router.push(`/notifications/${item.id}`);
-                            }}
+                            onClick={() => { }}
                         >
                             <CardContent className="p-4 relative">
                                 <div className="relative flex items-start gap-4">

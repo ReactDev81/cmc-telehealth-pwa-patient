@@ -10,7 +10,6 @@ export default function Page() {
     const [page, setPage] = useState(1);
 
     const { data, isLoading, isError, isFetching } = useMyReviews(page);
-
     const reviews = data?.data ?? [];
     const pagination = data?.pagination;
 
@@ -44,9 +43,9 @@ export default function Page() {
 
             {/* Reviews */}
             <div className="space-y-10">
+
                 {reviews.map((review) => (
-                    console.log(review),
-                    
+
                     <div key={review.id} className="border-b pb-8">
 
                         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
@@ -59,7 +58,7 @@ export default function Page() {
                                 />
 
                                 <div>
-                                        <h2 className="text-xl font-semibold">
+                                    <h2 className="text-xl font-semibold">
                                         Dr. {review.doctor_name}
                                     </h2>
                                     <p className="text-sm text-muted-foreground">
@@ -79,7 +78,7 @@ export default function Page() {
                                     ))}
                                 </div>
 
-                                    <p className="text-sm font-bold text-muted-foreground mt-1">
+                                <p className="text-sm font-bold text-muted-foreground mt-1">
                                     Visited: {review.created_at}
                                 </p>
                             </div>
@@ -91,7 +90,7 @@ export default function Page() {
                         </p>
 
                         {/* Content */}
-                            <p className="mt-4 text-muted-foreground text-lg italic whitespace-pre-line">
+                        <p className="mt-4 text-muted-foreground text-lg italic whitespace-pre-line">
                             "{review.content}"
                         </p>
                     </div>
