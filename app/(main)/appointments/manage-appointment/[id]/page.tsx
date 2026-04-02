@@ -226,6 +226,8 @@ export default function ManageAppointment({ params }: PageProps) {
                 <ReportsAndNotes
                     reports={reports}
                     note={note}
+                    doctorId={appointment?.doctor?.id}
+                    appointmentId={appointmentId}
                     activeMenu={activeMenu}
                     setActiveMenu={setActiveMenu}
                     onAddReport={() => setShowAddReport(true)}

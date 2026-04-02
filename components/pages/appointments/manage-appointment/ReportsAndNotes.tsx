@@ -1,11 +1,18 @@
 "use client"
+import { useState } from 'react';
 import { FileText, Plus, MoreVertical, Eye, Edit3, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Report } from '@/types/medical-reports';
+import { SlotItem } from '@/types/slots';
+import { toast } from 'sonner';
+import RescheduleDialog from './RescheduleDialog';
+import { useRescheduleAppointment } from '@/mutations/useRescheduleAppointment';
 
 interface ReportsAndNotesProps {
     reports: Report[];
     note: string;
+    doctorId?: string;
+    appointmentId?: string;
     activeMenu: string | null;
     setActiveMenu: (id: string | null) => void;
     onAddReport: () => void;
@@ -17,6 +24,8 @@ interface ReportsAndNotesProps {
 export default function ReportsAndNotes({
     reports,
     note,
+    doctorId,
+    appointmentId,
     activeMenu,
     setActiveMenu,
     onAddReport,
@@ -24,6 +33,45 @@ export default function ReportsAndNotes({
     onEditReport,
     onDeleteReport
 }: ReportsAndNotesProps) {
+    const [showRescheduleDialog, setShowRescheduleDialog] = useState(false);
+    const rescheduleMutation = useRescheduleAppointment();
+
+    const handleRescheduleClick = () => {
+        if (!doctorId) {
+            toast.error('Doctor information not available');
+            return;
+        }
+        setShowRescheduleDialog(true);
+    };
+
+    const handleConfirmReschedule = (slot: SlotItem, callbacks: { onSuccess: (message: string) => void, onError: (message: string) => void }) => {
+        if (!appointmentId) {
+            callbacks.onError('Appointment ID not available');
+            return;
+        }
+
+        const payload = {
+            appointment_id: appointmentId,
+            availability_id: slot.id,
+            appointment_date: slot.date,
+            appointment_time: slot.booking_start_time
+        };
+
+        rescheduleMutation.mutate(payload, {
+            onSuccess: (data) => {
+                const message = data.message || 'Appointment rescheduled successfully';
+                callbacks.onSuccess(message);
+            },
+            onError: (error: any) => {
+                // console.error('Reschedule error:', error?.response?.data);
+                const errorMessage = error?.response?.data?.errors?.message 
+                    || error?.response?.data?.message 
+                    || 'Failed to reschedule appointment';
+                callbacks.onError(errorMessage);
+            }
+        });
+    };
+
     return (
         <div className="lg:col-span-5 space-y-8">
             <motion.div
@@ -128,7 +176,10 @@ export default function ReportsAndNotes({
 
             {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-4">
-                <button className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/10 hover:opacity-90 transition-all">
+                <button
+                    onClick={handleRescheduleClick}
+                    className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
+                >
                     Reschedule
                 </button>
                 <button
@@ -137,6 +188,16 @@ export default function ReportsAndNotes({
                     Cancel
                 </button>
             </div>
+
+            {/* Reschedule Dialog */}
+            <RescheduleDialog
+                isOpen={showRescheduleDialog}
+                onClose={() => setShowRescheduleDialog(false)}
+                doctorId={doctorId || ''}
+                appointmentId={appointmentId}
+                onConfirmReschedule={handleConfirmReschedule}
+                isLoading={rescheduleMutation.isPending}
+            />
         </div>
     );
 }
