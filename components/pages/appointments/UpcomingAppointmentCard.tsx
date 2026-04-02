@@ -62,12 +62,16 @@ const UpcomingAppointmentCard = ({
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                        <div className="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded-lg">
-                            <Star className="w-3 h-3 fill-primary text-primary" />
-                            <span className="text-xs font-bold text-primary">{doctor?.rating}</span>
+
+                    {doctor?.rating !== 0 &&
+                        <div className="flex flex-col items-end gap-2">
+                            <div className="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded-lg">
+                                <Star className="w-3 h-3 fill-primary text-primary" />
+                                <span className="text-xs font-bold text-primary">{doctor?.rating}</span>
+                            </div>
                         </div>
-                    </div>
+                    }
+
                 </div>
 
                 <div className="bg-surface-container-lowest/50 rounded-2xl p-4 border border-outline-variant/5 mb-4">

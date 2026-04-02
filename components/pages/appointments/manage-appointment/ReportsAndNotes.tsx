@@ -19,6 +19,7 @@ interface ReportsAndNotesProps {
     onViewReport: (report: Report) => void;
     onEditReport: (report: Report) => void;
     onDeleteReport: (id: string) => void;
+    onCancel?: () => void;
 }
 
 export default function ReportsAndNotes({
@@ -31,7 +32,8 @@ export default function ReportsAndNotes({
     onAddReport,
     onViewReport,
     onEditReport,
-    onDeleteReport
+    onDeleteReport,
+    onCancel
 }: ReportsAndNotesProps) {
     const [showRescheduleDialog, setShowRescheduleDialog] = useState(false);
     const rescheduleMutation = useRescheduleAppointment();
@@ -101,7 +103,7 @@ export default function ReportsAndNotes({
                 ) : (
                     <div className="space-y-4">
                         {reports.map((report, index) => (
-                            <div key={report.id || `report-${index}`} className="p-5 bg-surface-container-low/30 rounded-3xl border border-outline-variant/5 relative">
+                            <div key={`report-${report.id || index}`} className="p-5 bg-surface-container-low/30 rounded-3xl border border-outline-variant/5 relative">
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
                                         <h4 className="font-bold text-primary text-sm mb-1">{report.title}</h4>
@@ -118,6 +120,7 @@ export default function ReportsAndNotes({
                                         <AnimatePresence>
                                             {activeMenu === report.id && (
                                                 <motion.div
+                                                    key={`report-menu-${report.id || index}`}
                                                     initial={{ opacity: 0, scale: 0.95, y: -10 }}
                                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -183,6 +186,7 @@ export default function ReportsAndNotes({
                     Reschedule
                 </button>
                 <button
+                    onClick={onCancel}
                     className="py-4 bg-white text-primary border border-outline-variant/20 rounded-full font-bold text-sm hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-sm"
                 >
                     Cancel

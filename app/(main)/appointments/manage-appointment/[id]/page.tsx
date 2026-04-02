@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Report } from '@/types/medical-reports';
 import { useAppointmentDetail } from '@/queries/useAppointmentSummary';
 import { useUpdateAppointmentInformation, useDeleteMedicalReport } from '@/queries/useManageAppointment';
+import { useCancelAppointment } from '@/mutations/useCancelAppointment';
 import { toast } from 'sonner';
 import { useMedicalReports } from '@/queries/useGetMedicalReports';
 import { useAuth } from '@/context/userContext';
@@ -16,6 +17,7 @@ import DoctorInfoCard from '@/components/pages/appointments/manage-appointment/D
 import AppointmentInfo from '@/components/pages/appointments/manage-appointment/AppointmentInfo';
 import ReportsAndNotes from '@/components/pages/appointments/manage-appointment/ReportsAndNotes';
 import AddReportModal from '@/components/pages/appointments/manage-appointment/AddReportModal';
+import CancelConfirmationModal from '@/components/pages/appointments/manage-appointment/CancelConfirmationModal';
 
 interface PageProps {
     params: Promise<{
@@ -47,6 +49,7 @@ export default function ManageAppointment({ params }: PageProps) {
     // Mutations
     const { mutate: updateInformation, isPending: isUpdatingInfo } = useUpdateAppointmentInformation();
     const { mutate: deleteReport } = useDeleteMedicalReport();
+    const { mutate: cancelAppointment, isPending: isCancelling } = useCancelAppointment();
 
     // console.log('data', data);
 
@@ -169,6 +172,20 @@ export default function ManageAppointment({ params }: PageProps) {
         });
     };
 
+    const handleConfirmCancel = () => {
+        cancelAppointment(appointmentId, {
+            onSuccess: () => {
+                toast.success('Appointment cancelled successfully');
+                setShowCancelConfirm(false);
+                router.push('/appointments');
+            },
+            onError: (err) => {
+                toast.error('Failed to cancel appointment');
+                console.error('Cancel appointment error:', err);
+            }
+        });
+    };
+
     const handleModalSubmit = (newNote: string) => {
         updateInformation({
             appointmentId,
@@ -234,6 +251,7 @@ export default function ManageAppointment({ params }: PageProps) {
                     onViewReport={handleViewReport}
                     onEditReport={setShowEditReport}
                     onDeleteReport={handleDeleteReport}
+                    onCancel={() => setShowCancelConfirm(true)}
                 />
             </div>
 
@@ -242,6 +260,7 @@ export default function ManageAppointment({ params }: PageProps) {
 
                 {/* Add Report Modal */}
                 <AddReportModal
+                    key="add-report-modal"
                     isOpen={showAddReport}
                     onClose={() => setShowAddReport(false)}
                     reports={reports}
@@ -254,9 +273,17 @@ export default function ManageAppointment({ params }: PageProps) {
                     isLoadingReports={isLoadingMedicalReports}
                 />
 
+                <CancelConfirmationModal
+                    key="cancel-confirm-modal"
+                    isOpen={showCancelConfirm}
+                    onClose={() => setShowCancelConfirm(false)}
+                    onConfirm={handleConfirmCancel}
+                    isPending={isCancelling}
+                />
+
                 {/* Edit Report Modal */}
                 {showEditReport && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div key="edit-report-modal" className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -397,45 +424,6 @@ export default function ManageAppointment({ params }: PageProps) {
                     </div>
                 )}
 
-                {/* Cancel Confirmation Modal */}
-                {showCancelConfirm && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowCancelConfirm(false)}
-                            className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-md bg-white rounded-[40px] shadow-2xl overflow-hidden"
-                        >
-                            <div className="p-10 text-center">
-                                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <X className="w-10 h-10 text-red-500" />
-                                </div>
-
-                                <h3 className="text-2xl font-bold font-headline text-primary mb-4 italic">Confirm Cancel</h3>
-                                <p className="text-on-surface-variant text-sm font-medium leading-relaxed mb-10 italic">
-                                    Cancel an existing appointment and free up the scheduled time slot.
-                                </p>
-
-                                <button
-                                    onClick={() => {
-                                        setShowCancelConfirm(false);
-                                        router.back();
-                                    }}
-                                    className="w-full py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-lg italic shadow-lg shadow-primary/10"
-                                >
-                                    Yes
-                                </button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
             </AnimatePresence>
         </div>
     );

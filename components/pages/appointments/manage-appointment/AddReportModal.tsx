@@ -162,7 +162,7 @@ export default function AddReportModal({
                                                 ) : (
                                                     patientReports.map((record, index) => (
                                                         <button
-                                                            key={record.id || `patient-report-${index}`}
+                                                            key={`history-${record.id || index}`}
                                                             onClick={() => handleSelectExisting(record)}
                                                             className="w-full px-6 py-4 text-left hover:bg-surface-container-low border-b border-outline-variant/5 last:border-0 transition-all font-medium text-primary"
                                                         >
@@ -242,7 +242,7 @@ export default function AddReportModal({
 
                         <div className="space-y-3 pt-4">
                             {reports.map((report, index) => (
-                                <div key={report.id || `attached-report-${index}`} className="p-4 border border-primary rounded-2xl flex items-center justify-between group">
+                                <div key={`upload-${report.id || index}`} className="p-4 border border-primary rounded-2xl flex items-center justify-between group">
                                     <div>
                                         <h4 className="font-bold text-primary">{report.title}</h4>
                                         <p className="text-xs text-on-surface-variant/60 font-medium">

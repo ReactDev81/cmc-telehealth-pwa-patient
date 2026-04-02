@@ -1,4 +1,3 @@
-// app/appointments/page.tsx (updated with pagination)
 'use client';
 import { useState } from 'react';
 import UpcomingAppointmentCard from '@/components/pages/appointments/UpcomingAppointmentCard';
@@ -12,6 +11,7 @@ import { AppointmentResponse } from '@/types/appointment';
 import { useRouter } from 'next/navigation';
 
 const AppointmentsPage = () => {
+
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedAppointment, setSelectedAppointment] = useState<string | null>(null);
@@ -24,8 +24,6 @@ const AppointmentsPage = () => {
         setSelectedAppointment(appointmentId);
         // console.log('Manage appointment:', appointmentId);
     };
-
-   
 
     const handleViewDetails = (id: string) => {
         router.push(`/appointments/appoitment-detail/${id}`);
@@ -109,23 +107,10 @@ const AppointmentsPage = () => {
         </div>
     );
 
-    // Filter appointments based on status
-    const filterAppointments = (appointments: AppointmentResponse[] | undefined, tab: 'upcoming' | 'past') => {
-        if (!appointments) return [];
-
-        if (tab === 'upcoming') {
-            return appointments.filter(app =>
-                app.status === 'upcoming' ||
-                app.status === 'confirmed' ||
-                app.can_start_consultation === true
-            );
-        }
-
-        return appointments.filter(app =>
-            app.status === 'completed' ||
-            app.status === 'cancelled' ||
-            app.status === 'failed'
-        );
+    // Filter appointments based on active tab
+    // The API already handles filtering by "upcoming" or "past", so we just return the full list
+    const filterAppointments = (appointments: AppointmentResponse[] | undefined) => {
+        return appointments || [];
     };
 
     // Upcoming Tab Content
@@ -133,7 +118,7 @@ const AppointmentsPage = () => {
         if (isLoading) return <LoadingState />;
         if (isError) return <ErrorState />;
 
-        const upcomingApps = filterAppointments(data?.data, 'upcoming');
+        const upcomingApps = filterAppointments(data?.data);
         const pagination = data?.pagination;
 
         if (upcomingApps.length === 0 && (!pagination || pagination.total === 0)) {
@@ -181,7 +166,7 @@ const AppointmentsPage = () => {
         if (isLoading) return <LoadingState />;
         if (isError) return <ErrorState />;
 
-        const pastApps = filterAppointments(data?.data, 'past');
+        const pastApps = filterAppointments(data?.data);
         const pagination = data?.pagination;
 
         if (pastApps.length === 0 && (!pagination || pagination.total === 0)) {

@@ -56,6 +56,7 @@ export type AppointmentResponse = {
     slug: string;
     status: string;
     status_label: string;
+    notes?: string;
     can_start_consultation: boolean;
     can_cancel: boolean;
     can_reschedule: boolean;
