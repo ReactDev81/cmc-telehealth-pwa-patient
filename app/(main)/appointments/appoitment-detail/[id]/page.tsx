@@ -32,9 +32,6 @@ export default function AppointmentDetailPage() {
     const [loading, setLoading] = useState(true);
 
 
-    console.log("full data", data);
-
-
 
     useEffect(() => {
         const getData = async () => {

@@ -27,7 +27,6 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    console.log('AppointmentId', AppointmentId)
 
     // Get appointment data from URL search params
     const appointmentData = {
@@ -54,16 +53,12 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
     const { data, isLoading, error } = useAppointmentDetail(AppointmentId);
 
     const doctor = data?.data;
-    console.log("doctor : ", doctor);
 
     const patient = data?.data?.patient;
-    console.log("patient : ", patient);
 
     const Data: AppointmentDetailData | undefined = data?.data;
-    console.log("Data : ", Data);
 
     const schedule = data?.data?.schedule;
-    console.log("schedule : ", schedule);
     
 
     const handleConfirmBooking = async () => {

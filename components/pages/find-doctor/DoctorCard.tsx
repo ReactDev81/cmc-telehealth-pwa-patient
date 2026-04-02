@@ -96,7 +96,7 @@ const DoctorCard = ({ doctor, onBook, onError, onSuccess, isLoading = false }: D
               Consultation Fee
             </p>
             <p className="text-lg font-bold text-primary-container">
-              ${doctor.consultation_fee}
+              ₹{doctor.consultation_fee}
             </p>
           </div>
         </div>
