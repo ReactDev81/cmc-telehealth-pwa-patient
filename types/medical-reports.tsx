@@ -18,12 +18,25 @@ export interface MedicalRecord {
     fileUrl?: string;
 }
 
+export interface MedicalReportDoctor {
+    id: string;
+    name: string;
+    first_name: string;
+    last_name: string;
+    appoinment_id?: string;
+}
+
 export interface MedicalReport {
     id: string;
     report_name: string;
+    report_type: string;
     type_label: string;
+    report_date: string;
     report_date_formatted: string;
     file_url: string;
+    file_name: string;
+    status: string;
+    doctor: MedicalReportDoctor;
 }
 
 export interface Pagination {

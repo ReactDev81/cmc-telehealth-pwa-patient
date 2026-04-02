@@ -18,9 +18,11 @@ import {
     Mail,
     Stethoscope,
     Pill,
-    Loader2
+    Loader2,
+    ChevronLeft
 } from "lucide-react";
 import { getStatusColor } from "@/src/utils/getStatusColor";
+import { DetailHeader } from "@/components/custom/DetailHeader";
 
 export default function AppointmentDetailPage() {
     const { id } = useParams();
@@ -57,27 +59,16 @@ export default function AppointmentDetailPage() {
 
     const { doctor, schedule, patient, payment, medical_reports, notes } = data;
 
-    console.log("doctor data", doctor);
 
 
     return (
         <div className="min-h-screen bg-gray-50 px-4">
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-8xl mx-auto">
 
-                {/* Back Button */}
-                <button
-                    onClick={() => router.back()}
-                    className="flex items-center gap-2 mb-4 text-gray-600 hover:text-black transition-colors"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span className="text-sm">Back</span>
-                </button>
-
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900">Manage Appointment</h1>
-                    <p className="text-gray-500 text-sm mt-1">Appointment Details</p>
-                </div>
+                <DetailHeader
+                    title="Manage Appointment"
+                    subtitle="Appointment Details"
+                />
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -236,39 +227,39 @@ export default function AppointmentDetailPage() {
                             <FileText className="w-5 h-5 text-emerald-600" />
                             Medical Reports
                         </h3>
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 gap-6">
 
                             {medical_reports?.length > 0 && (
-                                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                                <div className="bg-white rounded-2xl grid grid-cols-3 gap-6 p-6 shadow-sm border border-gray-100">
 
-                                    <div className="space-y-3">
-                                        {medical_reports.map((report: any) => (
-                                            <div
-                                                key={report.id}
-                                                className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                                                        <File className="w-5 h-5 text-emerald-600" />
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-medium text-gray-900">{report.title}</p>
-                                                        <p className="text-xs text-gray-500">
-                                                            {report.type_label} • {report.report_date_formatted}
-                                                        </p>
-                                                    </div>
+                                    {/* <div className="space-y-3"> */}
+                                    {medical_reports.map((report: any) => (
+                                        <div
+                                            key={report.id}
+                                            className="flex items-center justify-between p-3 bg-gray-50 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                                                    <File className="w-5 h-5 text-emerald-600" />
                                                 </div>
-                                                <a
-                                                    href={report.file_url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-emerald-600 hover:text-emerald-700 transition-colors"
-                                                >
-                                                    <Eye className="w-5 h-5" />
-                                                </a>
+                                                <div>
+                                                    <p className="font-medium text-gray-900">{report.title}</p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {report.type_label} • {report.report_date_formatted}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        ))}
-                                    </div>
+                                            <a
+                                                href={report.file_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-emerald-600 hover:text-emerald-700 transition-colors"
+                                            >
+                                                <Eye className="w-5 h-5" />
+                                            </a>
+                                        </div>
+                                    ))}
+                                    {/* </div> */}
                                 </div>
                             )}
                         </div>

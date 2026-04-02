@@ -44,7 +44,6 @@ export default function ManageAppointment({ params }: PageProps) {
     const { user } = useAuth();
 
     const { data: medicalReports, isLoading: isLoadingMedicalReports } = useMedicalReports(user?.id);
-
     // Mutations
     const { mutate: updateInformation, isPending: isUpdatingInfo } = useUpdateAppointmentInformation();
     const { mutate: deleteReport } = useDeleteMedicalReport();

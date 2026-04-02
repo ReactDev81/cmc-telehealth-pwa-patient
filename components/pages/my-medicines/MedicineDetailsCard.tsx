@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { MedicineDetailsData } from '@/types/prescriptions';
 import { MedicineItem } from './MedicineItem';
 import { Button } from '@/components/ui/button';
+import { DetailHeader } from '@/components/custom/DetailHeader';
 
 export const MedicineDetailsCard = ({ data, doctorName }: { data: MedicineDetailsData, doctorName?: string }) => {
   const router = useRouter();
@@ -25,19 +26,11 @@ export const MedicineDetailsCard = ({ data, doctorName }: { data: MedicineDetail
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      {/* Header */}
-      <header className="flex items-center gap-6">
-        <button
-          onClick={() => router.back()}
-          className="p-3 hover:bg-surface-container rounded-2xl transition-all text-primary"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-primary font-headline">Medicine Detailsdsfd</h1>
-          <p className="text-on-surface-variant font-medium">Detailed information about your prescription.</p>
-        </div>
-      </header>
+
+      <DetailHeader
+        title="Medicine Details"
+        subtitle="Detailed information about your prescription."
+      />
 
       {/* Main Info Card */}
       <motion.div
