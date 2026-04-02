@@ -37,6 +37,8 @@ export interface AppointmentDoctor {
   years_experience: string;
   department: string;
   review: unknown[];
+  total_reviews: number;
+  average_rating?: number;
 }
 
 export interface AppointmentPayment {

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import InputField from "../../custom/inputfield";
+import MultiSelectField from "../../custom/MultiSelectField";
 import { useCompleteProfile, CompleteProfileResponse } from "@/mutations/auth/useAuthMutations";
 import { toast } from "sonner";
 
@@ -17,6 +18,10 @@ const profileSchema = z.object({
   gender: z.enum(["male", "female", "other"]),
   date_of_birth: z.string().min(1, "Date of birth is required"),
   mobile_no: z.string().min(10, "Valid mobile number is required"),
+  // Health profile fields
+  allergies: z.array(z.string()).optional(),
+  chronic_conditions: z.array(z.string()).optional(),
+  blood_type: z.string().optional(),
   // Optional device info
   expo_push_token: z.string().optional(),
   device_type: z.string().optional(),
@@ -44,6 +49,9 @@ const CompleteProfileStep: React.FC<CompleteProfileStepProps> = ({ email }) => {
       gender: "male",
       date_of_birth: "",
       mobile_no: "",
+      allergies: [],
+      chronic_conditions: [],
+      blood_type: "",
       expo_push_token: "",
       device_type: "web",
       device_name: "browser",
@@ -143,6 +151,76 @@ const CompleteProfileStep: React.FC<CompleteProfileStepProps> = ({ email }) => {
             required
             disabled={isPending}
           />
+
+          {/* Health Profile Section */}
+          <div className="border-t border-border pt-6 mt-6">
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Health Information</h3>
+            
+            <div className="space-y-5">
+              <MultiSelectField
+                name="allergies"
+                label="Allergies"
+                description="Select any allergies you have"
+                options={[
+                  { label: "Penicillin", value: "penicillin" },
+                  { label: "Sulfa drugs", value: "sulfa" },
+                  { label: "Aspirin", value: "aspirin" },
+                  { label: "Latex", value: "latex" },
+                  { label: "Pollen", value: "pollen" },
+                  { label: "Dust mites", value: "dust_mites" },
+                  { label: "Pet dander", value: "pet_dander" },
+                  { label: "Food - Nuts", value: "nuts" },
+                  { label: "Food - Shellfish", value: "shellfish" },
+                  { label: "Food - Eggs", value: "eggs" },
+                  { label: "Food - Dairy", value: "dairy" },
+                ]}
+                disabled={isPending}
+                direction="row"
+              />
+
+              <MultiSelectField
+                name="chronic_conditions"
+                label="Chronic Conditions"
+                description="Select any chronic conditions you have been diagnosed with"
+                options={[
+                  { label: "Diabetes Type 1", value: "diabetes_type1" },
+                  { label: "Diabetes Type 2", value: "diabetes_type2" },
+                  { label: "Hypertension", value: "hypertension" },
+                  { label: "Asthma", value: "asthma" },
+                  { label: "Heart Disease", value: "heart_disease" },
+                  { label: "COPD", value: "copd" },
+                  { label: "Arthritis", value: "arthritis" },
+                  { label: "Thyroid Disorder", value: "thyroid" },
+                  { label: "Kidney Disease", value: "kidney_disease" },
+                  { label: "Liver Disease", value: "liver_disease" },
+                  { label: "Cancer", value: "cancer" },
+                  { label: "Epilepsy", value: "epilepsy" },
+                  { label: "Mental Health Condition", value: "mental_health" },
+                ]}
+                disabled={isPending}
+                direction="row"
+              />
+
+              <div className="flex flex-col space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">Blood Type</label>
+                <select
+                  {...methods.register("blood_type")}
+                  disabled={isPending}
+                  className="flex h-10 w-full rounded-md border border-input bg-accent/30 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">Select blood type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
           <button
             type="submit"

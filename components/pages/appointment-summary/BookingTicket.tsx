@@ -1,16 +1,18 @@
 import ScheduleDetails from './ScheduleDetails';
 import PaymentSummary from './PaymentSummary';
-import type { AppointmentDoctor, AppointmentPayment } from '@/types/appointment-summary';
+import type { AppointmentDoctor, AppointmentPayment, AppointmentSchedule } from '@/types/appointment-summary';
 
 interface BookingTicketProps {
   doctor: AppointmentDoctor;
   payment: AppointmentPayment;
+  schedule?: AppointmentSchedule;
   date: string;
   timeSlot: string;
   consultationType: 'video' | 'in_person';
 }
 
-const BookingTicket = ({ doctor, payment, date, timeSlot, consultationType }: BookingTicketProps) => {
+const BookingTicket = ({ doctor, payment, schedule, date, timeSlot, consultationType }: BookingTicketProps) => {
+  console.log("date : ", schedule?.date_formatted)
   return (
     <div className="bg-white rounded-[40px] shadow-2xl shadow-primary/5 border border-outline-variant/10 overflow-hidden relative">
       {/* Ticket Notch Effects */}
@@ -18,9 +20,9 @@ const BookingTicket = ({ doctor, payment, date, timeSlot, consultationType }: Bo
       <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-surface rounded-full border border-outline-variant/10 z-10"></div>
 
       <ScheduleDetails
-        date={date}
-        timeSlot={timeSlot}
-        consultationType={consultationType}
+        date={schedule?.date_formatted || date}
+        timeSlot={schedule?.time || timeSlot}
+        consultationType={schedule?.consultation_type as 'video' | 'in_person' || consultationType}
       />
 
       <PaymentSummary

@@ -32,7 +32,7 @@ const DoctorInfoCard = ({ doctor }: DoctorInfoCardProps) => {
           </p>
           <div className="flex items-center gap-1 mt-2">
             <span className="text-amber-500">★</span>
-            <span className="text-sm font-medium">{doctor.review?.length || 0} reviews</span>
+            <span className="text-sm font-medium">{doctor.average_rating || 0} ({doctor.total_reviews || 0}) reviews</span>
           </div>
         </div>
       </div>

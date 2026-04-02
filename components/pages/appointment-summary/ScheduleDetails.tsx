@@ -17,6 +17,8 @@ const ScheduleDetails = ({ date, timeSlot, consultationType }: ScheduleDetailsPr
     });
   };
 
+  console.log("schedule date : ", date);
+
   return (
     <div className="p-8 pb-10 border-b border-dashed border-outline-variant/20">
       <div className="flex items-center justify-between mb-8">
@@ -38,7 +40,7 @@ const ScheduleDetails = ({ date, timeSlot, consultationType }: ScheduleDetailsPr
               Date
             </p>
             <p className="text-lg font-bold text-primary">
-              {formatDate(date)}
+              {date}
             </p>
           </div>
         </div>

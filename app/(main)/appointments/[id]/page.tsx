@@ -13,6 +13,7 @@ import CustomDialog from '@/components/custom/Dialogboxs';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { useAppointmentDetail } from '@/queries/useAppointmentSummary';
+import type { AppointmentDetailData } from '@/types/appointment-summary';
 
 interface PageProps {
     params: Promise<{
@@ -53,6 +54,17 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
     const { data, isLoading, error } = useAppointmentDetail(AppointmentId);
 
     const doctor = data?.data;
+    console.log("doctor : ", doctor);
+
+    const patient = data?.data?.patient;
+    console.log("patient : ", patient);
+
+    const Data: AppointmentDetailData | undefined = data?.data;
+    console.log("Data : ", Data);
+
+    const schedule = data?.data?.schedule;
+    console.log("schedule : ", schedule);
+    
 
     const handleConfirmBooking = async () => {
         setIsConfirming(true);
@@ -107,21 +119,22 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
                     {/* Left Column: Doctor & Patient Info */}
                     <div className="lg:col-span-7 space-y-8">
                         <div className="space-y-8">
-                            <DoctorInfoCard doctor={doctor} />
+                            <DoctorInfoCard doctor={doctor.doctor} />
                             <PatientInfoCard
-                                name={appointmentData.patientName}
-                                age={appointmentData.patientAge}
-                                gender={appointmentData.patientGender}
+                                name={patient?.name || ''}
+                                age={patient?.age || 0}
+                                gender={patient?.gender || ''}
                             />
                         </div>
 
-                        <ConsultationModeCard type={appointmentData.consultationType} />
+                        <ConsultationModeCard type={Data?.schedule?.consultation_type as 'video' | 'in_person' || 'video'} />
                     </div>
 
                     {/* Right Column: Booking Ticket */}
                     <div className="lg:col-span-5 space-y-8">
                         <BookingTicket
-                            doctor={doctor}
+                        schedule={schedule}
+                            doctor={doctor.doctor}
                             payment={doctor.payment}
                             date={appointmentData.date}
                             timeSlot={appointmentData.timeSlot}
