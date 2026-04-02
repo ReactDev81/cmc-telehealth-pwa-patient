@@ -12,7 +12,6 @@ interface BookingTicketProps {
 }
 
 const BookingTicket = ({ doctor, payment, schedule, date, timeSlot, consultationType }: BookingTicketProps) => {
-  console.log("date : ", schedule?.date_formatted)
   return (
     <div className="bg-white rounded-[40px] shadow-2xl shadow-primary/5 border border-outline-variant/10 overflow-hidden relative">
       {/* Ticket Notch Effects */}

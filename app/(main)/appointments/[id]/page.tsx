@@ -12,8 +12,10 @@ import LoadingSkeleton from '@/components/pages/appointment-summary/LoadingSkele
 import CustomDialog from '@/components/custom/Dialogboxs';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
-import { useAppointmentDetail } from '@/queries/useAppointmentSummary';
+import { appointmentDetailKeys, useAppointmentDetail } from '@/queries/useAppointmentSummary';
 import type { AppointmentDetailData } from '@/types/appointment-summary';
+import { useVerifyPayment } from '@/mutations/useVerifyPayment';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface PageProps {
     params: Promise<{
@@ -26,7 +28,6 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
     const { id: AppointmentId } = use(params);
     const router = useRouter();
     const searchParams = useSearchParams();
-
 
     // Get appointment data from URL search params
     const appointmentData = {
@@ -50,16 +51,28 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
         description: '',
     });
 
-    const { data, isLoading, error } = useAppointmentDetail(AppointmentId);
-
+    const { data, isLoading, error, refetch } = useAppointmentDetail(AppointmentId);
     const doctor = data?.data;
-
     const patient = data?.data?.patient;
-
     const Data: AppointmentDetailData | undefined = data?.data;
-
     const schedule = data?.data?.schedule;
-    
+
+    const queryClient = useQueryClient();
+    const { mutate: verifyPayment } = useVerifyPayment();
+
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            if ((window as any).Razorpay) return resolve(true);
+
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+
+            document.body.appendChild(script);
+        });
+    };
+
 
     const handleConfirmBooking = async () => {
         setIsConfirming(true);
@@ -74,9 +87,96 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
                 description: 'Your appointment has been successfully booked. You will receive a confirmation email shortly.',
             });
 
-            setTimeout(() => {
-                router.push('/dashboard');
-            }, 2000);
+            const res = await loadRazorpayScript();
+
+            if (!res) {
+                alert("Razorpay SDK failed to load");
+                return;
+            }
+
+            // Validate fields
+            if (!doctor?.razorpay_key_id || !doctor?.razorpay_order_id) {
+                alert("Payment info missing");
+                return;
+            }
+
+            const razorpayKeyId = doctor.razorpay_key_id;
+            const razorpayOrderId = doctor.razorpay_order_id;
+
+            const options = {
+                key: razorpayKeyId,
+                amount: doctor.payment.total, // already in paise
+                currency: "INR",
+                name: "CMC Telehealth",
+                description: doctor?.doctor?.name,
+                order_id: razorpayOrderId,
+
+                handler: async function (response: any) {
+
+                    if (
+                        !response?.razorpay_order_id ||
+                        !response?.razorpay_payment_id ||
+                        !response?.razorpay_signature
+                    ) return;
+
+                    verifyPayment(
+                        {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            appointment_id: doctor?.appointment_id,
+                            razorpay_signature: response.razorpay_signature,
+                        },
+                        {
+                            onSuccess: (res) => {
+                                queryClient.invalidateQueries({
+                                    queryKey: appointmentDetailKeys.detail(AppointmentId),
+                                });
+
+                                refetch();
+
+                                setDialogState({
+                                    open: true,
+                                    type: "success",
+                                    title: "Payment Successful",
+                                    description: "Your appointment is confirmed",
+                                });
+                            },
+                            onError: () => {
+                                setDialogState({
+                                    open: true,
+                                    type: "danger",
+                                    title: "Verification Failed",
+                                    description: "Payment done but verification failed",
+                                });
+                            },
+                        }
+                    );
+                },
+
+                prefill: {
+                    name: patient?.name,
+                    email: patient?.email,
+                    contact: patient?.phone,
+                },
+
+                theme: {
+                    color: "#013220",
+                },
+            };
+
+            const rzp = new (window as any).Razorpay(options);
+
+            rzp.on("payment.failed", function (response: any) {
+                setDialogState({
+                    open: true,
+                    type: "danger",
+                    title: "Payment Failed",
+                    description: response.error.description,
+                });
+            });
+
+            rzp.open();
+
         } catch (error) {
             setDialogState({
                 open: true,
@@ -128,7 +228,7 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
                     {/* Right Column: Booking Ticket */}
                     <div className="lg:col-span-5 space-y-8">
                         <BookingTicket
-                        schedule={schedule}
+                            schedule={schedule}
                             doctor={doctor.doctor}
                             payment={doctor.payment}
                             date={appointmentData.date}

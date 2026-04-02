@@ -17,8 +17,6 @@ const ScheduleDetails = ({ date, timeSlot, consultationType }: ScheduleDetailsPr
     });
   };
 
-  console.log("schedule date : ", date);
-
   return (
     <div className="p-8 pb-10 border-b border-dashed border-outline-variant/20">
       <div className="flex items-center justify-between mb-8">
@@ -29,7 +27,7 @@ const ScheduleDetails = ({ date, timeSlot, consultationType }: ScheduleDetailsPr
           Confirmed
         </div>
       </div>
-      
+
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-surface-container-low rounded-2xl flex items-center justify-center text-primary">
@@ -44,7 +42,7 @@ const ScheduleDetails = ({ date, timeSlot, consultationType }: ScheduleDetailsPr
             </p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-surface-container-low rounded-2xl flex items-center justify-center text-primary">
             <Clock className="w-6 h-6" />
