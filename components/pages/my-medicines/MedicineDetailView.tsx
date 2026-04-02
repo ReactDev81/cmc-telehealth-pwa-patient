@@ -18,9 +18,11 @@ import { motion } from "motion/react";
 interface MedicineDetailViewProps {
     prescriptionId: string;
     onBack: () => void;
+    symptoms?: string;
+    showHeader?: boolean;
 }
 
-export const MedicineDetailView = ({ prescriptionId, onBack }: MedicineDetailViewProps) => {
+export const MedicineDetailView = ({ prescriptionId, onBack, symptoms, showHeader = true }: MedicineDetailViewProps) => {
     const {
         data: detailResponse,
         isLoading: isDetailLoading,
@@ -30,18 +32,25 @@ export const MedicineDetailView = ({ prescriptionId, onBack }: MedicineDetailVie
 
     return (
         <div className="space-y-8 animate-in max-w-5xl  mx-auto fade-in slide-in-from-bottom-4 duration-500">
-            <header className="flex items-center gap-6">
-                <button
-                    onClick={onBack}
-                    className="p-3 hover:bg-surface-container rounded-2xl transition-all text-primary"
-                >
-                    <ChevronLeft className="w-6 h-6" />
-                </button>
-                <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-primary font-headline">Medicine Details</h1>
-                    <p className="text-on-surface-variant font-medium">Detailed information about your prescription.</p>
-                </div>
-            </header>
+            {showHeader && (
+                <header className="flex items-center gap-6">
+                    <button
+                        onClick={onBack}
+                        className="p-3 hover:bg-surface-container rounded-2xl transition-all text-primary"
+                    >
+                        <ChevronLeft className="w-6 h-6" />
+                    </button>
+
+                    <header className="flex gap-6">
+                        <div>
+                            <h1 className="text-3xl font-extrabold tracking-tight text-primary font-headline">Medicine Details</h1>
+                            <p className="text-on-surface-variant font-medium">
+                                {symptoms || "Detailed information about your prescription."}
+                            </p>
+                        </div>
+                    </header>
+                </header>
+            )}
 
             {isDetailLoading ? (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4">

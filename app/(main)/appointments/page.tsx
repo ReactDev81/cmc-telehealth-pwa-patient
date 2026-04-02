@@ -9,6 +9,7 @@ import PaginationControls from '@/components/ui/PaginationControls';
 import { useAppointments } from '@/queries/useAppointments';
 import { Loader2, Calendar } from 'lucide-react';
 import { AppointmentResponse } from '@/types/appointment';
+import { useRouter } from 'next/navigation';
 
 const AppointmentsPage = () => {
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
@@ -17,15 +18,17 @@ const AppointmentsPage = () => {
 
     // Fetch appointments based on active tab and page
     const { data, isLoading, isError, error, refetch } = useAppointments(activeTab, currentPage);
+    const router = useRouter();
 
     const handleManageAppointment = (appointmentId: string) => {
         setSelectedAppointment(appointmentId);
         // console.log('Manage appointment:', appointmentId);
     };
 
-    const handleViewDetails = (appointmentId: string) => {
-        setSelectedAppointment(appointmentId);
-        // console.log('View details:', appointmentId);
+   
+
+    const handleViewDetails = (id: string) => {
+        router.push(`/appointments/appoitment-detail/${id}`);
     };
 
     const handlePageChange = (page: number) => {

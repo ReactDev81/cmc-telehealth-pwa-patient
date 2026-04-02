@@ -38,7 +38,7 @@ export const MedicineItem = ({ medicine }: MedicineItemProps) => {
             </div>
           </div>
         </div>
-        <div className="text-right shrink-0">
+        <div className="text-right">
           <div className="flex items-center justify-end gap-1.5 text-emerald-600 font-bold">
             <Clock className="w-3 h-3" />
             <p className="text-sm uppercase tracking-widest">

@@ -1,6 +1,7 @@
 'use client';
 import { Calendar, Clock, Star, Video, ChevronRight, FileText } from 'lucide-react';
 import { Doctor, Appointment } from '@/types/appointment';
+import { useRouter } from 'next/navigation';
 
 interface PastAppointmentCardProps {
     appointment: Appointment;
@@ -31,6 +32,13 @@ const PastAppointmentCard = ({
                 return 'bg-gray-100 text-gray-800';
         }
     };
+
+    const router = useRouter();
+
+    const handleViewDetails = (id: string) => {
+        router.push(`/appointments/${id}`);
+    }; 
+    console.table(appointment);
 
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">

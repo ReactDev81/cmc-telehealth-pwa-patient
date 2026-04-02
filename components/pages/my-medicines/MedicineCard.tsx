@@ -24,7 +24,7 @@ export const MedicineCard = ({ prescription, status, onViewDetail }: MedicineCar
       transition={{ duration: 0.3 }}
       className="w-full"
     >
-      <Card className="rounded-[2rem] p-5 shadow-sm border border-outline-variant/5 bg-white hover:shadow-md transition-all group overflow-hidden">
+      <Card className="rounded-3xl p-5 shadow-sm border border-outline-variant/5 bg-white hover:shadow-md transition-all group overflow-hidden">
         <CardContent className="p-0 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex-1 space-y-3">
             {/* Header: Label */}

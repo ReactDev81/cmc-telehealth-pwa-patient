@@ -76,7 +76,7 @@ export function Header() {
 
   const pathname = usePathname();
   const { user, initializing, logout } = useAuth();
-  console.table(user);
+
   // For notification label (Name fallback)
   const name =
     user && (user.first_name || user.last_name)
