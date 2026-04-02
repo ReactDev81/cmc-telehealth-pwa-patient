@@ -97,22 +97,23 @@ const UpcomingAppointmentCard = ({
                 </div>
 
                 <div className="flex gap-3">
-                    {call_now && joinUrl && (
+                    {call_now && joinUrl ? (
                         <button
-                            onClick={() => window.open(joinUrl, '_blank')}
+                            onClick={() => window.open(`/start-consultation?room_url=${joinUrl}&appointment_id=${appointment.id}`, "_blank")}
                             className="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-emerald-700 transition-all"
                         >
                             <Phone className="w-4 h-4" />
                             Join Now
                         </button>
+                    ) : (
+                        <button
+                            onClick={() => router.push(`/appointments/manage-appointment/${appointment.id}`)}
+                            className="flex-1 py-3.5 bg-[#0A2E1F] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-all"
+                        >
+                            Manage Appointment
+                            <ChevronRight className="w-4 h-4" />
+                        </button>
                     )}
-                    <button
-                        onClick={() => router.push(`/appointments/manage-appointment/${appointment.id}`)}
-                        className="flex-1 py-3.5 bg-[#0A2E1F] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-all"
-                    >
-                        Manage Appointment
-                        <ChevronRight className="w-4 h-4" />
-                    </button>
                 </div>
             </div>
         </div>
