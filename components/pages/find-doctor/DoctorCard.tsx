@@ -28,6 +28,8 @@ const DoctorCard = ({ doctor, onBook, onError, onSuccess, isLoading = false }: D
     router.push(`/find-doctors/${doctor.id}`);
   };
 
+  console.log("doctor : ", doctor.speciality);
+
   return (
     <div className="bg-surface-container-lowest p-6 rounded-3xl shadow-sm border border-outline-variant/10 hover:shadow-md transition-shadow group">
       <div className="flex gap-5 mb-6">
@@ -46,7 +48,9 @@ const DoctorCard = ({ doctor, onBook, onError, onSuccess, isLoading = false }: D
                 {doctor.name}
               </h3>
               <p className="text-on-primary-container font-semibold text-sm">
-                {doctor.specialty}
+                    {Array.isArray(doctor.speciality) && doctor.speciality.length > 0
+                      ? doctor.speciality[0].name
+                      : ""}
               </p>
             </div>
             <div className="flex items-center gap-1 bg-secondary-container px-2 py-1 rounded-lg">

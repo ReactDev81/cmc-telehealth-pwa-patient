@@ -1,7 +1,7 @@
 export interface Doctor {
   id: string;
   name: string;
-  specialty: string;
+  speciality: string | { id: string; name: string; symptoms?: any[] };
   avatar: string;
   rating: number;
   years_experience: string;

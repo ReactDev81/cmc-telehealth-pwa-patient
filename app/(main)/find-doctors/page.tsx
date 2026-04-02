@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useBrowseDoctors } from '@/queries/useBrowseDoctors';
+import { useDepartmentsAndSymptoms } from '@/queries/useDepartmentsAndSymptoms';
 import SearchBar from '@/components/pages/find-doctor/searchBar';
 import FilterSidebar from '@/components/pages/find-doctor/FilterSidebar';
 import SortDropdown from '@/components/pages/find-doctor/SortDropdown';
@@ -10,106 +11,160 @@ import DoctorCard from '@/components/pages/find-doctor/DoctorCard';
 import LoadingSkeleton from '@/components/pages/find-doctor/LoadingSkeleton';
 import CustomDialog from '@/components/custom/Dialogboxs';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import type { ConsultationType, SortOption } from '@/types/browse-doctors';
 import { Button } from '@/components/ui/button';
+import type { ConsultationType, SortOption, Doctor } from '@/types/browse-doctors';
+
+interface DialogState {
+  open: boolean;
+  type: 'danger' | 'success';
+  title: string;
+  description: string;
+}
 
 const FindDoctors = () => {
   const router = useRouter();
+  
+  // State
   const [searchTerm, setSearchTerm] = useState('');
   const [specialty, setSpecialty] = useState('all');
   const [consultationType, setConsultationType] = useState<ConsultationType>('all');
   const [sortBy, setSortBy] = useState<SortOption>('highest-rated');
   const [bookingDoctorId, setBookingDoctorId] = useState<string | null>(null);
-  const [dialogState, setDialogState] = useState<{
-    open: boolean;
-    type: 'danger' | 'success';
-    title: string;
-    description: string;
-  }>({
+  const [dialogState, setDialogState] = useState<DialogState>({
     open: false,
     type: 'danger',
     title: '',
     description: '',
   });
 
-  const { data, error, isLoading, refetch } = useBrowseDoctors();
-  const doctors = data?.data || [];
+  // Queries
+  const { data: doctorsData, error, isLoading, refetch } = useBrowseDoctors();
+  const { data: departmentsData } = useDepartmentsAndSymptoms();
+  
+  const doctors = doctorsData?.data || [];
 
-  // Filter doctors based on search and filters
-  const filteredDoctors = doctors.filter((doctor) => {
-    const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.hospital?.toLowerCase().includes(searchTerm.toLowerCase());
+  // Memoized specialty options
+  const specialtyOptions = useMemo(() => {
+    const apiOptions = departmentsData?.data?.map((item) => ({
+      value: item.department.name.toLowerCase().replace(/\s+/g, "-"),
+      label: item.department.name,
+    })) ?? [];
 
-    const matchesSpecialty = specialty === 'all' || doctor.specialty.toLowerCase() === specialty.toLowerCase();
-    
-    const matchesConsultationType = consultationType === 'all' || 
-      doctor.consultation_type_label.includes(consultationType);
+    return [{ value: "all", label: "All Specialties" }, ...apiOptions];
+  }, [departmentsData]);
 
-    return matchesSearch && matchesSpecialty && matchesConsultationType;
-  });
+  // Filter doctors
+  const filteredDoctors = useMemo(() => {
+    return doctors.filter((doctor: Doctor) => {
+      // Handle speciality as string, single object, or array of objects
+      const getDoctorSpecialities = (): string[] => {
+        if (Array.isArray(doctor.speciality)) {
+          return doctor.speciality.map(s => typeof s === 'string' ? s.toLowerCase() : s.name.toLowerCase());
+        }
+        if (typeof doctor.speciality === 'string') {
+          return [doctor.speciality.toLowerCase()];
+        }
+        return [doctor.speciality?.name?.toLowerCase() || ''];
+      };
+      
+      const doctorSpecialities = getDoctorSpecialities();
+      
+      const matchesSearch = searchTerm === '' || 
+        doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doctorSpecialities.some(s => s.includes(searchTerm.toLowerCase())) ||
+        (doctor.hospital && doctor.hospital.toLowerCase().includes(searchTerm.toLowerCase()));
+
+      const matchesSpecialty = specialty === 'all' || 
+        doctorSpecialities.some(s => s.replace(/\s+/g, "-") === specialty);
+
+      const matchesConsultationType = consultationType === 'all' ||
+        (Array.isArray(doctor.consultation_type_label)
+          ? doctor.consultation_type_label.some((label) => {
+              const normalizedLabel = label?.toLowerCase().replace(/[_\s-]+/g, '');
+              const normalizedType = consultationType.toLowerCase().replace(/[_\s-]+/g, '');
+              return normalizedLabel?.includes(normalizedType);
+            })
+          : typeof doctor.consultation_type_label === 'string' &&
+            (doctor.consultation_type_label as string).toLowerCase().replace(/[_\s-]+/g, '').includes(
+              consultationType.toLowerCase().replace(/[_\s-]+/g, '')
+            )
+        );
+
+      return matchesSearch && matchesSpecialty && matchesConsultationType;
+    });
+  }, [doctors, searchTerm, specialty, consultationType]);
 
   // Sort doctors
-  const sortedDoctors = [...filteredDoctors].sort((a, b) => {
-    switch (sortBy) {
-      case 'highest-rated':
-        return b.rating - a.rating;
-      case 'price-low-high':
-        return a.consultation_fee - b.consultation_fee;
-      case 'next-available':
-        return 0;
-      default:
-        return 0;
-    }
-  });
+  const sortedDoctors = useMemo(() => {
+    return [...filteredDoctors].sort((a: Doctor, b: Doctor) => {
+      switch (sortBy) {
+        case 'highest-rated':
+          return (b.rating || 0) - (a.rating || 0);
+        case 'price-low-high':
+          return (a.consultation_fee || 0) - (b.consultation_fee || 0);
+        case 'next-available':
+          // TODO: Implement availability sorting when data is available
+          return 0;
+        default:
+          return 0;
+      }
+    });
+  }, [filteredDoctors, sortBy]);
 
-  const handleClearFilters = () => {
+  // Handlers
+  const handleClearFilters = useCallback(() => {
+    setSpecialty("all");
+    setConsultationType("all");
     setSearchTerm('');
-    setSpecialty('all');
-    setConsultationType('all');
-    setSortBy('highest-rated');
-  };
+  }, []);
 
-  const handleBooking = async (doctorId: string) => {
+  const handleBooking = useCallback(async (doctorId: string) => {
     setBookingDoctorId(doctorId);
-    
-    // Simulate API call
+
     try {
+      // Simulate API call - replace with actual booking API
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       setDialogState({
         open: true,
         type: 'success',
         title: 'Appointment Booked!',
         description: 'Your appointment has been successfully scheduled. Check your email for details.',
       });
-      
+
       setTimeout(() => {
         router.push('/appointments');
       }, 2000);
     } catch (error) {
+      console.error('Booking failed:', error);
       setDialogState({
         open: true,
         type: 'danger',
         title: 'Booking Failed',
-        description: 'Unable to book appointment. Please try again later.',
+        description: error instanceof Error ? error.message : 'Unable to book appointment. Please try again later.',
       });
     } finally {
       setBookingDoctorId(null);
     }
-  };
+  }, [router]);
 
+  const handleCloseDialog = useCallback(() => {
+    setDialogState(prev => ({ ...prev, open: false }));
+  }, []);
+
+  // Loading state
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
+  // Error state
   if (error) {
     return (
       <div className="text-center py-12">
         <AlertCircle className="mx-auto h-12 w-12 text-destructive mb-4" />
         <p className="text-destructive mb-4">Failed to load doctors. Please try again.</p>
         <Button
-          onClick={() => refetch()} 
+          onClick={() => refetch()}
           variant="default"
           size="default"
         >
@@ -140,6 +195,7 @@ const FindDoctors = () => {
           <FilterSidebar
             specialty={specialty}
             consultationType={consultationType}
+            specialtyOptions={specialtyOptions}
             onSpecialtyChange={setSpecialty}
             onConsultationTypeChange={setConsultationType}
             onClearFilters={handleClearFilters}
@@ -155,9 +211,9 @@ const FindDoctors = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {sortedDoctors.map((doctor) => (
-                <DoctorCard 
-                  key={doctor.id} 
-                  doctor={doctor} 
+                <DoctorCard
+                  key={doctor.id}
+                  doctor={doctor}
                   onBook={() => handleBooking(doctor.id)}
                   isLoading={bookingDoctorId === doctor.id}
                 />
@@ -167,7 +223,7 @@ const FindDoctors = () => {
             {sortedDoctors.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-on-surface-variant mb-4">No doctors found matching your criteria.</p>
-                <Button 
+                <Button
                   onClick={handleClearFilters}
                   variant="outline"
                   size="default"
@@ -183,15 +239,15 @@ const FindDoctors = () => {
       {/* Custom Dialog */}
       <CustomDialog
         open={dialogState.open}
-        onClose={() => setDialogState(prev => ({ ...prev, open: false }))}
+        onClose={handleCloseDialog}
         type={dialogState.type}
         title={dialogState.title}
         description={dialogState.description}
         confirmText="OK"
         cancelText="Cancel"
-        onConfirm={() => setDialogState(prev => ({ ...prev, open: false }))}
-        icon={dialogState.type === 'danger' ? 
-          <AlertCircle className="h-6 w-6 text-destructive" /> : 
+        onConfirm={handleCloseDialog}
+        icon={dialogState.type === 'danger' ?
+          <AlertCircle className="h-6 w-6 text-destructive" /> :
           <CheckCircle2 className="h-6 w-6 text-green-600" />
         }
       />
