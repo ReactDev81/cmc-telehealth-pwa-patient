@@ -75,7 +75,7 @@ export default function CustomDialog({
                         onClick={onConfirm}
                         disabled={loading}
                         className={`flex-1 rounded-lg py-2 text-xs font-medium text-white ${type === "danger"
-                                ? "bg-primary hover:bg-green-800"
+                            ? "bg-primary hover:bg-green-800"
                             : "bg-primary hover:bg-green-800"
                             }`}
                     >

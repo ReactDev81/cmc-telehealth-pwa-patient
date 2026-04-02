@@ -13,6 +13,5 @@ export const useUnreadCount = () => {
     return useQuery({
         queryKey: ["unread-count"],
         queryFn: fetchUnreadCount,
-        refetchInterval: 5000,
     });
 };
