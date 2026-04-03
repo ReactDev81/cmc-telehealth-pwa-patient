@@ -142,29 +142,30 @@ export const MedicineDetailView = ({
                                 )}
 
                                 <div className="space-y-6">
-                                    <div className="flex justify-between">
-                                        <h3 className="text-xl font-bold text-primary font-headline flex items-center gap-2">
-                                            <Pill className="w-6 h-6" />
-                                            Prescribed Medicines
-                                        </h3>
-                                        {!showDoctorHead &&
-                                            detailResponse.data.pdf_url && (
-                                                <a
-                                                    href={
-                                                        detailResponse.data
-                                                            .pdf_url
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center gap-2  text-primary px-5 py-2.5 rounded-lg font-bold text-sm  outline transition-all whitespace-nowrap"
-                                                >
-                                                    <span className="font-bold text-primary flex items-center gap-2">
-                                                        View PDF{' '}
-                                                        <ExternalLink className="w-5 h-5" />
-                                                    </span>
-                                                </a>
-                                            )}
-                                    </div>
+                                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+                                                {/* LEFT - TITLE */}
+                                                <h3 className="text-lg sm:text-xl font-bold text-primary font-headline flex items-center gap-2">
+                                                    <Pill className="w-5 h-5 sm:w-6 sm:h-6" />
+                                                    Prescribed Medicines
+                                                </h3>
+
+                                                {/* RIGHT - BUTTON */}
+                                                {!showDoctorHead && detailResponse.data.pdf_url && (
+                                                    <a
+                                                        href={detailResponse.data.pdf_url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center justify-center gap-2 text-primary px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg font-bold text-sm outline transition-all whitespace-nowrap w-full sm:w-auto"
+                                                    >
+                                                        <span className="flex items-center gap-2">
+                                                            View PDF
+                                                            <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                        </span>
+                                                    </a>
+                                                )}
+
+                                            </div>
                                     <div className={`grid ${cardGrid}`}>
                                         {detailResponse.data.medicines.map(
                                             (med, idx) => (

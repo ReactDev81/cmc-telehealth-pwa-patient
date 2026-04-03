@@ -172,10 +172,10 @@ export default function Notifications() {
     const tabsWithContent = tabs.map(tab => ({ ...tab, content: renderNotifications() }));
 
     return (
-        <div className="container max-w-4xl mx-auto py-6 px-4">
+        <div className="container max-w-4xl mx-auto px-4">
             <div className="mb-6">
                 <h1 className="text-4xl font-bold text-primary mb-2">Notifications</h1>
-                <p className="text-muted-foreground w-140">
+                <p className="text-muted-foreground ">
                     Stay updated on your health journey. Here you'll find reminders, test results, and messages from your clinical team.
                 </p>
             </div>
@@ -187,14 +187,14 @@ export default function Notifications() {
                     activeTab={activeTab}
                     onTabChange={setActiveTab}
                     color="primary"
-                    tabsTriggerClassName="px-6 py-2 rounded-lg hover:bg-gray-200"
-                    tabsListClassName="bg-transparent gap-2 p-0 w-50! ml-0"
+                    tabsTriggerClassName="px-6 py-2 rounded-lg hover:bg-gray-200 text-xs"
+                    tabsListClassName="bg-transparent gap-1 p-0 w-50! ml-0"
                 />
 
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-10 px-2 text-sm text-primary absolute right-0 top-4 -translate-y-1/2 bg-transparent shadow-none hover:bg-transparent underline-offset-4 hover:underline decoration-primary flex items-center gap-1"
+                    className="h-10 px-2 text-sm text-primary absolute right-0 top-4  -translate-y-1/2 bg-transparent shadow-none hover:bg-transparent underline-offset-4 hover:underline decoration-primary flex items-center gap-1"
                     onClick={handleMarkAllRead}
                     disabled={totalUnread === 0}
                 >

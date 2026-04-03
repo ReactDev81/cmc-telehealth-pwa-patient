@@ -75,7 +75,7 @@ export function NotificationCard({ notification, onMarkAsRead }: NotificationCar
                             e.stopPropagation();
                             onMarkAsRead(notification.id);
                         }}
-                        className="h-5 w-5 absolute right-3 bottom-2 cursor-pointer text-muted-foreground hover:text-green-500 transition"
+                        className="h-5 w-5 absolute right-3 md:bottom-2 cursor-pointer text-muted-foreground hover:text-green-500 transition"
                     />
                 )}
             </CardContent>

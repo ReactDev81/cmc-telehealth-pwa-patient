@@ -54,32 +54,6 @@ export default function Transactions() {
     const currentCount = currentTransactions.length;
     const totalCount = data?.pagination?.total || transactions.length;
 
-    // // ✅ icons
-    // const getStatusIcon = (status: string) => {
-    //     switch (status) {
-    //         case "paid":
-    //             return <CheckCircle className="w-5 h-5 text-green-500" />;
-    //         case "pending":
-    //             return <Clock className="w-5 h-5 text-yellow-500" />;
-    //         case "cancelled":
-    //             return <XCircle className="w-5 h-5 text-red-500" />;
-    //         case "failed":
-    //             return <XCircle className="w-5 h-5 text-red-500" />;
-    //         default:
-    //             return null;
-    //     }
-    // };
-
-    // const getPaymentIcon = (method: string) => {
-    //     switch (method?.toLowerCase()) {
-    //         case "card":
-    //             return <CreditCard className="w-5 h-5 text-blue-500" />;
-    //         case "upi":
-    //             return <Smartphone className="w-5 h-5 text-purple-500" />;
-    //         default:
-    //             return <Banknote className="w-5 h-5 text-gray-500" />;
-    //     }
-    // };
 
     const formatAmount = (amount: string, currency: string) => {
         return new Intl.NumberFormat("en-IN", {
@@ -169,7 +143,7 @@ export default function Transactions() {
 
                                 {/* RIGHT */}
                                 <div className="text-right">
-                                    <p className="font-bold text-lg">
+                                    <p className="font-bold md:text-lg text-base">
                                         {formatAmount(item.amount, item.currency)}
                                     </p>
                                     <p className="text-xs text-muted-foreground">

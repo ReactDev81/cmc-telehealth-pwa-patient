@@ -38,7 +38,7 @@ export default function AppointmentDetailPage() {
     const { medical_reports, notes } = data;
 
     return (
-        <div className="min-h-screen bg-gray-50 px-4">
+        <div className="min-h-screen bg-gray-50">
             <div className="max-w-8xl mx-auto">
                 <DetailHeader
                     title="Appointment Details"
@@ -54,7 +54,7 @@ export default function AppointmentDetailPage() {
                 </div>
                 <div className="overflow-hidden">
                     <div className="pt-8 pb-4 border-b border-gray-100 bg-gray-50">
-                        <h3 className="font-semibold text-2xl text-gray-900 flex items-center gap-2">
+                        <h3 className="font-semibold md:text-2xl text-lg text-gray-900 flex items-center gap-2">
                             <Pill className="w-5 h-5 text-emerald-600" />
                             Medical Details & Prescription
                         </h3>
