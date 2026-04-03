@@ -226,18 +226,21 @@ const AppointmentsPage = () => {
     ];
 
     return (
-        <div className="space-y-6">
-            <CustomTabs
-                tabs={tabs}
-                defaultTab="upcoming"
-                activeTab={activeTab}
-                onTabChange={handleTabChange}
-                color="primary"
-                tabsListClassName="bg-surface-container-low p-1.5 rounded-2xl w-fit"
-                tabsTriggerClassName="px-8 py-3 rounded-xl text-base font-bold data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm text-on-surface-variant/70 hover:text-primary"
-                tabsContentClassName="mt-6"
-            />
-        </div>
+        <>
+            <div className="space-y-6">
+                <CustomTabs
+                    variant="pill"
+                    activeTabBg="#013220"
+                    activeTabColor="white"
+                    tabs={tabs}
+                    defaultTab="upcoming"
+                    activeTab={activeTab}
+                    onTabChange={handleTabChange}
+                    tabsListClassName="max-w-md"// only spacing
+                />
+            </div>
+
+        </>
     );
 };
 

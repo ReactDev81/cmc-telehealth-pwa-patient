@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { TransactionReceiptPDF } from "@/components/pdf/TransactionReceiptPDF";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { DetailHeader } from "@/components/custom/DetailHeader";
 
 interface TransactionDetailProps {
     params: { id: string };
@@ -141,16 +142,10 @@ export default function TransactionDetail({ params }: TransactionDetailProps) {
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-2xl mx-auto px-4">
                 {/* Back Button and Download */}
-                <div className="flex justify-between items-center mb-8">
-                    <button
-                        onClick={() => router.back()}
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm font-medium"
-                    >
-                        <ArrowLeft className="w-5 h-5" />
-                        Back to Transactions
-                    </button>
-
-                </div>
+                <DetailHeader
+                    title="Transaction Details"
+                    subtitle="Back to Transactions"
+                />
 
                 {/* Status Card */}
                 <div className={`${statusStyle.bg} rounded-2xl p-6 mb-6 shadow-sm border border-gray-100`}>
