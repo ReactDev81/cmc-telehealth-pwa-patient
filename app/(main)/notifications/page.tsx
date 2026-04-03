@@ -1,69 +1,84 @@
-"use client";
+'use client';
 
-import { useNotifications, useUnreadCount } from "@/queries/useNotifications";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Bell, Clock, FileText, Pill, Calendar, CreditCard, MessageSquare, Loader2, CircleCheck, CheckCheck } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import CustomTabs from "@/components/custom/CustomTabs";
-import { fetchNotifications, markAllAsRead, markNotificationAsRead } from "@/api/notifications";
-import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/context/userContext";
+import {
+    fetchNotifications,
+    markAllAsRead,
+    markNotificationAsRead,
+} from '@/api/notifications';
+import CustomTabs from '@/components/custom/CustomTabs';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/context/userContext';
+import { useNotifications, useUnreadCount } from '@/queries/useNotifications';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+    Bell,
+    Calendar,
+    CheckCheck,
+    CircleCheck,
+    Clock,
+    CreditCard,
+    FileText,
+    Loader2,
+    MessageSquare,
+    Pill,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 // Import your API function
 
 const getIcon = (group: string) => {
     switch (group?.toLowerCase()) {
-        case "appointment":
+        case 'appointment':
             return {
                 icon: Calendar,
-                color: "text-blue-500",
-                bg: "bg-blue-50 dark:bg-blue-950/30",
-                label: "Appointment"
+                color: 'text-blue-500',
+                bg: 'bg-blue-50 dark:bg-blue-950/30',
+                label: 'Appointment',
             };
-        case "lab":
-        case "lab_result":
+        case 'lab':
+        case 'lab_result':
             return {
                 icon: FileText,
-                color: "text-purple-500",
-                bg: "bg-purple-50 dark:bg-purple-950/30",
-                label: "Lab Result"
+                color: 'text-purple-500',
+                bg: 'bg-purple-50 dark:bg-purple-950/30',
+                label: 'Lab Result',
             };
-        case "prescription":
+        case 'prescription':
             return {
                 icon: Pill,
-                color: "text-green-500",
-                bg: "bg-green-50 dark:bg-green-950/30",
-                label: "Prescription"
+                color: 'text-green-500',
+                bg: 'bg-green-50 dark:bg-green-950/30',
+                label: 'Prescription',
             };
-        case "message":
+        case 'message':
             return {
                 icon: MessageSquare,
-                color: "text-amber-500",
-                bg: "bg-amber-50 dark:bg-amber-950/30",
-                label: "Message"
+                color: 'text-amber-500',
+                bg: 'bg-amber-50 dark:bg-amber-950/30',
+                label: 'Message',
             };
-        case "reminder":
+        case 'reminder':
             return {
                 icon: Bell,
-                color: "text-orange-500",
-                bg: "bg-orange-50 dark:bg-orange-950/30",
-                label: "Reminder"
+                color: 'text-orange-500',
+                bg: 'bg-orange-50 dark:bg-orange-950/30',
+                label: 'Reminder',
             };
-        case "payment":
+        case 'payment':
             return {
                 icon: CreditCard,
-                color: "text-emerald-500",
-                bg: "bg-emerald-50 dark:bg-emerald-950/30",
-                label: "Payment"
+                color: 'text-emerald-500',
+                bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+                label: 'Payment',
             };
         default:
             return {
                 icon: Bell,
-                color: "text-gray-500",
-                bg: "bg-gray-50 dark:bg-gray-950/30",
-                label: "Notification"
+                color: 'text-gray-500',
+                bg: 'bg-gray-50 dark:bg-gray-950/30',
+                label: 'Notification',
             };
     }
 };
@@ -95,7 +110,7 @@ export default function Notifications() {
         isLoading: boolean;
         error: any;
     };
-    const [activeTab, setActiveTab] = useState("all");
+    const [activeTab, setActiveTab] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [loadingMore, setLoadingMore] = useState(false);
     const [allNotifications, setAllNotifications] = useState<any[]>([]);
@@ -107,7 +122,6 @@ export default function Notifications() {
 
     const router = useRouter();
 
-
     const queryClient = useQueryClient();
 
     const handleMarkAllRead = async () => {
@@ -118,24 +132,22 @@ export default function Notifications() {
             const unread = res?.data?.unread_count ?? 0;
 
             // ✅ 1. Unread count instantly update karo (badge ke liye)
-            queryClient.setQueryData(["unread-count"], unread);
+            queryClient.setQueryData(['unread-count'], unread);
 
             // ✅ 2. Local notifications ko read mark karo (green dot hatao instantly)
-            setAllNotifications(prev =>
-                prev.map(item => ({
+            setAllNotifications((prev) =>
+                prev.map((item) => ({
                     ...item,
-                    is_read: true
-                }))
+                    is_read: true,
+                })),
             );
 
             // ✅ 3. Background me fresh data bhi fetch ho jaye
-            queryClient.invalidateQueries({ queryKey: ["notifications"] });
-
+            queryClient.invalidateQueries({ queryKey: ['notifications'] });
         } catch (error) {
-            console.error("Failed to mark all as read", error);
+            console.error('Failed to mark all as read', error);
         }
     };
-
 
     useEffect(() => {
         if (data?.data) {
@@ -149,7 +161,9 @@ export default function Notifications() {
     if (isLoading && currentPage === 1) {
         return (
             <div className="flex items-center justify-center min-h-100">
-                <div className="animate-pulse text-muted-foreground">Loading notifications...</div>
+                <div className="animate-pulse text-muted-foreground">
+                    Loading notifications...
+                </div>
             </div>
         );
     }
@@ -157,17 +171,18 @@ export default function Notifications() {
     if (error && currentPage === 1) {
         return (
             <div className="flex items-center justify-center min-h-100">
-                <div className="text-red-500">Error loading notifications. Please try again.</div>
+                <div className="text-red-500">
+                    Error loading notifications. Please try again.
+                </div>
             </div>
         );
     }
 
-
     const hasMorePages = currentPage < totalPages;
 
     const filteredNotifications =
-        activeTab === "unread"
-            ? allNotifications.filter(item => !item.is_read)
+        activeTab === 'unread'
+            ? allNotifications.filter((item) => !item.is_read)
             : allNotifications;
 
     // Load more notifications
@@ -181,12 +196,12 @@ export default function Notifications() {
             const newData = await fetchNotifications(nextPage);
 
             if (newData?.data?.length > 0) {
-                setAllNotifications(prev => [...prev, ...newData.data]);
+                setAllNotifications((prev) => [...prev, ...newData.data]);
                 setCurrentPage(nextPage);
                 setMeta(newData.meta);
             }
         } catch (error) {
-            console.error("Error loading more notifications:", error);
+            console.error('Error loading more notifications:', error);
         } finally {
             setLoadingMore(false);
         }
@@ -195,15 +210,11 @@ export default function Notifications() {
     // Tabs configuration
     const tabs = [
         {
-            key: "all",
-            label: (
-                <div className="flex items-center gap-1">
-                    All
-                </div>
-            )
+            key: 'all',
+            label: <div className="flex items-center gap-1">All</div>,
         },
         {
-            key: "unread",
+            key: 'unread',
             label: (
                 <div className="flex items-center gap-1">
                     Unread
@@ -213,8 +224,8 @@ export default function Notifications() {
                         </Badge>
                     )}
                 </div>
-            )
-        }
+            ),
+        },
     ];
 
     // Render notifications content
@@ -225,10 +236,13 @@ export default function Notifications() {
                     <CardContent className="flex flex-col items-center justify-center py-12">
                         <Bell className="h-12 w-12 text-muted-foreground mb-3 opacity-50" />
                         <p className="text-muted-foreground text-center">
-                            No {activeTab === "unread" ? "unread" : ""} notifications
+                            No {activeTab === 'unread' ? 'unread' : ''}{' '}
+                            notifications
                         </p>
                         <p className="text-sm text-muted-foreground text-center">
-                            {activeTab === "all" ? "You're all caught up!" : "Check back later for updates."}
+                            {activeTab === 'all'
+                                ? "You're all caught up!"
+                                : 'Check back later for updates.'}
                         </p>
                     </CardContent>
                 </Card>
@@ -244,12 +258,13 @@ export default function Notifications() {
                         <Card
                             key={item.id}
                             className={`group hover:shadow-md transition-all rounded-4xl duration-300 cursor-pointer ${!item.is_read ? 'bg-muted/5' : ''}`}
-                            onClick={() => { }}
+                            onClick={() => {}}
                         >
                             <CardContent className="p-4 relative">
                                 <div className="relative flex items-start gap-4">
-
-                                    <div className={`p-2.5 rounded-xl ${bg} shrink-0`}>
+                                    <div
+                                        className={`p-2.5 rounded-xl ${bg} shrink-0`}
+                                    >
                                         <Icon className={`h-6 w-6 ${color}`} />
                                     </div>
 
@@ -259,7 +274,9 @@ export default function Notifications() {
 
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-start justify-between gap-2 flex-wrap mb-1">
-                                            <h3 className={`text-primary text-lg font-semibold ${!item.is_read ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                            <h3
+                                                className={`text-primary text-lg font-semibold ${!item.is_read ? 'text-foreground' : 'text-muted-foreground'}`}
+                                            >
                                                 {item.title}
                                             </h3>
 
@@ -283,24 +300,34 @@ export default function Notifications() {
                                             e.stopPropagation();
 
                                             try {
-                                                await markNotificationAsRead(item.id);
+                                                await markNotificationAsRead(
+                                                    item.id,
+                                                );
 
                                                 // ✅ UI update
-                                                setAllNotifications(prev =>
-                                                    prev.map(n =>
-                                                        String(n.id) === String(item.id)
-                                                            ? { ...n, is_read: true }
-                                                            : n
-                                                    )
+                                                setAllNotifications((prev) =>
+                                                    prev.map((n) =>
+                                                        String(n.id) ===
+                                                        String(item.id)
+                                                            ? {
+                                                                  ...n,
+                                                                  is_read: true,
+                                                              }
+                                                            : n,
+                                                    ),
                                                 );
 
                                                 // ✅ unread count update
-                                                queryClient.setQueryData(["unread-count"], (old: number = 0) =>
-                                                    old > 0 ? old - 1 : 0
+                                                queryClient.setQueryData(
+                                                    ['unread-count'],
+                                                    (old: number = 0) =>
+                                                        old > 0 ? old - 1 : 0,
                                                 );
-
                                             } catch (error) {
-                                                console.error("Failed to mark notification as read", error);
+                                                console.error(
+                                                    'Failed to mark notification as read',
+                                                    error,
+                                                );
                                             }
                                         }}
                                         className="h-5 w-5 absolute right-3 bottom-2 cursor-pointer text-muted-foreground hover:text-green-500 transition"
@@ -327,7 +354,7 @@ export default function Notifications() {
                                     Loading...
                                 </>
                             ) : (
-                                "Load more Notifications"
+                                'Load more Notifications'
                             )}
                         </Button>
                     </div>
@@ -337,7 +364,8 @@ export default function Notifications() {
                 {!hasMorePages && filteredNotifications.length > 0 && (
                     <div className="mt-6 text-center">
                         <p className="text-xs text-muted-foreground">
-                            You've seen all {filteredNotifications.length} notifications
+                            You've seen all {filteredNotifications.length}{' '}
+                            notifications
                         </p>
                     </div>
                 )}
@@ -346,9 +374,9 @@ export default function Notifications() {
     };
 
     // Content for each tab
-    const tabsWithContent = tabs.map(tab => ({
+    const tabsWithContent = tabs.map((tab) => ({
         ...tab,
-        content: renderNotifications()
+        content: renderNotifications(),
     }));
 
     return (
@@ -356,16 +384,19 @@ export default function Notifications() {
             {/* Header */}
             <div className="mb-6">
                 <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-4xl font-bold text-primary">Notifications</h1>
+                    <h1 className="text-4xl font-bold text-primary">
+                        Notifications
+                    </h1>
                 </div>
                 <p className="text-muted-foreground w-140">
-                    Stay updated on your health journey. Here you'll find reminders, test results, and messages from your clinical team.
+                    Stay updated on your health journey. Here you'll find
+                    reminders, test results, and messages from your clinical
+                    team.
                 </p>
             </div>
 
             {/* Custom Tabs */}
             <div className="flex items-center justify-between mb-4 relative">
-
                 {/* Tabs */}
                 <CustomTabs
                     tabs={tabsWithContent}
@@ -373,7 +404,7 @@ export default function Notifications() {
                     activeTab={activeTab}
                     onTabChange={setActiveTab}
                     color="primary"
-                    tabsTriggerClassName="px-6 py-2 rounded-lg hover:bg-gray-200"
+                    tabsTriggerClassName="px-6 py-2 rounded-full hover:bg-gray-200"
                     tabsListClassName="bg-transparent gap-2 p-0 w-50! ml-0"
                 />
 
@@ -394,7 +425,6 @@ export default function Notifications() {
                     Mark all as read
                 </Button>
             </div>
-
         </div>
     );
 }

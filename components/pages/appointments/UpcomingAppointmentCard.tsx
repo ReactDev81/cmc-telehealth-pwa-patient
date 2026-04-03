@@ -88,10 +88,11 @@ const UpcomingAppointmentCard = ({
                             </div>
                         </div>
                         <div className="pl-4">
-                            <p className="text-lg font-bold text-primary leading-none">₹{parseFloat(fee).toFixed(2)}</p>
-                            <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest mt-1">
+
+                            <p className="text-xs font-bold text-primary mb-2">
                                 Consultation Fee
                             </p>
+                            <p className="text-lg font-bold text-primary leading-none">₹{parseFloat(fee).toFixed(2)}</p>
                         </div>
                     </div>
                 </div>
