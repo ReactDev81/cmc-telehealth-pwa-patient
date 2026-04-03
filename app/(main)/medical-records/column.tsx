@@ -24,6 +24,7 @@ function ActionCell({ row }: { row: { original: MedicalReport } }) {
     const router = useRouter();
     const record = row.original;
     const appointmentId = record.doctor?.appoinment_id;
+    const timeStatus = record.doctor?.appointment_time_status;
 
     return (
         <div className="flex items-center gap-2 flex-wrap">
@@ -41,9 +42,18 @@ function ActionCell({ row }: { row: { original: MedicalReport } }) {
                     variant="outline"
                     size="sm"
                     className="gap-1 rounded-lg p-5 font-semibold text-sm border-gray-200 hover:border-primary hover:text-primary whitespace-nowrap"
-                    onClick={() =>
-                        router.push(`/appointments/appoitment-detail/${appointmentId}`)
-                    }
+                    onClick={() => {
+                        const route = timeStatus === 'upcoming'
+                            ? `/appointments/manage-appointment/${appointmentId}`
+                            : `/appointments/appoitment-detail/${appointmentId}`;
+                        router.push(route);
+                    }}
+                    // onClick={() => {
+                    //     const route = timeStatus === 'past'
+                    //         ? `/my-appointments/past-appointments/appoitment-detail/${appointmentId}`
+                    //         : `/appointments/appoitment-detail/${appointmentId}`;
+                    //     router.push(route);
+                    // }}
                 >
                     Appointment
                     <ExternalLink className="w-3.5 h-3.5" />

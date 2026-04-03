@@ -206,7 +206,6 @@ const FindDoctors = () => {
               <p className="text-on-surface-variant font-medium text-sm sm:text-base">
                 Showing <span className="text-on-surface font-bold">{sortedDoctors.length} specialists</span> matching your criteria
               </p>
-              <SortDropdown value={sortBy} onChange={setSortBy} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">

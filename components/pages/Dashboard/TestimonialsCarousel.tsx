@@ -64,7 +64,6 @@ export function TestimonialsCarousel({
   testimonials,
 }: TestimonialsCarouselProps) {
 
-  console.log("testimonials id", testimonials);
   const router = useRouter();
 
   if (!testimonials || testimonials.length === 0) return null;

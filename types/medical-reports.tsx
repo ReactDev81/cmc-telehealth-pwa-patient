@@ -24,6 +24,8 @@ export interface MedicalReportDoctor {
     first_name: string;
     last_name: string;
     appoinment_id?: string;
+    appoinment_status?: string;
+    appointment_time_status?: 'upcoming' | 'past';
 }
 
 export interface MedicalReport {
