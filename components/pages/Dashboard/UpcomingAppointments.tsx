@@ -42,20 +42,19 @@ function AppointmentCard({
 }) {
   const doctor = appointment.doctor;
 
-  // Handler to open the appointment screen in a new tab
   const handleViewAll = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.open("/appointments", "_blank", "noopener,noreferrer");
+    window.open(`/appointments/manage-appointment/${appointment.id}`, "noopener,noreferrer");
   };
 
   return (
-    <Card className="relative overflow-hidden bg-primary border-0 rounded-3xl h-full min-h-[320px] flex flex-col justify-between shadow-xl p-8">
-      <CardDescription className="relative z-10 flex flex-col justify-between  p-0 gap-8">
+    <Card className="relative overflow-hidden bg-primary border-0 rounded-2xl sm:rounded-3xl h-full flex flex-col justify-between shadow-xl p-4 sm:p-6 md:p-8">
+      <CardDescription className="relative z-10 flex flex-col justify-between p-0 gap-4 sm:gap-6 md:gap-8">
         {/* Header row */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <Badge
             variant="secondary"
-            className="bg-white/10 text-feature-green border-0 text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full"
+            className="bg-white/10 text-feature-green border-0 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 sm:px-3 sm:py-1 rounded-full"
           >
             Upcoming Session
           </Badge>
@@ -64,10 +63,10 @@ function AppointmentCard({
               asChild
               variant="ghost"
               size="sm"
-              className="text-xs font-bold  text-feature-green hover:underline hover:text-feature-green flex items-center gap-1 p-0 h-auto px-3 py-1 hover:bg-transparent"
+              className="text-xs font-bold text-feature-green hover:underline hover:text-feature-green flex items-center gap-1 p-0 h-auto px-2 py-1 hover:bg-transparent"
             >
               <a
-                href="/appointments"
+                href={`/appointments/manage-appointment/${appointment.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleViewAll}
@@ -79,28 +78,28 @@ function AppointmentCard({
           )}
         </div>
 
-        {/* Doctor info */}
-        <div className="flex items-start gap-5">
+        {/* Doctor info - Responsive */}
+        <div className="flex flex-row items-start sm:items-center gap-4 sm:gap-5">
           <CustomAvatar
             src={appointment.doctorImage}
             radius="lg"
-            className="w-[76px] h-[76px] border-2 border-white/30 shrink-0"
+            className="w-16 h-16 sm:w-[76px] sm:h-[76px] border-2 border-white/30 shrink-0"
           />
-          <div>
-            <h3 className="text-2xl font-bold text-white font-headline leading-tight mb-1">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-xl sm:text-2xl font-bold text-white font-headline leading-tight mb-1 break-words">
               {appointment.doctorName}
             </h3>
-            <p className="text-base mb-3  text-feature-green/90 font-medium">
+            <p className="text-sm sm:text-base mb-2 sm:mb-3 text-feature-green/90 font-medium">
               {doctor?.specialty || "Specialist"}
             </p>
             <div className="flex flex-wrap gap-2 text-xs text-feature-green/90 font-medium">
               {doctor?.experience && (
-                <span className="bg-white/10 p-1 px-2 rounded-md">
+                <span className="bg-white/10 p-1 px-2 rounded-md text-[10px] sm:text-xs">
                   Exp: {doctor.experience}
                 </span>
               )}
               {doctor?.languages && doctor.languages.length > 0 && (
-                <span className="bg-white/10 p-1 px-2 rounded-md">
+                <span className="bg-white/10 p-1 px-2 rounded-md text-[10px] sm:text-xs">
                   Lang: {doctor.languages.join(", ")}
                 </span>
               )}
@@ -108,63 +107,69 @@ function AppointmentCard({
           </div>
         </div>
       </CardDescription>
-      <CardContent className="p-0">
-        {/* Footer: Date/Time/Type + CTA */}
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-5 p-0">
-          <div className="flex flex-wrap items-center gap-6">
+      
+      <CardContent className="p-0 mt-4 sm:mt-6">
+        {/* Footer: Date/Time/Type + CTA - Responsive */}
+        <div className="flex flex-col gap-4 sm:gap-5 p-0">
+          {/* Info chips - Horizontal scroll on mobile */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-6 overflow-x-auto pb-2 sm:pb-0">
             {/* Date */}
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-white/10 rounded-lg">
-                <Calendar className="w-5 h-5 text-feature-green/90" />
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <div className="p-1.5 sm:p-2.5 bg-white/10 rounded-lg">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
               </div>
               <div>
-                <p className="text-sm text-white/60 font-bold uppercase tracking-widest">
+                <p className="text-[10px] sm:text-sm text-white/60 font-bold uppercase tracking-widest">
                   Date
                 </p>
-                <p className="text-white font-semibold text-sm">
+                <p className="text-white font-semibold text-xs sm:text-sm">
                   {appointment.date}
                 </p>
               </div>
             </div>
+            
             {/* Time */}
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/10 rounded-lg">
-                <Clock className="w-5 h-5 text-feature-green/90" />
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <div className="p-1.5 sm:p-2 bg-white/10 rounded-lg">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
               </div>
               <div>
-                <p className="text-sm text-white/60 font-bold uppercase tracking-widest">
+                <p className="text-[10px] sm:text-sm text-white/60 font-bold uppercase tracking-widest">
                   Time
                 </p>
-                <p className="text-white font-semibold text-sm">
+                <p className="text-white font-semibold text-xs sm:text-sm">
                   {appointment.time}
                 </p>
               </div>
             </div>
+            
             {/* Type */}
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/10 rounded-lg">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <div className="p-1.5 sm:p-2 bg-white/10 rounded-lg">
                 {appointment.type === "video" ? (
-                  <Video className="w-5 h-5 text-feature-green/90" />
+                  <Video className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
                 ) : (
-                  <Calendar className="w-5 h-5 text-feature-green/90" />
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
                 )}
               </div>
               <div>
-                <p className="text-sm text-white/60 font-bold uppercase tracking-widest">
+                <p className="text-[10px] sm:text-sm text-white/60 font-bold uppercase tracking-widest">
                   Type
                 </p>
-                <p className="text-white font-semibold text-sm capitalize">
+                <p className="text-white font-semibold text-xs sm:text-sm capitalize">
                   {appointment.typeLabel} Consultation
                 </p>
               </div>
             </div>
           </div>
+          
+          {/* Button - Full width on mobile */}
           {appointment.type === "video" && (
             <Button
               onClick={() => onStartCall(appointment.id)}
-              className="w-full md:w-auto px-6 py-5 bg-white text-primary hover:bg-white/90 rounded-xl font-bold shadow-lg transition-all flex items-center gap-2 shrink-0"
+              className="w-full md:w-auto px-4 sm:px-6 py-3 sm:py-5 bg-white text-primary hover:bg-white/90 rounded-xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 text-sm sm:text-base"
             >
-              <Video className="w-5 h-5" />
+              <Video className="w-4 h-4 sm:w-5 sm:h-5" />
               Start Video Call
             </Button>
           )}
@@ -180,7 +185,6 @@ export function UpcomingAppointments({
   onStartCall,
   onBookFirst,
 }: UpcomingAppointmentsProps) {
-  // Create a handler for opening appointments in new tab
   const handleViewAll = () => {
     window.open("/appointments", "_blank", "noopener,noreferrer");
     if (onViewAll) onViewAll();
@@ -189,19 +193,19 @@ export function UpcomingAppointments({
   // No appointments
   if (!appointments || appointments.length === 0) {
     return (
-      <Card className="rounded-3xl border border-border/50 h-full min-h-[320px] flex flex-col items-center justify-center text-center p-8 shadow-sm">
-        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-          <Calendar className="w-8 h-8 text-muted-foreground" />
+      <Card className="rounded-2xl sm:rounded-3xl border border-border/50 h-full min-h-[280px] sm:min-h-[320px] flex flex-col items-center justify-center text-center p-6 sm:p-8 shadow-sm">
+        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded-full flex items-center justify-center mb-3 sm:mb-4">
+          <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
         </div>
-        <h3 className="text-2xl font-bold text-primary mb-2 font-headline">
+        <h3 className="text-xl sm:text-2xl font-bold text-primary mb-2 font-headline">
           No Upcoming Sessions
         </h3>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-4">
           You don&apos;t have any appointments scheduled at the moment.
         </p>
         <Button
           onClick={onBookFirst}
-          className="px-6 py-5 bg-primary text-primary-foreground rounded-xl font-bold shadow-sm hover:bg-primary/90 transition-all"
+          className="px-4 sm:px-6 py-3 sm:py-5 bg-primary text-primary-foreground rounded-xl font-bold shadow-sm hover:bg-primary/90 transition-all text-sm sm:text-base w-full sm:w-auto"
         >
           Book Your First Appointment
         </Button>
@@ -209,7 +213,7 @@ export function UpcomingAppointments({
     );
   }
 
-  // Show only one upcoming appointment (the most recent/first in list)
+  // Show only one upcoming appointment
   return (
     <AppointmentCard
       appointment={appointments[0]}

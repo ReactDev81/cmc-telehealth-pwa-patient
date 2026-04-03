@@ -113,7 +113,7 @@ export default function Transactions() {
                     {getFilteredTransactions(status).map((item: any) => (
                         <div
                             key={item.id}
-                            className="p-6 border-b border-gray-100 hover:bg-gray-100 rounded-xl transition cursor-pointer"
+                            className="p-6 border-b border-gray-100 bg-gray-100 hover:bg-gray-200 rounded-xl transition cursor-pointer"
                             onClick={() => router.push(`/transactions/${item.id}`)}
                         >
                             <div className="flex justify-between items-center">
@@ -179,19 +179,20 @@ export default function Transactions() {
     });
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-4xl mx-auto px-6">
             <h1 className="text-2xl font-bold mb-6">
                 Transactions
             </h1>
 
             {/* ✅ Custom Tabs */}
             <CustomTabs
+                variant="pill"
+                activeTabBg="#013220"
+                activeTabColor="white"
                 tabs={tabs}
                 defaultTab="All"
                 onTabChange={setActiveTab}
-                tabsListClassName="justify-start bg-transparent gap-3 w-50"
-                tabsTriggerClassName="rounded-full text-gray-700 px-4 py-2
-                data-[state=active]:bg-primary data-[state=active]:text-white"
+                tabsListClassName="max-w-md"   // ✅ sirf tabs ki width control hogi
             />
 
             {/* Pagination Info - Now shows count based on active tab */}

@@ -33,13 +33,12 @@ export default function ProfileTabs() {
                 <p className="text-gray-700 mt-2">Manage your medical profile and personal preferences.</p>
             </div>
             <CustomTabs
+                variant="pill"
+                activeTabBg="#013220"
+                activeTabColor="white"
                 tabs={tabs}
-              
                 defaultTab="personal_info"
-                color="primary"
-                tabsListClassName="bg-transparent rounded-lg justify-start gap-2 mt-5"
-                tabsTriggerClassName="px-2 py-4 rounded-lg hover:bg-gray-200 text-sm max-w-50" // ✅ width auto
-                tabsContentClassName="bg-transparent gap-2 p-0"
+                tabsListClassName="max-w-md"
             />
         </div>
     );

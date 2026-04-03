@@ -11,10 +11,10 @@ interface QuickLinksProps {
 export function QuickLinks() {
     // Handler to redirect to /medical-records
     const handleViewReports = () => {
-        window.open("/medical-records", "_blank");
+        window.open("/reviews", "_blank");
     };
     const handleManageRefills = () => {
-        window.open("/prescriptions", "_blank");
+        window.open("/transactions", "_blank");
     };
 
     return (
@@ -29,7 +29,7 @@ export function QuickLinks() {
                             </div>
                         </div>
                         <h4 className="text-xl font-bold text-foreground mb-1 font-headline">
-                            Reports
+                            Reviews
                         </h4>
                     </div>
                     <Button
@@ -53,7 +53,7 @@ export function QuickLinks() {
                             </div>
                         </div>
                         <h4 className="text-xl font-bold text-foreground mb-1 font-headline">
-                            Prescriptions
+                            Transactions
                         </h4>
                     </div>
                     <Button

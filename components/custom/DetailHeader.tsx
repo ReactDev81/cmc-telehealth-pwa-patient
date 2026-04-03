@@ -29,7 +29,7 @@ export const DetailHeader = ({
   };
 
   return (
-    <header className={cn("flex items-center gap-6 mb-8", className)}>
+    <header className={cn("flex items-center gap-4 mb-8", className)}>
       <button
         onClick={handleBack}
         className="p-3 hover:bg-surface-container rounded-2xl transition-all text-primary"

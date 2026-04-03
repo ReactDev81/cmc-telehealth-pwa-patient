@@ -23,7 +23,7 @@ interface DialogState {
 
 const FindDoctors = () => {
   const router = useRouter();
-  
+
   // State
   const [searchTerm, setSearchTerm] = useState('');
   const [specialty, setSpecialty] = useState('all');
@@ -40,7 +40,7 @@ const FindDoctors = () => {
   // Queries
   const { data: doctorsData, error, isLoading, refetch } = useBrowseDoctors();
   const { data: departmentsData } = useDepartmentsAndSymptoms();
-  
+
   const doctors = doctorsData?.data || [];
 
   // Memoized specialty options
@@ -66,28 +66,28 @@ const FindDoctors = () => {
         }
         return [doctor.speciality?.name?.toLowerCase() || ''];
       };
-      
+
       const doctorSpecialities = getDoctorSpecialities();
-      
-      const matchesSearch = searchTerm === '' || 
+
+      const matchesSearch = searchTerm === '' ||
         doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doctorSpecialities.some(s => s.includes(searchTerm.toLowerCase())) ||
         (doctor.hospital && doctor.hospital.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      const matchesSpecialty = specialty === 'all' || 
+      const matchesSpecialty = specialty === 'all' ||
         doctorSpecialities.some(s => s.replace(/\s+/g, "-") === specialty);
 
       const matchesConsultationType = consultationType === 'all' ||
         (Array.isArray(doctor.consultation_type_label)
           ? doctor.consultation_type_label.some((label) => {
-              const normalizedLabel = label?.toLowerCase().replace(/[_\s-]+/g, '');
-              const normalizedType = consultationType.toLowerCase().replace(/[_\s-]+/g, '');
-              return normalizedLabel?.includes(normalizedType);
-            })
+            const normalizedLabel = label?.toLowerCase().replace(/[_\s-]+/g, '');
+            const normalizedType = consultationType.toLowerCase().replace(/[_\s-]+/g, '');
+            return normalizedLabel?.includes(normalizedType);
+          })
           : typeof doctor.consultation_type_label === 'string' &&
-            (doctor.consultation_type_label as string).toLowerCase().replace(/[_\s-]+/g, '').includes(
-              consultationType.toLowerCase().replace(/[_\s-]+/g, '')
-            )
+          (doctor.consultation_type_label as string).toLowerCase().replace(/[_\s-]+/g, '').includes(
+            consultationType.toLowerCase().replace(/[_\s-]+/g, '')
+          )
         );
 
       return matchesSearch && matchesSpecialty && matchesConsultationType;
@@ -160,9 +160,9 @@ const FindDoctors = () => {
   // Error state
   if (error) {
     return (
-      <div className="text-center py-12">
-        <AlertCircle className="mx-auto h-12 w-12 text-destructive mb-4" />
-        <p className="text-destructive mb-4">Failed to load doctors. Please try again.</p>
+      <div className="text-center py-12 px-4 sm:px-6">
+        <AlertCircle className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-destructive mb-4" />
+        <p className="text-destructive mb-4 text-sm sm:text-base">Failed to load doctors. Please try again.</p>
         <Button
           onClick={() => refetch()}
           variant="default"
@@ -176,14 +176,14 @@ const FindDoctors = () => {
 
   return (
     <>
-      <div className="space-y-12">
+      <div className="space-y-6 sm:space-y-8 md:space-y-10 lg:space-y-12">
         {/* Hero Section */}
         <section>
           <div className="max-w-3xl">
-            <h1 className="font-headline text-5xl font-extrabold text-primary-container tracking-tight mb-4">
+            <h1 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-container tracking-tight mb-3 sm:mb-4">
               Find the right care, <span className="text-on-primary-container">effortlessly.</span>
             </h1>
-            <p className="text-on-surface-variant text-lg max-w-xl mb-8">
+            <p className="text-on-surface-variant text-sm sm:text-base md:text-lg max-w-xl mb-5 sm:mb-6 md:mb-8">
               Connect with world-class specialists curated for your health journey. Expert clinical care delivered with a human touch.
             </p>
             <SearchBar value={searchTerm} onChange={setSearchTerm} />
@@ -191,7 +191,7 @@ const FindDoctors = () => {
         </section>
 
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-10">
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-10">
           <FilterSidebar
             specialty={specialty}
             consultationType={consultationType}
@@ -202,14 +202,14 @@ const FindDoctors = () => {
           />
 
           <div className="flex-grow">
-            <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-              <p className="text-on-surface-variant font-medium">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8">
+              <p className="text-on-surface-variant font-medium text-sm sm:text-base">
                 Showing <span className="text-on-surface font-bold">{sortedDoctors.length} specialists</span> matching your criteria
               </p>
               <SortDropdown value={sortBy} onChange={setSortBy} />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
               {sortedDoctors.map((doctor) => (
                 <DoctorCard
                   key={doctor.id}
@@ -221,8 +221,8 @@ const FindDoctors = () => {
             </div>
 
             {sortedDoctors.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-on-surface-variant mb-4">No doctors found matching your criteria.</p>
+              <div className="text-center py-8 sm:py-10 md:py-12">
+                <p className="text-on-surface-variant mb-4 text-sm sm:text-base">No doctors found matching your criteria.</p>
                 <Button
                   onClick={handleClearFilters}
                   variant="outline"
@@ -247,8 +247,8 @@ const FindDoctors = () => {
         cancelText="Cancel"
         onConfirm={handleCloseDialog}
         icon={dialogState.type === 'danger' ?
-          <AlertCircle className="h-6 w-6 text-destructive" /> :
-          <CheckCircle2 className="h-6 w-6 text-green-600" />
+          <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive" /> :
+          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
         }
       />
     </>

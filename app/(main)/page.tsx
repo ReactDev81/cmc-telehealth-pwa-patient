@@ -87,7 +87,10 @@ export default function Home() {
 					</p>
 				</div>
 				<Button
-					onClick={() => setPage && setPage("find-doctor")}
+					onClick={() => {
+						window.open("/find-doctors", "_blank")
+						setPage && setPage("/find-doctors");
+					}}
 					className="p-5 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-all shadow-md flex items-center gap-2"
 				>
 					<Plus className="w-5 h-5" />
