@@ -107,7 +107,7 @@ function AppointmentCard({
           </div>
         </div>
       </CardDescription>
-      
+
       <CardContent className="p-0 mt-4 sm:mt-6">
         {/* Footer: Date/Time/Type + CTA - Responsive */}
         <div className="flex flex-col gap-4 sm:gap-5 p-0">
@@ -127,7 +127,7 @@ function AppointmentCard({
                 </p>
               </div>
             </div>
-            
+
             {/* Time */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <div className="p-1.5 sm:p-2 bg-white/10 rounded-lg">
@@ -142,9 +142,9 @@ function AppointmentCard({
                 </p>
               </div>
             </div>
-            
+
             {/* Type */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-2 justify-between sm:gap-3 shrink-0">
               <div className="p-1.5 sm:p-2 bg-white/10 rounded-lg">
                 {appointment.type === "video" ? (
                   <Video className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
@@ -161,18 +161,20 @@ function AppointmentCard({
                 </p>
               </div>
             </div>
+
+            {appointment.type === "video" && (
+              <Button
+                onClick={() => onStartCall(appointment.id)}
+                className="ml-auto w-full md:w-auto px-4 sm:px-6 py-3 sm:py-5 bg-white text-primary hover:bg-white/90 rounded-xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 text-sm sm:text-base"
+              >
+                <Video className="w-4 h-4 sm:w-5 sm:h-5" />
+                Start Video Call
+              </Button>
+            )}
           </div>
-          
+
           {/* Button - Full width on mobile */}
-          {appointment.type === "video" && (
-            <Button
-              onClick={() => onStartCall(appointment.id)}
-              className="w-full md:w-auto px-4 sm:px-6 py-3 sm:py-5 bg-white text-primary hover:bg-white/90 rounded-xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 text-sm sm:text-base"
-            >
-              <Video className="w-4 h-4 sm:w-5 sm:h-5" />
-              Start Video Call
-            </Button>
-          )}
+
         </div>
       </CardContent>
     </Card>
