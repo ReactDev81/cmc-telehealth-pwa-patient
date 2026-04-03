@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, FileText, Pill } from "lucide-react";
@@ -6,22 +7,37 @@ import { ArrowRight, FileText, Pill } from "lucide-react";
 interface QuickLinksProps {
     reportSummary?: string;
     prescriptionSummary?: string;
+    onViewReports?: () => void;
+    onManageRefills?: () => void;
 }
 
-export function QuickLinks() {
-    // Handler to redirect to /medical-records
+export default function QuickLinks({
+    reportSummary,
+    prescriptionSummary,
+    onViewReports,
+    onManageRefills,
+}: QuickLinksProps) {
     const handleViewReports = () => {
-        window.open("/reviews", "_blank");
+        if (onViewReports) {
+            onViewReports();
+        } else {
+            window.location.href = "/reviews";
+        }
     };
+
     const handleManageRefills = () => {
-        window.open("/transactions", "_blank");
+        if (onManageRefills) {
+            onManageRefills();
+        } else {
+            window.location.href = "/transactions";
+        }
     };
 
     return (
         <div className="flex flex-col gap-6 h-full">
             {/* Reports Card */}
             <Card className="rounded-3xl border border-border/50 shadow-sm flex-1 p-0">
-                <CardContent className=" flex flex-col h-full p-5 align-end justify-between">
+                <CardContent className="flex flex-col h-full p-5 justify-between">
                     <div>
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-3 bg-[#d1e4d7] rounded-xl">

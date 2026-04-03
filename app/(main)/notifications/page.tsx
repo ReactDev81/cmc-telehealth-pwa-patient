@@ -47,7 +47,7 @@ export default function Notifications() {
 
     const handleMarkAsRead = async (notificationId: string | number) => {
         try {
-            await markNotificationAsRead(notificationId);
+            await markNotificationAsRead(Number(notificationId));
 
             setAllNotifications(prev =>
                 prev.map(n =>

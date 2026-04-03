@@ -1,5 +1,4 @@
-// @ts-expect-error - next-pwa does not provide TypeScript definitions
-import withPWAInit from 'next-pwa';
+const withPWA = require('next-pwa');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -19,13 +18,12 @@ const nextConfig = {
       },
     ],
   },
+  pwa: {
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+    disable: process.env.NODE_ENV === 'development',
+  },
 };
-
-const withPWA = withPWAInit({
-  dest: "public",
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-});
 
 export default process.env.NODE_ENV === 'development' ? nextConfig : withPWA(nextConfig);

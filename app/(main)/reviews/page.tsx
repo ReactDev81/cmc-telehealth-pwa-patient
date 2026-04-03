@@ -4,14 +4,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useMyReviews } from "@/queries/useMyReviews";
 import { Star, Loader2 } from "lucide-react";
+import { ReviewResponse } from "@/types/reviews";
 
 export default function Page() {
 
     const [page, setPage] = useState(1);
 
     const { data, isLoading, isError, isFetching } = useMyReviews(page);
-    const reviews = data?.data ?? [];
-    const pagination = data?.pagination;
+    const reviews = (data as ReviewResponse | undefined)?.data ?? [];
+    const pagination = (data as ReviewResponse | undefined)?.pagination;
 
     // Loading State
     if (isLoading) {

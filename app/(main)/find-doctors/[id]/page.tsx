@@ -12,6 +12,7 @@ import AppointmentBooking from '@/components/pages/doctor-profile/AppointmentBoo
 import ReviewSection from '@/components/pages/doctor-profile/ReviewSection';
 import LoadingSkeleton from '@/components/pages/doctor-profile/LoadingSkeleton';
 import CustomDialog from '@/components/custom/Dialogboxs';
+import CustomTabs from '@/components/custom/CustomTabs';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -83,7 +84,6 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
                 <div className="lg:col-span-8 space-y-8">
                     <DoctorHeader doctor={doctor} />
 
-                    {/* Tabs */}
                     <div className="space-y-6">
                         {/* Tabs Container - Centered on all devices */}
                         <div className="flex justify-center md:justify-start">
@@ -100,7 +100,7 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
                                             : 'text-on-surface-variant font-medium hover:text-primary'
                                         }
                                      `}
-                                    >
+                                >
                                     Overview
                                 </button>
                                 <button
@@ -137,6 +137,34 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
                             <ReviewSection reviews={doctor.doctor_reviews || []} />
                         )}
                     </div>
+
+                    {/* Tabs */}
+                    {/* <CustomTabs
+                        tabs={[
+                            {
+                                key: 'overview',
+                                label: 'Overview',
+                                content: (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                                        <DoctorAbout about={doctor.about} className="md:col-span-2" />
+                                        <DoctorStats
+                                            patientsHelped={5000}
+                                            experience={doctor.profile.years_experience}
+                                        />
+                                        <DoctorEducation education={doctor.education} />
+                                    </div>
+                                ),
+                            },
+                            {
+                                key: 'reviews',
+                                label: `Reviews (${doctor.review_summary?.total_reviews || 0})`,
+                                content: <ReviewSection reviews={doctor.doctor_reviews || []} />,
+                            },
+                        ]}
+                        activeTab={activeTab}
+                        onTabChange={(value) => setActiveTab(value as 'overview' | 'reviews')}
+                        variant="pill"
+                    /> */}
                 </div>
 
                 {/* Right Column - Booking */}

@@ -40,7 +40,7 @@ export default function Transactions() {
     };
 
     // ✅ Get unique statuses with their labels for tabs
-    const uniqueStatuses = [...new Set(transactions.map((t: any) => t.status))];
+    const uniqueStatuses = [...new Set(transactions.map((t: any) => t.status))] as string[];
     const allStatuses = ["All", ...uniqueStatuses];
 
     // ✅ filter logic
@@ -89,7 +89,7 @@ export default function Transactions() {
     };
 
     // ✅ Tabs config with status_label
-    const tabs = allStatuses.map((status) => {
+    const tabs = allStatuses.map((status: string) => {
         // Get display label for the tab
         let displayLabel = status;
         if (status !== "All") {

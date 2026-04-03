@@ -1,7 +1,7 @@
 "use client";
 import { Advertisements } from "@/components/pages/Dashboard/Advertisements";
 import { AvailableDoctors } from "@/components/pages/Dashboard/AvailableDoctors";
-import { QuickLinks } from "@/components/pages/Dashboard/QuickLinks";
+import QuickLinks from "@/components/pages/Dashboard/QuickLinks";
 import { TestimonialsCarousel } from "@/components/pages/Dashboard/TestimonialsCarousel";
 import { UpcomingAppointments } from "@/components/pages/Dashboard/UpcomingAppointments";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { usePatientHome } from "@/queries/usePatientHome";
 import { MappedAppointment } from "@/types/home";
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Page = string;
 
@@ -18,6 +19,9 @@ export default function Home() {
 	const [page, setPage] = useState<Page | null>(null);
 	const { data, isLoading, isError } = usePatientHome();
 	const homeData = data?.data;
+	const router = useRouter();
+
+	console.log("data : ", data);
 	// Map API upcoming_appointments → MappedAppointment shape for UpcomingAppointments component
 	const appointments: MappedAppointment[] = (
 		homeData?.upcoming_appointments ?? []
@@ -110,8 +114,8 @@ export default function Home() {
 					<QuickLinks
 						reportSummary="Blood Work Result: Normal"
 						prescriptionSummary="2 Active medications • Refill ready"
-						onViewReports={() => setPage && setPage("medical-records")}
-						onManageRefills={() => setPage && setPage("prescriptions")}
+						onViewReports={() => router.push("/reviews")}
+						onManageRefills={() => router.push("/transactions")}
 					/>
 				</div>
 			</div>
