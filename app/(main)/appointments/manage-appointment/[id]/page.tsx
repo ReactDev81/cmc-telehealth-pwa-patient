@@ -18,6 +18,7 @@ import AppointmentInfo from '@/components/pages/appointments/manage-appointment/
 import ReportsAndNotes from '@/components/pages/appointments/manage-appointment/ReportsAndNotes';
 import AddReportModal from '@/components/pages/appointments/manage-appointment/AddReportModal';
 import CancelConfirmationModal from '@/components/pages/appointments/manage-appointment/CancelConfirmationModal';
+import { DetailHeader } from '@/components/custom/DetailHeader';
 
 interface PageProps {
     params: Promise<{
@@ -213,13 +214,9 @@ export default function ManageAppointment({ params }: PageProps) {
 
             {/* Header */}
             <header className="flex items-center gap-4 mb-8">
-                <button
-                    onClick={() => router.back()}
-                    className="p-2 hover:bg-surface-container rounded-full transition-colors"
-                >
-                    <ChevronLeft className="w-6 h-6 text-primary" />
-                </button>
-                <h1 className="text-2xl font-bold font-headline text-primary tracking-tight">Manage Appointment</h1>
+                <DetailHeader
+                    title='Manage Appointment'
+                />
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

@@ -14,6 +14,8 @@ import CustomTabs from "@/components/custom/CustomTabs";
 import { getStatusColor } from "@/src/utils/getStatusColor";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { getIconSizeClass, getPaymentMethodIcon, getTransactionStatusIcon } from "@/src/utils/getIcons";
 
 export default function Transactions() {
     const router = useRouter();
@@ -52,32 +54,32 @@ export default function Transactions() {
     const currentCount = currentTransactions.length;
     const totalCount = data?.pagination?.total || transactions.length;
 
-    // ✅ icons
-    const getStatusIcon = (status: string) => {
-        switch (status) {
-            case "paid":
-                return <CheckCircle className="w-5 h-5 text-green-500" />;
-            case "pending":
-                return <Clock className="w-5 h-5 text-yellow-500" />;
-            case "cancelled":
-                return <XCircle className="w-5 h-5 text-red-500" />;
-            case "failed":
-                return <XCircle className="w-5 h-5 text-red-500" />;
-            default:
-                return null;
-        }
-    };
+    // // ✅ icons
+    // const getStatusIcon = (status: string) => {
+    //     switch (status) {
+    //         case "paid":
+    //             return <CheckCircle className="w-5 h-5 text-green-500" />;
+    //         case "pending":
+    //             return <Clock className="w-5 h-5 text-yellow-500" />;
+    //         case "cancelled":
+    //             return <XCircle className="w-5 h-5 text-red-500" />;
+    //         case "failed":
+    //             return <XCircle className="w-5 h-5 text-red-500" />;
+    //         default:
+    //             return null;
+    //     }
+    // };
 
-    const getPaymentIcon = (method: string) => {
-        switch (method?.toLowerCase()) {
-            case "card":
-                return <CreditCard className="w-5 h-5 text-blue-500" />;
-            case "upi":
-                return <Smartphone className="w-5 h-5 text-purple-500" />;
-            default:
-                return <Banknote className="w-5 h-5 text-gray-500" />;
-        }
-    };
+    // const getPaymentIcon = (method: string) => {
+    //     switch (method?.toLowerCase()) {
+    //         case "card":
+    //             return <CreditCard className="w-5 h-5 text-blue-500" />;
+    //         case "upi":
+    //             return <Smartphone className="w-5 h-5 text-purple-500" />;
+    //         default:
+    //             return <Banknote className="w-5 h-5 text-gray-500" />;
+    //     }
+    // };
 
     const formatAmount = (amount: string, currency: string) => {
         return new Intl.NumberFormat("en-IN", {
@@ -119,21 +121,31 @@ export default function Transactions() {
                             <div className="flex justify-between items-center">
                                 {/* LEFT */}
                                 <div className="flex gap-3 items-center">
-                                    <div className={`text-xs p-2 rounded-full ${getStatusColor(
-                                        "payment",
-                                        item.status
-                                    )}`}>
-                                        {getStatusIcon(item.status)}
-                                    </div>
+                                    {(() => {
+                                        const { icon: Icon, color, bg } = getTransactionStatusIcon(item.status);
+
+                                        return (
+                                            <div className={cn("p-2 rounded-full", bg)}>
+                                                <Icon className={cn(getIconSizeClass("md"), color)} />
+                                            </div>
+                                        );
+                                    })()}
 
                                     <div>
                                         <div className="flex gap-2 items-center">
                                             <p className="font-semibold text-base">
                                                 {item.patient_name}
                                             </p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {item.payment_method}
-                                            </p>
+                                            {(() => {
+                                                const { icon: PayIcon, color } = getPaymentMethodIcon(item.payment_method);
+
+                                                return (
+                                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                                        <PayIcon className={cn("w-4 h-4", color)} />
+                                                        <span>{item.payment_method}</span>
+                                                    </div>
+                                                );
+                                            })()}
                                             {/* Status badge */}
 
                                         </div>
@@ -179,7 +191,7 @@ export default function Transactions() {
     });
 
     return (
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">
                 Transactions
             </h1>
@@ -192,7 +204,14 @@ export default function Transactions() {
                 tabs={tabs}
                 defaultTab="All"
                 onTabChange={setActiveTab}
-                tabsListClassName="max-w-md"   // ✅ sirf tabs ki width control hogi
+                tabsListClassName={cn(
+                    "max-w-xl",
+                    "overflow-x-auto overflow-y-hidden", // Add scroll
+                    "flex-nowrap", // Prevent wrapping
+                    "justify-start", // Left align for scroll
+                     // Space for scrollbar
+                    "scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700" // Optional: custom scrollbar
+                )}
             />
 
             {/* Pagination Info - Now shows count based on active tab */}
@@ -203,4 +222,4 @@ export default function Transactions() {
             )}
         </div>
     );
-}
+} 

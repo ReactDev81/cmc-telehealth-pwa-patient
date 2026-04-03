@@ -59,11 +59,11 @@ const MedicalRecordsPage = () => {
         <div className="space-y-8 max-w-6xl mx-auto pb-12">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-2">
-                    <h1 className="text-5xl font-black text-[#0A2E1F] tracking-tight">
+                <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#0A2E1F] tracking-tight">
                         Medical Records
                     </h1>
-                    <p className="text-gray-500 text-lg font-medium">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl font-medium text-gray-500">
                         Access your clinical history, lab results, and prescriptions.
                     </p>
                 </div>

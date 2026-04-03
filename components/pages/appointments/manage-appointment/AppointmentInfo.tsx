@@ -29,7 +29,7 @@ export default function AppointmentInfo({
         >
             {/* Appointment Details */}
             <section>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex md:items-center items-start justify-between mb-6">
                     <h3 className="text-lg font-bold font-headline text-primary">Appointment Details</h3>
                     <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-emerald-100">
                         {appointment_status}

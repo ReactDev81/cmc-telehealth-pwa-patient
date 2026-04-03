@@ -85,29 +85,45 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
 
                     {/* Tabs */}
                     <div className="space-y-6">
-                        <div className="flex gap-8 border-b border-outline-variant/20 px-2 overflow-x-auto no-scrollbar">
-                            <button
-                                onClick={() => setActiveTab('overview')}
-                                className={`pb-4 transition-all whitespace-nowrap ${activeTab === 'overview'
-                                    ? 'text-primary font-bold border-b-2 border-primary'
-                                    : 'text-on-surface-variant font-medium hover:text-primary'
-                                    }`}
-                            >
-                                Overview
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('reviews')}
-                                className={`pb-4 transition-all whitespace-nowrap ${activeTab === 'reviews'
-                                    ? 'text-primary font-bold border-b-2 border-primary'
-                                    : 'text-on-surface-variant font-medium hover:text-primary'
-                                    }`}
-                            >
-                                Reviews ({doctor.review_summary?.total_reviews || 0})
-                            </button>
+                        {/* Tabs Container - Centered on all devices */}
+                        <div className="flex justify-center md:justify-start">
+                            <div className="flex gap-4 sm:gap-8 border-b border-outline-variant/20 overflow-x-auto no-scrollbar px-2">
+                                <button
+                                    onClick={() => setActiveTab('overview')}
+                                    className={`
+                                                pb-3 sm:pb-4 
+                                                transition-all 
+                                                whitespace-nowrap
+                                                text-sm sm:text-base
+                                                ${activeTab === 'overview'
+                                            ? 'text-primary font-bold border-b-2 border-primary'
+                                            : 'text-on-surface-variant font-medium hover:text-primary'
+                                        }
+                                     `}
+                                    >
+                                    Overview
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('reviews')}
+                                    className={`
+                                                pb-3 sm:pb-4 
+                                                transition-all 
+                                                whitespace-nowrap
+                                                text-sm sm:text-base
+                                                ${activeTab === 'reviews'
+                                            ? 'text-primary font-bold border-b-2 border-primary'
+                                            : 'text-on-surface-variant font-medium hover:text-primary'
+                                        }
+                                `}
+                                >
+                                    Reviews ({doctor.review_summary?.total_reviews || 0})
+                                </button>
+                            </div>
                         </div>
 
+                        {/* Content Sections */}
                         {activeTab === 'overview' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                 <DoctorAbout about={doctor.about} className="md:col-span-2" />
                                 <DoctorStats
                                     patientsHelped={5000}

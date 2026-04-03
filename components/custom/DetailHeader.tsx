@@ -29,7 +29,7 @@ export const DetailHeader = ({
   };
 
   return (
-    <header className={cn("flex items-center gap-4 mb-8", className)}>
+    <header className={cn("flex items-center md:gap-4 gap-1 mb-8", className)}>
       <button
         onClick={handleBack}
         className="p-3 hover:bg-surface-container rounded-2xl transition-all text-primary"
@@ -37,11 +37,11 @@ export const DetailHeader = ({
         <ChevronLeft className="w-6 h-6" />
       </button>
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-primary font-headline">
+        <h1 className="md:text-3xl text-1xl font-extrabold tracking-tight text-primary font-headline">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-on-surface-variant font-medium">
+          <p className="text-on-surface-variant text-sm md:text-base font-medium">
             {subtitle}
           </p>
         )}

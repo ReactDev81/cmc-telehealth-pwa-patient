@@ -16,7 +16,7 @@ const TimeSelector = ({ slot, selectedSlot, onSelectSlot }: TimeSelectorProps) =
   };
 
   return (
-    <div className="bg-surface-container-low/50 p-4 rounded-2xl space-y-4">
+    <div className="bg-surface-container-low/50  rounded-2xl space-y-4">
       <div className="grid grid-cols-2 gap-3">
         {timeSlots.map((timeSlot) => (
           <Button

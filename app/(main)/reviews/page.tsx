@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useMyReviews } from "@/queries/useMyReviews";
-import { Star } from "lucide-react";
+import { Star, Loader2 } from "lucide-react";
 
 export default function Page() {
 
@@ -13,115 +13,169 @@ export default function Page() {
     const reviews = data?.data ?? [];
     const pagination = data?.pagination;
 
-    return (
-        <div className="max-w-5xl mx-auto px-6 py-10">
+    // Loading State
+    if (isLoading) {
+        return (
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12">
+                <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+                    <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 text-primary animate-spin" />
+                    <p className="text-muted-foreground text-sm sm:text-base">Loading your reviews...</p>
+                </div>
+            </div>
+        );
+    }
 
-            {/* Header */}
-            <div className="mb-12">
-                <h1 className="text-4xl font-bold text-primary">
+    console.log("Pagination data:", pagination);
+    console.log("Reviews data:", data);
+
+
+    // Error State
+    if (isError) {
+        return (
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12">
+                <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+                    <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-full">
+                        <Star className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
+                    </div>
+                    <p className="text-red-500 text-sm sm:text-base">Error loading reviews. Please try again.</p>
+                    <Button
+                        variant="outline"
+                        onClick={() => window.location.reload()}
+                        className="mt-2"
+                    >
+                        Retry
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="max-w-7xl mx-auto px-0 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10 lg:py-12">
+            {/* Header Section */}
+            <div className="mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
                     My Reviews
                 </h1>
-                <p className="text-muted-foreground mt-2">
+                <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
                     Manage and view all your doctor reviews.
                 </p>
             </div>
 
-            {/* Loading */}
-            {isLoading && <p>Loading...</p>}
-
-            {/* Error */}
-            {isError && <p>Error loading reviews</p>}
-
-            {/* Empty */}
+            {/* Empty State */}
             {!isLoading && reviews.length === 0 && (
-                <div className="text-center py-20 border rounded-xl">
-                    <p className="text-lg font-semibold text-muted-foreground">
+                <div className="text-center py-12 sm:py-16 md:py-20 px-4 border-2 border-dashed rounded-xl sm:rounded-2xl bg-gray-50/30 dark:bg-gray-950/10">
+                    <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+                        <Star className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-semibold text-muted-foreground mb-2">
                         No Reviews Found
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                        You haven't written any reviews yet.
                     </p>
                 </div>
             )}
 
-            {/* Reviews */}
-            <div className="space-y-10">
+            {/* Reviews List */}
+            {!isLoading && reviews.length > 0 && (
+                <>
+                    <div className="space-y-6 sm:space-y-8 md:space-y-10  shadow-sm bg-white p-4 rounded-xl sm:rounded-2xl">
+                        {reviews.map((review, index) => (
+                            <div
+                                key={review.id}
+                                className={` border-outline-variant/20  ${index !== reviews.length - 1 ? 'border-b' : ''
+                                    }`}
+                            >
+                                {/* Review Header */}
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-6">
+                                    {/* Doctor Info - Left Side */}
+                                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                                        <img
+                                            src={review.doctor_avatar}
+                                            alt={review.doctor_name}
+                                            className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full object-cover ring-2 ring-primary/10 shadow-md"
+                                            referrerPolicy="no-referrer"
+                                        />
 
-                {reviews.map((review) => (
+                                        <div className="flex-1 min-w-0">
+                                            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-primary truncate">
+                                                Dr. {review.doctor_name}
+                                            </h2>
+                                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                                                {review.doctor_departments}
+                                            </p>
 
-                    <div key={review.id} className="border-b pb-8">
+                                            
+                                        </div>
+                                    </div>
 
-                        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+                                    {/* Rating & Date - Right Side */}
+                                    <div className="text-left sm:text-right shrink-0">
+                                        <div className="flex gap-0.5 sm:gap-1 justify-start sm:justify-end">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    className={`w-4 h-4 sm:w-5 sm:h-5 ${i < review.rating
+                                                            ? 'text-yellow-500 fill-yellow-500'
+                                                            : 'text-gray-300 fill-gray-300 dark:text-gray-600 dark:fill-gray-600'
+                                                        }`}
+                                                />
+                                            ))}
+                                        </div>
+                                        <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-1 sm:mt-2">
+                                            Visited: {review.created_at}
+                                        </p>
+                                    </div>
+                                </div>
 
-                            {/* LEFT */}
-                            <div className="flex items-center gap-4">
-                                <img
-                                    src={review.doctor_avatar}
-                                    className="w-14 h-14 rounded-full object-cover"
-                                />
-
-                                <div>
-                                    <h2 className="text-xl font-semibold">
-                                        Dr. {review.doctor_name}
-                                    </h2>
-                                    <p className="text-sm text-muted-foreground">
-                                        {review.doctor_departments}
+                                {/* Review Content */}
+                                <div className="mt-4 sm:mt-5 md:mt-6">
+                                    <h3 className="text-base sm:text-lg md:text-xl font-bold text-primary mb-2 sm:mb-3">
+                                        {review.title}
+                                    </h3>
+                                    <p className="text-sm sm:text-base md:text-lg text-muted-foreground italic leading-relaxed whitespace-pre-line">
+                                        "{review.content}"
                                     </p>
                                 </div>
                             </div>
-
-                            {/* RIGHT */}
-                            <div className="text-right">
-                                <div className="flex gap-1 justify-end">
-                                    {[...Array(review.rating)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className="w-5 h-5 text-yellow-500 fill-yellow-500"
-                                        />
-                                    ))}
-                                </div>
-
-                                <p className="text-sm font-bold text-muted-foreground mt-1">
-                                    Visited: {review.created_at}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Title */}
-                        <p className="mt-4 text-primary text-lg font-bold">
-                            {review.title}
-                        </p>
-
-                        {/* Content */}
-                        <p className="mt-4 text-muted-foreground text-lg italic whitespace-pre-line">
-                            "{review.content}"
-                        </p>
+                        ))}
                     </div>
-                ))}
-            </div>
 
-            {/* ✅ PAGINATION */}
-            {pagination && (
-                <div className="flex justify-end items-center mt-10 gap-4">
+                    {/* Pagination Section */}
+                    {pagination && pagination.last_page > 1 && (
+                        <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-center gap-3 sm:gap-4 mt-8 sm:mt-10 md:mt-12">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={page === 1 || isFetching}
+                                onClick={() => setPage((prev) => prev - 1)}
+                                className="w-24 sm:w-auto"
+                            >
+                                Previous
+                            </Button>
 
-                    <Button
-                        variant="outline"
-                        disabled={page === 1 || isFetching}
-                        onClick={() => setPage((prev) => prev - 1)}
-                    >
-                        Previous
-                    </Button>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs sm:text-sm text-muted-foreground">
+                                    Page {pagination.current_page} of {pagination.last_page}
+                                </span>
+                                {isFetching && (
+                                    <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin text-muted-foreground" />
+                                )}
+                            </div>
 
-                    <span className="text-sm text-muted-foreground">
-                        Page {pagination.current_page} of {pagination.last_page}
-                    </span>
-
-                    <Button
-                        variant="outline"
-                        disabled={page === pagination.last_page || isFetching}
-                        onClick={() => setPage((prev) => prev + 1)}
-                    >
-                        Next
-                    </Button>
-
-                </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={page === pagination.last_page || isFetching}
+                                onClick={() => setPage((prev) => prev + 1)}
+                                className="w-24 sm:w-auto"
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );
