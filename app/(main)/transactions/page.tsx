@@ -89,7 +89,7 @@ export default function Transactions() {
                     {getFilteredTransactions(status).map((item: any) => (
                         <div
                             key={item.id}
-                            className="p-6 border-b border-gray-100 bg-gray-100 hover:bg-gray-200 rounded-xl transition cursor-pointer"
+                            className="p-6 border-b border-gray-100 bg-white hover:bg-gray-200 rounded-xl transition cursor-pointer"
                             onClick={() => router.push(`/transactions/${item.id}`)}
                         >
                             <div className="flex justify-between items-center">
