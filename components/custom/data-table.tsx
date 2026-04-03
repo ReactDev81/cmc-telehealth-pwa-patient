@@ -21,13 +21,7 @@ import {
 
 import PaginationControls from '@/components/ui/PaginationControls';
 import { Button } from '@/components/ui/button';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import SelectField from '@/components/custom/SelectField';
 import { Filter, Loader2, Search, X } from 'lucide-react';
 
 export interface FilterOption {
@@ -124,7 +118,8 @@ export function DataTable<T>({
             {/* Collapsible Filters section */}
             {showFilters && filters.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 p-1 bg-gray-50/50 rounded-2xl">
-                    {filters.map((filter) => (
+
+                    {/* {filters.map((filter) => (
                         <Select
                             key={filter.column}
                             value={filter.value || 'all'}
@@ -147,6 +142,21 @@ export function DataTable<T>({
                                 ))}
                             </SelectContent>
                         </Select>
+                    ))} */}
+                
+                    {filters.map((filter) => (
+                        <SelectField
+                            key={filter.column}
+                            name={filter.column}
+                            value={filter.value || 'all'}
+                            onChange={filter.onChange}
+                            placeholder={filter.label}
+                            options={[
+                                { value: 'all', label: `All ${filter.label}` },
+                                ...filter.options,
+                            ]}
+                            triggerClassName="h-[50px] w-fit min-w-[150px] rounded-xl border-gray-100 shadow-sm bg-white"
+                        />
                     ))}
 
                     {onClearFilters && (
