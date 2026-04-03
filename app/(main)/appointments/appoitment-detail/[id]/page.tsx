@@ -41,8 +41,7 @@ export default function AppointmentDetailPage() {
         <div className="min-h-screen bg-gray-50 px-4">
             <div className="max-w-8xl mx-auto">
                 <DetailHeader
-                    title="Manage Appointment"
-                    subtitle="Appointment Details"
+                    title="Appointment Details"
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
