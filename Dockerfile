@@ -13,11 +13,15 @@ RUN npm install --legacy-peer-deps
 # 5. Copy the rest of the application code
 COPY . .
 
-# 6. Build the Next.js production bundle
+# 6. Provide client env at build time for Next.js
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+
+# 7. Build the Next.js production bundle
 RUN npm run build
 
-# 7. Expose the Requested Port
+# 8. Expose the Requested Port
 EXPOSE 8000
 
-# 8. Start the application on Port 7001
+# 9. Start the application on Port 8000
 CMD ["npm", "run", "start", "--", "-p", "8000"]
