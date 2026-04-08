@@ -332,8 +332,8 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
             const payload = {
                 group: "personal_information",
                 first_name: formData.first_name,
-                last_name: formData.last_name,
-                mobile_no: formData.mobile_no,
+                last_name: formData.last_name, 
+                mobile_no: formData.mobile_no,  
                 bio: formData.bio,
                 date_of_birth: formatDate(formData.date_of_birth),
                 ...(avatarFile && { avatar: avatarFile }),
