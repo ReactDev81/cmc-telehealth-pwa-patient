@@ -5,13 +5,22 @@ export interface RescheduleAppointmentPayload {
   appointment_time: string;
 }
 
+// export interface RescheduleAppointmentData {
+//   success: boolean;
+//   message: string;
+//   path: string;
+//   timestamp: string;
+//   data?: unknown;
+//   appointment_status: string;
+// }
+
 export interface RescheduleAppointmentData {
   success: boolean;
   message: string;
   path: string;
   timestamp: string;
-  data?: unknown;
-  appointment_status: string;
+  data?: unknown;  // <-- This is 'unknown', so TS can't infer properties
+  appointment_status: string;  // <-- This is at the TOP level
 }
 
 export interface SlotItem {

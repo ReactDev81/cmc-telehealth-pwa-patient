@@ -43,8 +43,7 @@ export default function ManageAppointment({ params }: PageProps) {
     // Fetch appointment details using the proper hook
     const { data, isLoading, error } = useAppointmentDetail(appointmentId);
     const appointment = data?.data;
-
-    console.log("all data:", data);
+    console.log("Appointments : ", appointment?.status);
     
 
     const { user } = useAuth();

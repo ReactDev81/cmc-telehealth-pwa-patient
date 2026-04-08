@@ -47,13 +47,9 @@ export default function RescheduleDialog({
         isOpen
     );
 
-    console.log("data reschudele", slotsData);
-
     
 
     const slotGroups: SlotGroup[] = slotsData?.data || [];
-
-    console.log("data reschudele", slotsData);
 
     const handleSlotSelect = (slot: SlotItem) => {
         setSelectedSlot(slot);

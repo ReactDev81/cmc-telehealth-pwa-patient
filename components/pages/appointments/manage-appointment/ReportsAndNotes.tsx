@@ -52,9 +52,7 @@ export default function ReportsAndNotes({
         }
     }, [appointmentStatus]);
 
-    console.log("reschdule mutaion", rescheduleMutation);
-
-    console.log("APPOINTMENT STATUS PROP:", appointmentStatus);
+    // console.log("APPOINTMENT STATUS PROP:", appointmentStatus);
 
 
     const handleRescheduleClick = () => {
@@ -84,21 +82,20 @@ export default function ReportsAndNotes({
             appointment_time: slot.booking_start_time
         };
 
-        console.log("payload id", payload);
+        // console.log("payload id", payload);
 
         rescheduleMutation.mutate(payload, {
             onSuccess: (data) => {
+                // console.log("response status", data?.data?.appointment_status);
                 const message = data.message || 'Appointment rescheduled successfully';
                 callbacks.onSuccess(message);
                 
-                const status = data?.data?.appointment_status;
+                // const status = data?.data?.appointment_status;
+                // console.log("status", status);
 
-                console.log("status" ,status);
-                
-
-                if (status === "rescheduled") {
+                if (appointmentStatus === "rescheduled") {
                     setIsAlreadyRescheduled(true); // ✅ LOCK
-                    queryClient.invalidateQueries(['appointment', appointmentId]);
+                    queryClient.invalidateQueries({ queryKey: ['appointment', appointmentId] });
                 }
 
             },
