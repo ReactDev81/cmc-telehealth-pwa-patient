@@ -15,6 +15,9 @@ interface RescheduleDialogProps {
     appointmentId?: string;
     isLoading?: boolean;
     onConfirmReschedule?: (slot: SlotItem, callbacks: { onSuccess: (message: string) => void, onError: (message: string) => void }) => void;
+
+    currentSlotId?: string;
+    currentSlotDate?: string;
 }
 
 export default function RescheduleDialog({
@@ -23,7 +26,9 @@ export default function RescheduleDialog({
     doctorId,
     appointmentId,
     isLoading,
-    onConfirmReschedule
+    onConfirmReschedule,
+     currentSlotId,
+    currentSlotDate
 }: RescheduleDialogProps) {
     const [selectedSlot, setSelectedSlot] = useState<SlotItem | null>(null);
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -39,6 +44,9 @@ export default function RescheduleDialog({
         doctorId,
         isOpen
     );
+
+    console.log("data reschudele", slotsData);
+    
 
     const slotGroups: SlotGroup[] = slotsData?.data || [];
 
@@ -156,28 +164,34 @@ export default function RescheduleDialog({
                                                     </span>
                                                 </h4>
                                                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                                                    {group.slots.map((slot) => (
-                                                        <button
-                                                            key={getSlotKey(slot)}
-                                                            onClick={() => handleSlotSelect(slot)}
-                                                            disabled={!slot.available}
-                                                            className={`p-3 rounded-xl text-xs font-bold transition-all ${
-                                                                selectedSlot && getSlotKey(selectedSlot) === getSlotKey(slot)
-                                                                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
-                                                                    : slot.available
-                                                                        ? 'bg-surface-container-low text-primary hover:bg-emerald-50 border border-outline-variant/10'
-                                                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                            }`}
-                                                        >
-                                                            <div className="flex items-center justify-center gap-1 mb-1">
-                                                                <Clock className="w-3 h-3" />
-                                                                {slot.start_time}
-                                                            </div>
-                                                            <div className="text-[10px] font-normal opacity-80">
-                                                                {slot.consultation_type_label}
-                                                            </div>
-                                                        </button>
-                                                    ))}
+                                                    {group.slots.map((slot) => {
+                                                        const isCurrentSlot =
+                                                            currentSlotId === slot.id && currentSlotDate === slot.date;
+
+                                                        return (
+                                                            <button
+                                                                key={getSlotKey(slot)}
+                                                                onClick={() => handleSlotSelect(slot)}
+                                                                disabled={!slot.available || isCurrentSlot}
+                                                                className={`p-3 rounded-xl text-xs font-bold transition-all ${selectedSlot && getSlotKey(selectedSlot) === getSlotKey(slot)
+                                                                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
+                                                                        : slot.available && !isCurrentSlot
+                                                                            ? 'bg-surface-container-low text-primary hover:bg-emerald-50 border border-outline-variant/10'
+                                                                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                                    }`}
+                                                            >
+                                                                <div className="flex items-center justify-center gap-1 mb-1">
+                                                                    {slot.start_time}
+                                                                </div>
+
+                                                                {isCurrentSlot && (
+                                                                    <div className="text-[10px] text-red-500">
+                                                                        Already booked
+                                                                    </div>
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
                                         ))}

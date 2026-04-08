@@ -81,7 +81,7 @@ const CustomTabs = ({
                             "transition-all duration-300 font-source-sans font-bold",
                             isPill
                                 ? cn(
-                                    "px-8 py-5 rounded-[1.5rem] flex-1 text-[#333333]",
+                                    "px-6 py-5 rounded-[1.5rem] flex-1 text-[#333333]",
                                     "data-[state=active]:bg-(--tab-active-bg) data-[state=active]:text-(--tab-active-text) data-[state=active]:shadow-sm",
                                 )
                                 : cn(

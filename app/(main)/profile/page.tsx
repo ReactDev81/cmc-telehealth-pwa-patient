@@ -27,11 +27,16 @@ export default function ProfileTabs() {
     ];
 
     return (
-        <div className="space-y-6 max-w-5xl mx-auto mt-5">
-            <div>
-                <h1 className="text-primary text-4xl font-extrabold">Account Settings</h1>
-                <p className="text-gray-700 mt-2">Manage your medical profile and personal preferences.</p>
+        <div className="space-y-6 max-w-5xl mx-auto">
+            <div className="space-y-1 sm:space-y-2">
+                <h1 className="text-primary text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+                    Account Settings
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm md:text-base mt-1 sm:mt-2">
+                    Manage your medical profile and personal preferences.
+                </p>
             </div>
+            
             <CustomTabs
                 variant="pill"
                 activeTabBg="#013220"

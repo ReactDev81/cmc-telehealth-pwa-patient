@@ -52,10 +52,14 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
     });
 
     const { data, isLoading, error, refetch } = useAppointmentDetail(AppointmentId);
+    console.log("rededule data" , data);
+    
     const doctor = data?.data;
     const patient = data?.data?.patient;
     const Data: AppointmentDetailData | undefined = data?.data;
     const schedule = data?.data?.schedule;
+
+
 
     const queryClient = useQueryClient();
     const { mutate: verifyPayment } = useVerifyPayment();

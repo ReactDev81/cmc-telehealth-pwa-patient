@@ -236,7 +236,7 @@ const AppointmentsPage = () => {
                     defaultTab="upcoming"
                     activeTab={activeTab}
                     onTabChange={handleTabChange}
-                    tabsListClassName="max-w-md"// only spacing
+                    tabsListClassName="max-w-md"
                 />
             </div>
 

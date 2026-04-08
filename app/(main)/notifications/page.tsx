@@ -172,7 +172,7 @@ export default function Notifications() {
     const tabsWithContent = tabs.map(tab => ({ ...tab, content: renderNotifications() }));
 
     return (
-        <div className="container max-w-4xl mx-auto px-4">
+        <div className="container max-w-4xl mx-auto">
             <div className="mb-6">
                 <h1 className="text-4xl font-bold text-primary mb-2">Notifications</h1>
                 <p className="text-muted-foreground ">

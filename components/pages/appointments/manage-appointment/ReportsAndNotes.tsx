@@ -38,6 +38,11 @@ export default function ReportsAndNotes({
     const [showRescheduleDialog, setShowRescheduleDialog] = useState(false);
     const rescheduleMutation = useRescheduleAppointment();
 
+
+
+    console.log("reschdule mutaion", rescheduleMutation);
+
+
     const handleRescheduleClick = () => {
         if (!doctorId) {
             toast.error('Doctor information not available');
@@ -59,15 +64,20 @@ export default function ReportsAndNotes({
             appointment_time: slot.booking_start_time
         };
 
+        console.log("payload id", payload);
+
         rescheduleMutation.mutate(payload, {
             onSuccess: (data) => {
                 const message = data.message || 'Appointment rescheduled successfully';
                 callbacks.onSuccess(message);
+
+                console.log("res" ,data);
+                
             },
             onError: (error: any) => {
                 // console.error('Reschedule error:', error?.response?.data);
-                const errorMessage = error?.response?.data?.errors?.message 
-                    || error?.response?.data?.message 
+                const errorMessage = error?.response?.data?.errors?.message
+                    || error?.response?.data?.message
                     || 'Failed to reschedule appointment';
                 callbacks.onError(errorMessage);
             }
