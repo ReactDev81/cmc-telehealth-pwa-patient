@@ -180,27 +180,29 @@ export default function Notifications() {
                 </p>
             </div>
 
-            <div className="flex items-center justify-between mb-4 relative">
-                <CustomTabs
-                    tabs={tabsWithContent}
-                    defaultTab="all"
-                    activeTab={activeTab}
-                    onTabChange={setActiveTab}
-                    color="primary"
-                    tabsTriggerClassName="px-6 py-2 rounded-lg hover:bg-gray-200 text-xs"
-                    tabsListClassName="bg-transparent gap-1 p-0 w-50! ml-0"
-                />
+            <div className="flex-1 flex items-center justify-between mb-4 gap-4">
+                <div className="flex">
+                    <CustomTabs
+                        tabs={tabsWithContent}
+                        defaultTab="all"
+                        activeTab={activeTab}
+                        onTabChange={setActiveTab}
+                        color="primary"
+                        tabsTriggerClassName="px-6 py-2 rounded-lg hover:bg-gray-200 text-xs"
+                        tabsListClassName="bg-transparent gap-1 p-0 w-50! ml-0"
+                    />
 
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-10 px-2 text-sm text-primary absolute right-0 top-4  -translate-y-1/2 bg-transparent shadow-none hover:bg-transparent underline-offset-4 hover:underline decoration-primary flex items-center gap-1"
-                    onClick={handleMarkAllRead}
-                    disabled={totalUnread === 0}
-                >
-                    <CircleCheck className="h-4 w-4" />
-                    Mark all as read
-                </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-10 px-2 text-sm text-primary bg-transparent shadow-none hover:bg-transparent underline-offset-4 hover:underline decoration-primary flex items-center gap-1 whitespace-nowrap shrink-0"
+                        onClick={handleMarkAllRead}
+                        disabled={totalUnread === 0}
+                    >
+                        <CircleCheck className="h-4 w-4" />
+                        Mark all as read
+                    </Button>
+                </div>
             </div>
         </div>
     );
