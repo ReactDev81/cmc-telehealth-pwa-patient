@@ -21,7 +21,7 @@ export interface User {
     doctor_id?: string;
     gender: string;
     date_of_birth: string;
-    phone: string;
+    mobile_no: string;
     address: Address;
     status: string;
 }
