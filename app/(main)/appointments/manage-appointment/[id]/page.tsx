@@ -44,6 +44,9 @@ export default function ManageAppointment({ params }: PageProps) {
     const { data, isLoading, error } = useAppointmentDetail(appointmentId);
     const appointment = data?.data;
 
+    console.log("all data:", data);
+    
+
     const { user } = useAuth();
 
     const { data: medicalReports, isLoading: isLoadingMedicalReports } = useMedicalReports(user?.id);
@@ -186,6 +189,8 @@ export default function ManageAppointment({ params }: PageProps) {
         });
     };
 
+    console.log("appointment status", appointment?.status);
+
     const handleModalSubmit = (newNote: string) => {
         updateInformation({
             appointmentId,
@@ -248,6 +253,7 @@ export default function ManageAppointment({ params }: PageProps) {
                     onEditReport={setShowEditReport}
                     onDeleteReport={handleDeleteReport}
                     onCancel={() => setShowCancelConfirm(true)}
+                    appointmentStatus={appointment?.status}
                 />
             </div>
 

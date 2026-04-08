@@ -11,6 +11,7 @@ export interface RescheduleAppointmentData {
   path: string;
   timestamp: string;
   data?: unknown;
+  appointment_status: string;
 }
 
 export interface SlotItem {

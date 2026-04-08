@@ -18,6 +18,7 @@ interface RescheduleDialogProps {
 
     currentSlotId?: string;
     currentSlotDate?: string;
+    isAlreadyRescheduled?: boolean;
 }
 
 export default function RescheduleDialog({
@@ -28,7 +29,8 @@ export default function RescheduleDialog({
     isLoading,
     onConfirmReschedule,
      currentSlotId,
-    currentSlotDate
+    currentSlotDate,
+    isAlreadyRescheduled
 }: RescheduleDialogProps) {
     const [selectedSlot, setSelectedSlot] = useState<SlotItem | null>(null);
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -46,15 +48,26 @@ export default function RescheduleDialog({
     );
 
     console.log("data reschudele", slotsData);
+
     
 
     const slotGroups: SlotGroup[] = slotsData?.data || [];
+
+    console.log("data reschudele", slotsData);
 
     const handleSlotSelect = (slot: SlotItem) => {
         setSelectedSlot(slot);
     };
 
     const handleConfirm = () => {
+        if (isAlreadyRescheduled) {
+            setDialogTitle('Error');
+            setDialogMessage('You already rescheduled this appointment');
+            setShowErrorDialog(true);
+            return;
+        }
+
+
         if (!selectedSlot) {
             setDialogTitle('Error');
             setDialogMessage('Please select a time slot');
@@ -127,6 +140,13 @@ export default function RescheduleDialog({
 
                             {/* Content */}
                             <div className="flex-1 overflow-y-auto p-6">
+
+                                {isAlreadyRescheduled && (
+                                    <div className="text-red-500 text-sm text-center mb-4 font-semibold">
+                                        You already rescheduled this appointment
+                                    </div>
+                                )}
+
                                 {isLoadingSlots ? (
                                     <div className="flex flex-col items-center justify-center py-12">
                                         <Loader2 className="w-8 h-8 text-emerald-600 animate-spin mb-4" />
@@ -221,7 +241,7 @@ export default function RescheduleDialog({
                                         </button>
                                         <button
                                             onClick={handleConfirm}
-                                            disabled={!selectedSlot || isLoadingSlots || isLoading}
+                                            disabled={!selectedSlot || isLoadingSlots || isLoading || isAlreadyRescheduled}
                                             className="px-6 py-3 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                         >
                                             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}

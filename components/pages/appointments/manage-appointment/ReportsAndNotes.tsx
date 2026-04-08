@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FileText, Plus, MoreVertical, Eye, Edit3, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Report } from '@/types/medical-reports';
@@ -7,6 +7,7 @@ import { SlotItem } from '@/types/slots';
 import { toast } from 'sonner';
 import RescheduleDialog from './RescheduleDialog';
 import { useRescheduleAppointment } from '@/mutations/useRescheduleAppointment';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ReportsAndNotesProps {
     reports: Report[];
@@ -20,6 +21,7 @@ interface ReportsAndNotesProps {
     onEditReport: (report: Report) => void;
     onDeleteReport: (id: string) => void;
     onCancel?: () => void;
+    appointmentStatus?: string;
 }
 
 export default function ReportsAndNotes({
@@ -33,17 +35,35 @@ export default function ReportsAndNotes({
     onViewReport,
     onEditReport,
     onDeleteReport,
-    onCancel
+    onCancel,
+    appointmentStatus
 }: ReportsAndNotesProps) {
     const [showRescheduleDialog, setShowRescheduleDialog] = useState(false);
+    const [isAlreadyRescheduled, setIsAlreadyRescheduled] = useState(
+        appointmentStatus === "rescheduled"
+    );
     const rescheduleMutation = useRescheduleAppointment();
 
+    const queryClient = useQueryClient();
 
+    useEffect(() => {
+        if (appointmentStatus === "rescheduled") {
+            setIsAlreadyRescheduled(true);
+        }
+    }, [appointmentStatus]);
 
     console.log("reschdule mutaion", rescheduleMutation);
 
+    console.log("APPOINTMENT STATUS PROP:", appointmentStatus);
+
 
     const handleRescheduleClick = () => {
+        if (isAlreadyRescheduled) {
+            toast.error("You already rescheduled this appointment");
+            return;
+        }
+
+
         if (!doctorId) {
             toast.error('Doctor information not available');
             return;
@@ -70,9 +90,17 @@ export default function ReportsAndNotes({
             onSuccess: (data) => {
                 const message = data.message || 'Appointment rescheduled successfully';
                 callbacks.onSuccess(message);
-
-                console.log("res" ,data);
                 
+                const status = data?.data?.appointment_status;
+
+                console.log("status" ,status);
+                
+
+                if (status === "rescheduled") {
+                    setIsAlreadyRescheduled(true); // ✅ LOCK
+                    queryClient.invalidateQueries(['appointment', appointmentId]);
+                }
+
             },
             onError: (error: any) => {
                 // console.error('Reschedule error:', error?.response?.data);
@@ -189,18 +217,26 @@ export default function ReportsAndNotes({
 
             {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-4">
-                <button
-                    onClick={handleRescheduleClick}
-                    className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
-                >
-                    Reschedule
-                </button>
+
+                {/* ✅ Reschedule button only if NOT rescheduled */}
+                {!isAlreadyRescheduled && (
+                    <button
+                        onClick={handleRescheduleClick}
+                        className="py-4 bg-[#0A2E1F] text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
+                    >
+                        Reschedule
+                    </button>
+                )}
+
                 <button
                     onClick={onCancel}
-                    className="py-4 bg-white text-primary border border-outline-variant/20 rounded-full font-bold text-sm hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-sm"
+                    className={`py-4 bg-white text-primary border border-outline-variant/20 rounded-full font-bold text-sm hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-sm 
+            ${isAlreadyRescheduled ? 'col-span-2' : ''}
+        `}
                 >
                     Cancel
                 </button>
+
             </div>
 
             {/* Reschedule Dialog */}
@@ -211,6 +247,8 @@ export default function ReportsAndNotes({
                 appointmentId={appointmentId}
                 onConfirmReschedule={handleConfirmReschedule}
                 isLoading={rescheduleMutation.isPending}
+                // isAlreadyRescheduled={isAlreadyRescheduled}
+                isAlreadyRescheduled={isAlreadyRescheduled}
             />
         </div>
     );
