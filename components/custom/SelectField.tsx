@@ -113,9 +113,9 @@ const SelectField: React.FC<SelectFieldProps> = ({
               <SelectLabel className="text-xs font-semibold text-muted-foreground">
                 {group.label}
               </SelectLabel>
-              {group.options.map((option) => (
+              {group.options.map((option, index) => (
                 <SelectItem
-                  key={option.value}
+                  key={`${group.label}-${option.value}-${index}`}
                   value={option.value}
                   disabled={option.disabled}
                   className="cursor-pointer"
@@ -128,9 +128,9 @@ const SelectField: React.FC<SelectFieldProps> = ({
           </React.Fragment>
         ))
       ) : (
-        options?.map((option) => (
+          options?.map((option, index) => (
           <SelectItem
-            key={option.value}
+            key={`${option.value}-${index}`}
             value={option.value}
             disabled={option.disabled}
             className="cursor-pointer"

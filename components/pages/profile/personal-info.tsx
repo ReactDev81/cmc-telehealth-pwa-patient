@@ -268,16 +268,21 @@ interface PersonalInfoFormProps {
 
 export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
 
+    console.log("user", user);
+
     const { updateUser } = useAuth();
+
+    console.log("update user" ,updateUser);
+
 
     const [formData, setFormData] = useState({
         first_name: user?.first_name || "",
         last_name: user?.last_name || "",
         email: user?.email || "",
-        mobile_no: user?.mobile_no || "",
+        mobile_no: String(user?.mobile_no || ""),
         date_of_birth: user?.date_of_birth || "",
-        bio: user?.bio || "",
-        avatar: user?.avatar || "",
+        bio: user?.bio || "", // ✅ always string
+        // avatar: user?.avatar || "",
     });
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState("");
@@ -292,7 +297,7 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
                 mobile_no: user.mobile_no || "",
                 date_of_birth: user.date_of_birth || "",
                 bio: user.bio || "",
-                avatar: user?.avatar || "",
+                // avatar: user?.avatar || "",
 
             });
         }
@@ -303,6 +308,9 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
     const [loading, setLoading] = useState(false);
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        
+
         if (e.target.files?.[0]) {
             setAvatarFile(e.target.files[0]);
         }
@@ -329,15 +337,25 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
         try {
             setLoading(true);
 
-            const payload = {
+            const payload: any = {
                 group: "personal_information",
                 first_name: formData.first_name,
-                last_name: formData.last_name, 
-                mobile_no: formData.mobile_no,  
-                bio: formData.bio,
+                last_name: formData.last_name,
+                mobile_no: String(formData.mobile_no), // ✅ ensure string
+                      // ✅ ensure string
                 date_of_birth: formatDate(formData.date_of_birth),
-                ...(avatarFile && { avatar: avatarFile }),
             };
+
+            if (formData.bio && formData.bio.trim() !== "") {
+                payload.bio = formData.bio;
+            }
+
+            // ✅ ONLY if file exists
+            if (avatarFile instanceof File) {
+                payload.avatar = avatarFile;
+            }
+
+            console.log("avatarFile:", avatarFile);
 
             const response = await updatePatientPersonalInfo(user.id, payload);
 
@@ -430,8 +448,8 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
                             { label: "First Name", name: "first_name", type: "text" },
                             { label: "Last Name", name: "last_name", type: "text" },
                             { label: "Email Address", name: "email", type: "email", disabled: true },
-                            { label: "Phone Number", name: "mobile_no", type: "tel" },
-                            { label: "Date of Birth", name: "date_of_birth", type: "date" },
+                            { label: "Phone Number", name: "mobile_no", type: "tel", disabled: true },
+                            { label: "Date of Birth", name: "date_of_birth", type: "date", disabled: true },
                         ].map((field) => (
                             <div key={field.label} className="space-y-2">
                                 <Label className="text-xs uppercase tracking-widest text-primary font-bold">

@@ -137,34 +137,6 @@ const DoctorProfile = ({ params }: DoctorProfileProps) => {
                             <ReviewSection reviews={doctor.doctor_reviews || []} />
                         )}
                     </div>
-
-                    {/* Tabs */}
-                    {/* <CustomTabs
-                        tabs={[
-                            {
-                                key: 'overview',
-                                label: 'Overview',
-                                content: (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                                        <DoctorAbout about={doctor.about} className="md:col-span-2" />
-                                        <DoctorStats
-                                            patientsHelped={5000}
-                                            experience={doctor.profile.years_experience}
-                                        />
-                                        <DoctorEducation education={doctor.education} />
-                                    </div>
-                                ),
-                            },
-                            {
-                                key: 'reviews',
-                                label: `Reviews (${doctor.review_summary?.total_reviews || 0})`,
-                                content: <ReviewSection reviews={doctor.doctor_reviews || []} />,
-                            },
-                        ]}
-                        activeTab={activeTab}
-                        onTabChange={(value) => setActiveTab(value as 'overview' | 'reviews')}
-                        variant="pill"
-                    /> */}
                 </div>
 
                 {/* Right Column - Booking */}

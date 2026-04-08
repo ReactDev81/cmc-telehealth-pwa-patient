@@ -52,7 +52,7 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
     });
 
     const { data, isLoading, error, refetch } = useAppointmentDetail(AppointmentId);
-    console.log("rededule data" , data);
+    console.log("rededule data" ,);
     
     const doctor = data?.data;
     const patient = data?.data?.patient;
@@ -63,6 +63,7 @@ const AppointmentSummaryPage = ({ params }: PageProps) => {
 
     const queryClient = useQueryClient();
     const { mutate: verifyPayment } = useVerifyPayment();
+    
 
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
