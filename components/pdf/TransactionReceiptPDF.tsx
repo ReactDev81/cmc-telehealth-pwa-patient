@@ -98,7 +98,7 @@ export const TransactionReceiptPDF: React.FC<TransactionReceiptPDFProps> = ({
                         'N/A',
                 ],
                 ['Email:', user?.email || 'N/A'],
-                ['Phone:', user?.phone || 'N/A'],
+                ['Phone:', user?.mobile_no || 'N/A'],
             ];
             entries.forEach(([label, value]) => {
                 doc.text(label, leftX, y);

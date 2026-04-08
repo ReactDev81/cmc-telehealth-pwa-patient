@@ -82,7 +82,7 @@ const LoginPage = () => {
                         role,
                         gender: user.gender,
                         date_of_birth: user.date_of_birth,
-                        phone: user.phone,
+                        mobile_no: user.phone,
                         patient_id: user.patient_id,
                         doctor_id: user.doctor_id,
                         status: user.status ?? "",
