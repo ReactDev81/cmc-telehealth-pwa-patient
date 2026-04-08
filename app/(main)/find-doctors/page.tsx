@@ -50,7 +50,12 @@ const FindDoctors = () => {
             label: item.department.name,
         })) ?? [];
 
-        return [{ value: "all", label: "All Specialties" }, ...apiOptions];
+        // Remove duplicates based on value
+        const uniqueOptions = apiOptions.filter((option, index, self) =>
+            index === self.findIndex((o) => o.value === option.value)
+        );
+
+        return [{ value: "all", label: "All Specialties" }, ...uniqueOptions];
     }, [departmentsData]);
 
     // Filter doctors

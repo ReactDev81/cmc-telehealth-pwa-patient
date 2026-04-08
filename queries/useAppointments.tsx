@@ -8,9 +8,9 @@ export const useAppointments = (
     return useQuery({
         queryKey: ["appointments", filter, page],
         queryFn: () => fetchAppointments(filter, page),
-        staleTime: 3 * 60 * 1000,
+        staleTime: 0,
         retry: 0,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
     });
 };
