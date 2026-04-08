@@ -107,9 +107,10 @@ const AppointmentsPage = () => {
     );
 
     // Filter appointments based on active tab
-    // The API already handles filtering by "upcoming" or "past", so we just return the full list
+    // The API already handles filtering by "upcoming" or "past", but we also filter out cancelled ones
     const filterAppointments = (appointments: AppointmentResponse[] | undefined) => {
-        return appointments || [];
+        if (!appointments) return [];
+        return appointments.filter(app => app.status !== 'cancelled');
     };
 
     // Upcoming Tab Content
