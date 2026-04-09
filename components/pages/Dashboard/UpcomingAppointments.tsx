@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { ArrowRight, Calendar, Clock, Video } from "lucide-react";
+import Link from "next/link";
 
 export interface AppointmentDoctor {
   specialty?: string;
@@ -42,11 +43,6 @@ function AppointmentCard({
 }) {
   const doctor = appointment.doctor;
 
-  const handleViewAll = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.open(`/appointments/manage-appointment/${appointment.id}`, "noopener,noreferrer");
-  };
-
   return (
     <Card className="relative overflow-hidden bg-primary border-0 rounded-2xl sm:rounded-3xl h-full flex flex-col justify-between shadow-xl p-4 sm:p-6 md:p-8">
       <CardDescription className="relative z-10 flex flex-col justify-between p-0 gap-4 sm:gap-6 md:gap-8">
@@ -65,15 +61,13 @@ function AppointmentCard({
               size="sm"
               className="text-xs font-bold text-feature-green hover:underline hover:text-feature-green flex items-center gap-1 p-0 h-auto px-2 py-1 hover:bg-transparent"
             >
-              <a
+              <Link
                 href={`/appointments/manage-appointment/${appointment.id}`}
-                target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleViewAll}
               >
                 View All
                 <ArrowRight className="w-3 h-3" />
-              </a>
+              </Link>
             </Button>
           )}
         </div>

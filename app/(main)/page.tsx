@@ -124,9 +124,8 @@ export default function Home() {
 				onBookNow={(doctorId: string) => {
 					setPage && setPage("live-session");
 				}}
-				onShowAll={() => {
-					setPage && setPage("all-doctors");
-				}}
+				
+				onShowAll={() => router.push("/find-doctors")}
 			/>
 			{/* Advertisements */}
 			<Advertisements ads={advertisements} />

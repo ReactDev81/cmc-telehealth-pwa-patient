@@ -52,7 +52,7 @@ export const updatePatientPersonalInfo = async (userId: string | number,  payloa
                     payload[key] !== undefined &&
                     payload[key] !== null &&
                     payload[key] !== "" &&
-                    !(key === "avatar" && !(payload[key] instanceof File)) // 🔥 main fix
+                    !(key === "avatar" && !(payload[key] instanceof File)) 
                 ) {
                     formData.append(key, payload[key]);
                 }
