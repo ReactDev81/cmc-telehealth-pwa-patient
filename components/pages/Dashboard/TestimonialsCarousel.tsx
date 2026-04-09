@@ -135,7 +135,7 @@ export function TestimonialsCarousel({
                   t.doctorName}
               </p>
               <div
-                onClick={() => window.open("/reviews", "_blank")}
+                onClick={() => router.push("/reviews")}
                 className="cursor-pointer hover:opacity-80 transition-opacity"
               >
                 <CustomAvatar

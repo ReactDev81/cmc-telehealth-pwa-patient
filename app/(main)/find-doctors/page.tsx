@@ -39,6 +39,9 @@ const FindDoctors = () => {
 
     // Queries
     const { data: doctorsData, error, isLoading, refetch } = useBrowseDoctors();
+
+    console.log("doctor data", doctorsData);
+    
     const { data: departmentsData } = useDepartmentsAndSymptoms();
 
     const doctors = doctorsData?.data || [];

@@ -9,10 +9,31 @@ interface TimeSelectorProps {
 
 const TimeSelector = ({ slots, selectedSlot, onSelectSlot }: TimeSelectorProps) => {
 
+  console.log("slots" ,slots);
+  
+
   // console.log("time slots", slots);
 
   const formatTime = (time: string) => {
-    return time.substring(0, 5);
+    if (!time) return "";
+
+    // Case 1: already 24-hour format (13:00:00)
+    if (time.includes(":") && time.length >= 5 && !time.includes("AM") && !time.includes("PM")) {
+      return time.slice(0, 5);
+    }
+
+    // Case 2: 12-hour format (01:00 PM)
+    const parsed = new Date(`1970-01-01 ${time}`);
+    if (!isNaN(parsed.getTime())) {
+      return parsed.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+    }
+
+    // Fallback
+    return time;
   };
 
   const isSlotAvailable = (slot: DoctorAvailabilitySlot) => {
@@ -35,7 +56,7 @@ const TimeSelector = ({ slots, selectedSlot, onSelectSlot }: TimeSelectorProps) 
                   variant={isSelected ? "default" : "outline"}
                   onClick={() => available && onSelectSlot(timeSlot)}
                   disabled={!available}
-                  className={`flex-shrink-0 py-3 px-4 rounded-lg text-xs font-bold h-auto min-w-[110px] ${isSelected
+                  className={`flex-shrink-0 py-3 px-4 rounded-lg text-xs font-bold h-auto min-w-27.5 ${isSelected
                       ? 'bg-primary text-white hover:bg-primary'
                       : available
                         ? 'bg-white text-on-surface-variant hover:bg-surface-container'
@@ -57,7 +78,7 @@ const TimeSelector = ({ slots, selectedSlot, onSelectSlot }: TimeSelectorProps) 
       </div>
 
       {/* Desktop: Grid of 3 or 4 columns */}
-      <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="hidden md:grid md:grid-cols-3 gap-3">
         {slots.map((timeSlot) => {
           const available = isSlotAvailable(timeSlot);
           const isSelected = selectedSlot?.id === timeSlot.id;
