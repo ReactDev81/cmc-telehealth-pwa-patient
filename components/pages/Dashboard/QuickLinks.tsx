@@ -34,7 +34,7 @@ export default function QuickLinks({
     };
 
     return (
-        <div className="flex flex-col gap-6 h-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 h-full">
             {/* Reports Card */}
             <Card className="rounded-3xl border border-border/50 shadow-sm flex-1 p-0">
                 <CardContent className="flex flex-col h-full p-5 justify-between">

@@ -80,29 +80,39 @@ export default function Home() {
 	}
 	return (
 		<div className="space-y-12">
-			<header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+			<header className="w-full rounded bg-white shadow-sm p-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+
+				{/* Left Content */}
 				<div>
-					<h1 className="md:text-5xl font-extrabold tracking-tight text-primary mb-2 font-headline">
+					<h1 className="text-[24px]  font-bold tracking-tight text-primary">
 						Welcome back{user?.first_name || user?.last_name ? "," : ""}{" "}
-						{user?.first_name ?? ""} {user?.last_name ?? ""}
+						<span className="text-foreground">
+							{user?.first_name ?? ""} {user?.last_name ?? ""}
+						</span>
 					</h1>
-					<p className="text-on-surface-variant text-lg">
+
+					<p className="text-muted-foreground text-base">
 						Your health summary is looking stable today.
 					</p>
 				</div>
+
+				{/* Right Action */}
 				<Button
 					onClick={() => {
-						window.open("/find-doctors", "_blank")
+						window.open("/find-doctors", "_blank");
 						setPage && setPage("/find-doctors");
 					}}
-					className="p-5 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-all shadow-md flex items-center gap-2"
+					className="flex items-center justify-center gap-2 px-5 py-5 text-xs rounded-xl bg-primary text-white hover:bg-primary/90 shadow-md transition-all"
 				>
-					<Plus className="w-5 h-5" />
+					<Plus className="w-4 h-4" />
 					Book Appointment
 				</Button>
+
 			</header>
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-				<div className="lg:col-span-8">
+			<div className="flex flex-col lg:flex-row gap-6">
+
+				{/* Left */}
+				<div className="flex-1">
 					<UpcomingAppointments
 						appointments={appointments}
 						onViewAll={() => setPage && setPage("my-appointments")}
@@ -110,7 +120,9 @@ export default function Home() {
 						onBookFirst={() => setPage && setPage("find-doctor")}
 					/>
 				</div>
-				<div className="lg:col-span-4">
+
+				{/* Right */}
+				<div className="flex-2">
 					<QuickLinks
 						reportSummary="Blood Work Result: Normal"
 						prescriptionSummary="2 Active medications • Refill ready"
@@ -118,6 +130,7 @@ export default function Home() {
 						onManageRefills={() => router.push("/transactions")}
 					/>
 				</div>
+
 			</div>
 			<AvailableDoctors
 				doctors={homeData.available_doctors}

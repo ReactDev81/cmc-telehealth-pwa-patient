@@ -3,6 +3,7 @@ import { Inter, Geist_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Providers } from "./providers";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
             <body className="min-h-full flex flex-col" suppressHydrationWarning>
                 <Providers>
-                    {children}
+                    <TooltipProvider>
+                        {children}
+                    </TooltipProvider>
                 </Providers>
             </body>
         </html>
