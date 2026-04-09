@@ -2,7 +2,9 @@
 
 import { CustomAvatar } from "@/components/custom/custom-avatar";
 import { DashboardCarousel } from "@/components/pages/Dashboard/dashboard-carousel";
+import { Avatar, AvatarImage } from "@/components/ui";
 import { ExternalLink } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 export interface Advertisement {
@@ -59,11 +61,26 @@ export function Advertisements({ ads }: AdvertisementsProps) {
 
         return (
             <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between h-full min-h-[260px] sm:min-h-[280px] shadow group transition-transform duration-150 border border-outline-variant/10">
-                <div className="flex-1 mb-2 sm:mb-3">
-                    <h4 className="font-semibold text-sm sm:text-base md:text-lg text-gray-900 mb-1.5 sm:mb-2">
+                <div className="flex-1">
+                    <div className="w-full aspect-video rounded-lg overflow-hidden mb-2 sm:mb-3">
+                        <img
+                            src={ad.image}
+                            alt={ad.title}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+
+                    {/* <Image
+                        src={ad.image}
+                        alt={ad.title}
+                        width={100}
+                        height={10}
+                        className="rounded-lg"
+                    /> */}
+                    {/* <h4 className="font-semibold text-sm sm:text-base md:text-lg text-gray-900 mb-1.5 sm:mb-2">
                         {ad.title}
-                    </h4>
-                    <div>
+                    </h4> */}
+                    {/* <div>
                         {!isExpanded && needsTruncation ? (
                             <>
                                 <div
@@ -97,7 +114,7 @@ export function Advertisements({ ads }: AdvertisementsProps) {
                                 )}
                             </>
                         )}
-                    </div>
+                    </div> */}
                 </div>
                 <div className="flex w-full items-end justify-between gap-2 sm:gap-3 mt-auto">
                     {ad.link ? (
@@ -115,11 +132,11 @@ export function Advertisements({ ads }: AdvertisementsProps) {
                             Book Appointment
                         </span>
                     )}
-                    <CustomAvatar
+                    {/* <CustomAvatar
                         src={ad.image}
                         radius="lg"
                         className="w-12 h-12 sm:w-[60px] sm:h-[60px] md:w-[76px] md:h-[76px] shrink-0"
-                    />
+                    /> */}
                 </div>
             </div>
         );
