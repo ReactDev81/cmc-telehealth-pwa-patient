@@ -268,11 +268,11 @@ interface PersonalInfoFormProps {
 
 export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
 
-    console.log("user", user);
+    // console.log("user", user);
 
     const { updateUser } = useAuth();
 
-    console.log("update user" ,updateUser);
+    // console.log("update user" ,updateUser);
 
 
     const [formData, setFormData] = useState({
@@ -355,7 +355,7 @@ export default function PersonalInfoForm({ user }: PersonalInfoFormProps) {
                 payload.avatar = avatarFile;
             }
 
-            console.log("avatarFile:", avatarFile);
+            // console.log("avatarFile:", avatarFile);
 
             const response = await updatePatientPersonalInfo(user.id, payload);
 

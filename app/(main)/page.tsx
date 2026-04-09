@@ -21,7 +21,7 @@ export default function Home() {
 	const homeData = data?.data;
 	const router = useRouter();
 
-	console.log("data : ", data);
+	// console.log("data : ", data);
 	// Map API upcoming_appointments → MappedAppointment shape for UpcomingAppointments component
 	const appointments: MappedAppointment[] = (
 		homeData?.upcoming_appointments ?? []

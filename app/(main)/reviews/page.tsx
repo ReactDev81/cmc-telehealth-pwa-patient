@@ -26,8 +26,8 @@ export default function Page() {
         );
     }
 
-    console.log("Pagination data:", pagination);
-    console.log("Reviews data:", data);
+    // console.log("Pagination data:", pagination);
+    // console.log("Reviews data:", data);
 
 
     // Error State

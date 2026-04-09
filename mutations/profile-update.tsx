@@ -1,6 +1,7 @@
 // import api from "@/lib/axios";
 
 import api from "@/lib/axios";
+import { AxiosError } from "axios";
 
 // export const updatePatientPersonalInfo = async (
 //     userId: string | number,
@@ -71,7 +72,11 @@ export const updatePatientPersonalInfo = async (userId: string | number,  payloa
         return response.data?.data;
 
     } catch (err) {
-        console.error("Error:", err.response?.data || err);
+        if (err instanceof AxiosError) {
+            console.error("Error:", err.response?.data || err);
+        } else {
+            console.error("Error:", err);
+        }
         throw err;
     }
 };

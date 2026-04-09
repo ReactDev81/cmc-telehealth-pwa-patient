@@ -9,7 +9,7 @@ interface TimeSelectorProps {
 
 const TimeSelector = ({ slots, selectedSlot, onSelectSlot }: TimeSelectorProps) => {
 
-  console.log("time slots", slots);
+  // console.log("time slots", slots);
 
   const formatTime = (time: string) => {
     return time.substring(0, 5);

@@ -43,7 +43,7 @@ export default function ManageAppointment({ params }: PageProps) {
     // Fetch appointment details using the proper hook
     const { data, isLoading, error } = useAppointmentDetail(appointmentId);
     const appointment = data?.data;
-    console.log("Appointments : ", appointment?.status);
+    // console.log("Appointments : ", appointment?.status);
     
 
     const { user } = useAuth();
@@ -188,7 +188,7 @@ export default function ManageAppointment({ params }: PageProps) {
         });
     };
 
-    console.log("appointment status", appointment?.status);
+    // console.log("appointment status", appointment?.status);
 
     const handleModalSubmit = (newNote: string) => {
         updateInformation({

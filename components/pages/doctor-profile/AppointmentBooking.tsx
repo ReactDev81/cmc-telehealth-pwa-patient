@@ -15,7 +15,7 @@ interface AppointmentBookingProps {
 
 const AppointmentBooking = ({ doctor, onBookingSuccess, onBookingError }: AppointmentBookingProps) => {
 
-    console.log("doctor", doctor);
+    // console.log("doctor", doctor);
 
     const [appointmentType, setAppointmentType] = useState<'in_person' | 'video' | null>(null);
     const [selectedSlot, setSelectedSlot] = useState<DoctorAvailabilitySlot | null>(null);
