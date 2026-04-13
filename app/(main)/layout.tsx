@@ -11,7 +11,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     return (
         <SidebarProvider>
             <AppSidebar />
-            <SidebarInset className="flex min-h-screen w-auto pl-5 flex-col overflow-hidden">
+            <SidebarInset className="flex min-h-screen w-auto md:pl-5 pl-0 flex-col overflow-hidden">
                 <Header />
                 <div className="flex-1 p-5 lg:py-8 overflow-y-auto">{children}</div>
                 <Toaster richColors position="top-right" />

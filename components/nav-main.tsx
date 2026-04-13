@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import type { ReactElement } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronRightIcon } from "lucide-react";
 import React from "react";
@@ -10,7 +10,7 @@ import React from "react";
 type NavItem = {
   title: string;
   url?: string;
-  icon?: ReactNode;
+  icon?: ReactElement;
   items?: {
     title: string;
     url: string;
@@ -42,9 +42,9 @@ export function NavMain({ items }: { items: NavItem[] }) {
               <CollapsibleTrigger asChild>
                 <button className="flex w-full items-center py-2 rounded-lg hover:bg-muted transition justify-between">
                   <div className="flex text-sm px-2 gap-3">
-                    {React.cloneElement(item.icon, {
+                    {item.icon ? React.cloneElement(item.icon as React.ReactElement<any>, {
                       className: "w-3.5 h-3.5",
-                    })}
+                    }) : null}
                     <span>{item.title}</span>
                   </div>
                   <ChevronRightIcon className="h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -80,13 +80,13 @@ export function NavMain({ items }: { items: NavItem[] }) {
             href={item.url || "#"}
             className={`flex items-center text-sm gap-3 py-2 font-medium rounded-md transition px-2
     ${active
-                ? "text-blue-600 border border-gray-200"
+                ? "text-primary border border-gray-200"
                 : "hover:bg-muted"
               }`}
           >
-            {React.cloneElement(item.icon, {
+            {item.icon ? React.cloneElement(item.icon as React.ReactElement<any>, {
               className: "w-3.5 h-3.5",
-            })}
+            }) : null}
             <span>{item.title}</span>
           </Link>
         );

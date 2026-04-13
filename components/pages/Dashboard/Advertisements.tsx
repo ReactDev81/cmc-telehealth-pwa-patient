@@ -1,8 +1,9 @@
 "use client";
 
 import { CustomAvatar } from "@/components/custom/custom-avatar";
+import { SectionHeader } from "@/components/custom/SectionHeader";
 import { DashboardCarousel } from "@/components/pages/Dashboard/dashboard-carousel";
-import { Avatar, AvatarImage } from "@/components/ui";
+import { Avatar, AvatarImage, Card, CardContent } from "@/components/ui";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -60,8 +61,8 @@ export function Advertisements({ ads }: AdvertisementsProps) {
         };
 
         return (
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between h-full min-h-[260px] sm:min-h-[280px] shadow group transition-transform duration-150 border border-outline-variant/10">
-                <div className="flex-1">
+            <Card className=" rounded-[5px]">
+                <CardContent className="flex-1">
                     <div className="w-full aspect-video rounded-lg overflow-hidden mb-2 sm:mb-3">
                         <img
                             src={ad.image}
@@ -115,47 +116,51 @@ export function Advertisements({ ads }: AdvertisementsProps) {
                             </>
                         )}
                     </div> */}
-                </div>
-                <div className="flex w-full items-end justify-between gap-2 sm:gap-3 mt-auto">
-                    {ad.link ? (
-                        <a
-                            href={ad.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-white border flex items-center gap-1.5 sm:gap-2 border-gray-300 text-[#103228] px-3 sm:px-4 py-1.5 text-xs sm:text-sm rounded-md font-medium hover:bg-gray-100 transition-colors duration-100 shrink-0"
-                        >
-                            <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                            View
-                        </a>
-                    ) : (
-                        <span className="bg-gray-300 text-gray-700 px-3 sm:px-4 py-1.5 text-xs sm:text-sm rounded-md font-medium opacity-60 cursor-default shrink-0">
-                            Book Appointment
-                        </span>
-                    )}
-                    {/* <CustomAvatar
+
+                    <div className="flex w-full items-end justify-between gap-2 sm:gap-3 mt-auto">
+                        {ad.link ? (
+                            <a
+                                href={ad.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white border flex items-center gap-1.5 sm:gap-2 border-gray-300 text-[#103228] px-3 sm:px-4 py-1.5 text-xs sm:text-sm rounded-md font-medium hover:bg-gray-100 transition-colors duration-100 shrink-0"
+                            >
+                                <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                                View
+                            </a>
+                        ) : (
+                            <span className="bg-gray-300 text-gray-700 px-3 sm:px-4 py-1.5 text-xs sm:text-sm rounded-md font-medium opacity-60 cursor-default shrink-0">
+                                Book Appointment
+                            </span>
+                        )}
+                        {/* <CustomAvatar
                         src={ad.image}
                         radius="lg"
                         className="w-12 h-12 sm:w-[60px] sm:h-[60px] md:w-[76px] md:h-[76px] shrink-0"
                     /> */}
-                </div>
-            </div>
+                    </div>
+                </CardContent>
+            </Card>
         );
     };
 
     return (
-        <section className="mt-6 sm:mt-8 bg-[#103228] w-full py-4 sm:py-6 px-3 sm:px-4 md:px-6 lg:px-8 rounded-xl sm:rounded-2xl flex flex-col shadow-sm max-w-full overflow-hidden">
-            <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-4 sm:mb-6">
-                Safe & Advanced Surgical Care
-            </h3>
+        <section>
 
-            <DashboardCarousel
-                items={ads}
-                contentClassName="-ml-3 sm:-ml-4 md:-ml-6 py-3 sm:py-4 px-1"
-                basisClassName="pl-3 sm:pl-4 md:pl-6 basis-full sm:basis-1/2 lg:basis-1/3"
-                dotClassName="bg-white/50 opacity-60 hover:bg-white/80 h-1 sm:h-1.5"
-                activeDotClassName="bg-white opacity-100 h-1 sm:h-1.5"
-                renderItem={(ad) => <AdvertisementCard key={ad.id} ad={ad} />}
-            />
+            <SectionHeader title="Safe & Advanced Surgical Care" />
+
+            <Card className="rounded-[5px] shadow-card-lg">
+                <CardContent>
+                    <DashboardCarousel
+                        items={ads}
+                        contentClassName="-ml-3 sm:-ml-4 md:-ml-6 py-3 sm:py-4 px-1"
+                        basisClassName="pl-3 sm:pl-4 md:pl-6 basis-full sm:basis-1/2 lg:basis-1/3"
+                        dotClassName="bg-white/50 opacity-60 hover:bg-white/80 h-1 sm:h-1.5"
+                        activeDotClassName="bg-primary opacity-100 h-1 sm:h-1.5"
+                        renderItem={(ad) => <AdvertisementCard key={ad.id} ad={ad} />}
+                    />
+                </CardContent>
+            </Card>
         </section>
     );
 }

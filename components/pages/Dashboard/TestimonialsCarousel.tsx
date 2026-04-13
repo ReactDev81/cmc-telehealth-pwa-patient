@@ -1,6 +1,7 @@
 "use client";
 
 import { CustomAvatar } from "@/components/custom/custom-avatar";
+import { SectionHeader } from "@/components/custom/SectionHeader";
 import { DashboardCarousel } from "@/components/pages/Dashboard/dashboard-carousel";
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -70,24 +71,20 @@ export function TestimonialsCarousel({
 
   return (
     <section className="py-6 sm:py-8 w-full max-w-full overflow-hidden">
-      <div className="mb-6 sm:mb-8 md:mb-10">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-primary font-headline tracking-tight mb-2">
-          Here's what our satisfied customers are saying...
-        </h2>
-        <p className="text-base sm:text-lg text-on-surface-variant">
-          See what your patients are saying about their experiences with you.
-        </p>
-      </div>
+      <SectionHeader
+        title="Here's what our satisfied customers are saying..."
+        subtitle="See what your patients are saying about their experiences with you."
+      />
 
       <DashboardCarousel
         items={testimonials}
-        basisClassName="basis-[85%] sm:basis-[70%] md:basis-1/2 lg:basis-[400px]"
+        basisClassName="basis-[100%] sm:basis-[70%] md:basis-1/2 lg:basis-[400px]"
         contentClassName="-ml-3 sm:-ml-4 py-3 sm:py-4 px-1"
         dotClassName="bg-gray-300 h-1 sm:h-1.5"
         activeDotClassName="bg-primary h-1 sm:h-1.5"
         renderItem={(t) => (
-          <div className="h-full bg-surface-lowest p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border border-outline-variant/10 shadow-sm flex flex-col">
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="h-full bg-surface-lowest p-4 sm:p-5 md:p-6 rounded-[5px] border border-outline-variant/10 shadow-card-lg flex flex-col">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5 mb-4 sm:mb-6">
               <div className="flex gap-3 sm:gap-4">
                 <CustomAvatar
                   src={(t as any).patientImage}
@@ -110,7 +107,7 @@ export function TestimonialsCarousel({
               </span>
             </div>
 
-            <div className="mb-3 sm:mb-4 flex-grow">
+            <div className="mb-3 sm:mb-4 grow">
               <div className="flex gap-0.5 mb-1.5 sm:mb-2">
                 {[...Array(5)].map((_, i) => (
                   <Star

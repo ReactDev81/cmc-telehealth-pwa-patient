@@ -79,8 +79,8 @@ export default function Home() {
 		);
 	}
 	return (
-		<div className="space-y-12">
-			<header className="w-full rounded bg-white shadow-sm p-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+		<div className="space-y-5">
+			<header className="w-full rounded bg-white shadow-card-lg p-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
 
 				{/* Left Content */}
 				<div>
@@ -102,17 +102,17 @@ export default function Home() {
 						window.open("/find-doctors", "_blank");
 						setPage && setPage("/find-doctors");
 					}}
-					className="flex items-center justify-center gap-2 px-5 py-5 text-xs rounded-xl bg-primary text-white hover:bg-primary/90 shadow-md transition-all"
+					className="flex items-center justify-center gap-2 px-3 font-semibold py-4.5 text-xs rounded-[5px] bg-primary text-white hover:bg-primary/90 shadow-md transition-all"
 				>
-					<Plus className="w-4 h-4" />
+					<Plus className="w-4 h-4eretrtt" />
 					Book Appointment
 				</Button>
 
 			</header>
-			<div className="flex flex-col lg:flex-row gap-6">
+			<div className="flex flex-col   lg:flex-row gap-5 items-stretch">
 
-				{/* Left */}
-				<div className="flex-1">
+				{/* Left - 40% */}
+				<div className="w-full lg:basis-[45%]">
 					<UpcomingAppointments
 						appointments={appointments}
 						onViewAll={() => setPage && setPage("my-appointments")}
@@ -121,8 +121,8 @@ export default function Home() {
 					/>
 				</div>
 
-				{/* Right */}
-				<div className="flex-2">
+				{/* Right - 60% */}
+				<div className="w-full lg:basis-[55%]">
 					<QuickLinks
 						reportSummary="Blood Work Result: Normal"
 						prescriptionSummary="2 Active medications • Refill ready"
@@ -132,6 +132,7 @@ export default function Home() {
 				</div>
 
 			</div>
+			
 			<AvailableDoctors
 				doctors={homeData.available_doctors}
 				onBookNow={(doctorId: string) => {

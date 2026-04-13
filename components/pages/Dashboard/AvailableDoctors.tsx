@@ -7,6 +7,7 @@ import type { AvailableDoctor } from "@/types/home";
 import { ArrowRight, Star } from "lucide-react";
 import { DashboardCarousel } from "@/components/pages/Dashboard/dashboard-carousel";
 import { useRouter } from "next/navigation";
+import { SectionHeader } from "@/components/custom/SectionHeader";
 
 interface AvailableDoctorsProps {
   doctors: AvailableDoctor[];
@@ -19,7 +20,7 @@ export function AvailableDoctors({
   onBookNow,
   onShowAll,
 }: AvailableDoctorsProps) {
-  const useCarousel = Array.isArray(doctors) && doctors.length > 3;
+  // const useCarousel = Array.isArray(doctors) && doctors.length > 3;
   const router = useRouter();
 
   if (!doctors || doctors.length === 0) {
@@ -28,71 +29,74 @@ export function AvailableDoctors({
 
   // Reusable Doctor Card Component
   const DoctorCardComponent = ({ doc }: { doc: AvailableDoctor }) => (
-    <Card className="rounded-2xl sm:rounded-3xl shadow-sm border border-border/50 hover:shadow-md transition-shadow group flex flex-col overflow-hidden h-full">
-      <CardHeader className="pb-0 flex flex-row items-start gap-3 sm:gap-4 bg-muted/10 rounded-t-2xl sm:rounded-t-3xl p-4 sm:p-6">
-        <CustomAvatar
-          src={doc.avatar}
-          radius="lg"
-          className="w-14 h-14 sm:w-[76px] sm:h-[76px] shrink-0"
-        />
-        <div className="flex flex-col justify-center flex-1 min-w-0">
-          {/* Name and Rating in same row */}
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <h3 className="font-headline font-bold text-base sm:text-xl text-foreground leading-tight break-words flex-1">
-              {doc.name}
-            </h3>
-            {typeof doc.rating === "number" && doc.rating > 0 && (
-              <div className="flex items-center gap-1 bg-feature-green/30 rounded-[8px] px-2 py-1 flex-shrink-0">
-                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-primary/70 fill-current" />
-                <span className="text-xs font-bold text-foreground/80">
-                  {doc.rating}
-                </span>
+    <Card className="rounded-[5px] h-full flex flex-col shadow-card-lg">
+      <CardContent className="flex flex-col h-full">
+        <div className="flex gap-4 sm:gap-5">
+          {/* Left Image */}
+          <div className="shrink-0">
+            <div className="md:w-30 w-20 h-auto rounded-md bg-[#d9d9d9] overflow-hidden">
+              <img
+                src={doc.avatar}
+                alt={doc.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Right Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="text-base font-semibold text-[#222] leading-tight">
+                  {doc.name}
+                </h3>
               </div>
-            )}
-          </div>
 
-          {/* Specialty */}
-          <p className="text-primary/80 font-semibold text-xs sm:text-sm mt-0.5 sm:mt-1 truncate">
-            {Array.isArray(doc.speciality) && doc.speciality.length > 0
-              ? doc.speciality[0]
-              : ""}
-          </p>
+              {typeof doc.rating === "number" && doc.rating > 0 && (
+                <div className="flex items-center gap-1 rounded-[5px] bg-[#f3f4f6] px-2.5 py-0.5 text-sm font-semibold text-primary shrink-0">
+                  <Star className="w-3 h-3 fill-current text-primary" />
+                  <span className="text-xs font-semibold">{doc.rating}</span>
+                </div>
+              )}
+            </div>
 
-          {/* Experience & Languages */}
-          <div className="flex flex-wrap gap-2 sm:gap-6 text-[10px] sm:text-xs text-muted-foreground font-medium mt-1.5 sm:mt-2 pt-1.5 sm:pt-0 border-t border-border/20 sm:border-t-0">
-            <span>Exp: {doc.years_experience} yrs</span>
-            {Array.isArray(doc.languages_known) && doc.languages_known.length > 0 && (
-              <span>Lang: {doc.languages_known.join(", ")}</span>
-            )}
-          </div>
-        </div>
-      </CardHeader>
+            <p className="mt-1 sm:text-[13px] font-semibold text-primary">
+              {Array.isArray(doc.speciality) && doc.speciality.length > 0
+                ? doc.speciality[0]
+                : "Cardiologist"}
+            </p>
 
-      <CardContent className="p-4 sm:p-6 pt-3 sm:pt-5 mt-auto">
-        <div className="flex flex-row gap-4 sm:gap-8">
-          <div className="flex-1">
-            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">
-              Consultation Type
+            <p className="mt-2 text-xs font-medium text-[#2e2e2e] flex gap-1 flex-wrap">
+              <span>Exp: {doc.years_experience || 14} years</span>
+              <span>•</span>
+              <span>
+                {Array.isArray(doc.languages_known) && doc.languages_known.length > 0
+                  ? doc.languages_known.join(", ")
+                  : "English, Hindi, Punjabi"}
+              </span>
             </p>
-            <p className="text-xs sm:text-sm font-bold text-emerald-600">
-              {doc.consultation_type}
+
+            <p className="mt-3 text-xs text-[#2e2e2e]">
+              Consultation Type:{" "}
+              <span className="font-bold text-primary">
+                {doc.consultation_type || "Video"}
+              </span>
             </p>
-          </div>
-          <div className="flex-1">
-            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">
-              Consultation Fee
-            </p>
-            <p className="text-base sm:text-lg font-bold text-primary">
-              ₹{doc.consultation_fee}
+
+            <p className="mt-2 text-xs font-normal text-[#2e2e2e]">
+              Fee: <span className="font-bold text-[#111]">₹{doc.consultation_fee ?? 1}</span>
             </p>
           </div>
         </div>
-        <div className="pt-4 sm:pt-5">
+
+        <div className="mt-auto pt-3">
+          <div className="mb-3 h-px w-full bg-[#e5e7eb]" />
+
           <Button
             onClick={() => router.push(`/find-doctors/${doc.id}`)}
-            className="w-full py-3 sm:py-6 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all shadow-md"
+            className="w-full h-8 rounded-[5px] bg-primary text-white text-xs font-medium"
           >
-            Book Now
+            Book Your Appointment
           </Button>
         </div>
       </CardContent>
@@ -101,32 +105,18 @@ export function AvailableDoctors({
 
   return (
     <section >
-      <div className="flex flex-row items-center justify-between gap-4 mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-primary font-headline tracking-tight">
-          Available Doctors
-        </h2>
-        <Button
-          variant="ghost"
-          onClick={onShowAll}
-          className="text-primary font-bold hover:underline flex items-center gap-1 text-sm sm:text-base shrink-0"
-        >
-          Show All
-          <ArrowRight className="w-4 h-4" />
-        </Button>
+        <SectionHeader
+          title="Available Doctors"
+          showAction={true}
+          onActionClick={onShowAll}
+        />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {doctors.map((doc) => (
+          <DoctorCardComponent key={doc.id} doc={doc} />
+        ))}
       </div>
 
-      {useCarousel ? (
-        <DashboardCarousel
-          items={doctors}
-          renderItem={(doc) => <DoctorCardComponent key={doc.id} doc={doc} />}
-        />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {doctors.map((doc) => (
-            <DoctorCardComponent key={doc.id} doc={doc} />
-          ))}
-        </div>
-      )}
     </section>
   );
 }

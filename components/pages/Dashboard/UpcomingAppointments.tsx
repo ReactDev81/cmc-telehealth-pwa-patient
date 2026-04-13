@@ -41,135 +41,94 @@ function AppointmentCard({
   onViewAll: () => void;
   showViewAll: boolean;
 }) {
+
+  console.log("doctore appoitment 2", appointment);
+
   const doctor = appointment.doctor;
 
+  console.log("doctore appoitment", doctor);
+
+
   return (
-    <Card className="relative overflow-hidden bg-primary border-0 rounded-2xl sm:rounded-3xl h-full flex flex-col justify-between shadow-xl p-4 sm:p-6 md:p-8">
-      <CardDescription className="relative z-10 flex flex-col justify-between p-0 gap-4 sm:gap-6 md:gap-8">
-        {/* Header row */}
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <Badge
-            variant="secondary"
-            className="bg-white/10 text-feature-green border-0 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 sm:px-3 sm:py-1 rounded-full"
-          >
+    <Card className="overflow-hidden rounded-[5px] border-0 bg-primary shadow-card-lg">
+      <CardContent className="py-3.75 px-5">
+
+        {/* <div className="mb-5 flex justify-end">
+          <Badge className="rounded-[5px] bg-white px-3 py-1 text-xs font-semibold text-green-600 hover:bg-white">
             Upcoming Session
           </Badge>
-          {showViewAll && (
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="text-xs font-bold text-feature-green hover:underline hover:text-feature-green flex items-center gap-1 p-0 h-auto px-2 py-1 hover:bg-transparent"
-            >
-              <Link
-                href={`/appointments/manage-appointment/${appointment.id}`}
-                rel="noopener noreferrer"
-              >
-                View All
-                <ArrowRight className="w-3 h-3" />
-              </Link>
-            </Button>
-          )}
-        </div>
+        </div> */}
 
-        {/* Doctor info - Responsive */}
-        <div className="flex flex-row items-start sm:items-center gap-4 sm:gap-5">
-          <CustomAvatar
-            src={appointment.doctorImage}
-            radius="lg"
-            className="w-16 h-16 sm:w-[76px] sm:h-[76px] border-2 border-white/30 shrink-0"
-          />
+        {/* Main content */}
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+          {/* Doctor image */}
+          <div className="shrink-0">
+            <CustomAvatar
+              src={appointment.doctorImage}
+              radius="sm"
+              className="h-26 w-26 object-cover"
+            />
+          </div>
+
+          {/* Doctor details */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-xl sm:text-2xl font-bold text-white font-headline leading-tight mb-1 break-words">
-              {appointment.doctorName}
-            </h3>
-            <p className="text-sm sm:text-base mb-2 sm:mb-3 text-feature-green/90 font-medium">
-              {doctor?.specialty || "Specialist"}
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-white leading-tight">
+                {appointment.doctorName}
+              </h3>
+
+              <div className="flex justify-end">
+                <Badge className="rounded-[3px] bg-white px-3 py-1 text-xs font-semibold text-green-600 hover:bg-white">
+                  Upcoming Session
+                </Badge>
+              </div>
+            </div>
+            <p className="mt-2 text-sm font-medium text-white/95">
+              {doctor?.specialty || "Cardiology"}
             </p>
-            <div className="flex flex-wrap gap-2 text-xs text-feature-green/90 font-medium">
-              {doctor?.experience && (
-                <span className="bg-white/10 p-1 px-2 rounded-md text-[10px] sm:text-xs">
-                  Exp: {doctor.experience}
-                </span>
-              )}
-              {doctor?.languages && doctor.languages.length > 0 && (
-                <span className="bg-white/10 p-1 px-2 rounded-md text-[10px] sm:text-xs">
-                  Lang: {doctor.languages.join(", ")}
-                </span>
-              )}
+
+            <p className="mt-2 text-xs font-medium text-white/90 flex items-center gap-1 flex-wrap">
+              <span>Exp: {doctor?.experience || "14 years"}</span>
+
+              <span>•</span>
+
+              <span>
+                {doctor?.languages?.join(", ") || "English, Hindi, Punjabi"}
+              </span>
+            </p>
+
+            {/* Appointment meta */}
+            <div className="mt-3 flex font-medium flex-wrap items-center gap-4 text-white text-xs">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                <span>{appointment.date}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                <span>{appointment.time}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Video className="h-4 w-4" />
+                <span>{appointment.typeLabel}</span>
+              </div>
             </div>
           </div>
         </div>
-      </CardDescription>
 
-      <CardContent className="p-0 mt-4 sm:mt-6">
-        {/* Footer: Date/Time/Type + CTA - Responsive */}
-        <div className="flex flex-col gap-4 sm:gap-5 p-0">
-          {/* Info chips - Horizontal scroll on mobile */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-6 overflow-x-auto pb-2 sm:pb-0">
-            {/* Date */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              <div className="p-1.5 sm:p-2.5 bg-white/10 rounded-lg">
-                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-sm text-white/60 font-bold uppercase tracking-widest">
-                  Date
-                </p>
-                <p className="text-white font-semibold text-xs sm:text-sm">
-                  {appointment.date}
-                </p>
-              </div>
-            </div>
-
-            {/* Time */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              <div className="p-1.5 sm:p-2 bg-white/10 rounded-lg">
-                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-sm text-white/60 font-bold uppercase tracking-widest">
-                  Time
-                </p>
-                <p className="text-white font-semibold text-xs sm:text-sm">
-                  {appointment.time}
-                </p>
-              </div>
-            </div>
-
-            {/* Type */}
-            <div className="flex items-center gap-2 justify-between sm:gap-3 shrink-0">
-              <div className="p-1.5 sm:p-2 bg-white/10 rounded-lg">
-                {appointment.type === "video" ? (
-                  <Video className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
-                ) : (
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-feature-green/90" />
-                )}
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-sm text-white/60 font-bold uppercase tracking-widest">
-                  Type
-                </p>
-                <p className="text-white font-semibold text-xs sm:text-sm capitalize">
-                  {appointment.typeLabel} Consultation
-                </p>
-              </div>
-            </div>
-
-            {appointment.type === "video" && (
-              <Button
-                onClick={() => onStartCall(appointment.id)}
-                className="ml-auto w-full md:w-auto px-4 sm:px-6 py-3 sm:py-5 bg-white text-primary hover:bg-white/90 rounded-xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 text-sm sm:text-base"
-              >
-                <Video className="w-4 h-4 sm:w-5 sm:h-5" />
-                Start Video Call
-              </Button>
-            )}
+        {/* CTA Button */}
+        {appointment.type === "video" && (
+          <div className="mt-6">
+            <Button
+              onClick={() => onStartCall(appointment.id)}
+              className="h-8 w-full rounded-[5px] bg-white text-xs font-medium text-black hover:bg-white/95 flex items-center justify-center gap-2"
+            >
+              <Video className="h-4 w-4" />
+              Start Video Call
+            </Button>
           </div>
-
-          {/* Button - Full width on mobile */}
-
-        </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -186,109 +145,109 @@ export function UpcomingAppointments({
     if (onViewAll) onViewAll();
   };
 
-  const appointment = {
-    doctorName: "Dr. Emily Carter",
-    doctorImage: "https://randomuser.me/api/portraits/women/44.jpg",
-    date: "Fri, Apr 10",
-    time: "07:00 PM",
-    type: "video",
-    typeLabel: "Video",
-    doctor: {
-      specialty: "Cardiology",
-      experience: "14 years",
-      languages: ["English", "Hindi"],
-    },
-  };
+  // const appointment = {
+  //   doctorName: "Dr. Emily Carter",
+  //   doctorImage: "https://randomuser.me/api/portraits/women/44.jpg",
+  //   date: "Fri, Apr 10",
+  //   time: "07:00 PM",
+  //   type: "video",
+  //   typeLabel: "Video",
+  //   doctor: {
+  //     specialty: "Cardiology",
+  //     experience: "14 years",
+  //     languages: ["English", "Hindi"],
+  //   },
+  // };
 
   // No appointments
   if (!appointments || appointments.length === 0) {
     return (
-      // <Card className="rounded-2xl sm:rounded-3xl border border-border/50 h-full min-h-[280px] sm:min-h-[320px] flex flex-col items-center justify-center text-center p-6 sm:p-8 shadow-sm">
-      //   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded-full flex items-center justify-center mb-3 sm:mb-4">
-      //     <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
-      //   </div>
-      //   <h3 className="text-xl sm:text-2xl font-bold text-primary mb-2 font-headline">
-      //     No Upcoming Sessions
-      //   </h3>
-      //   <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-4">
-      //     You don&apos;t have any appointments scheduled at the moment.
-      //   </p>
-      //   <Button
-      //     onClick={onBookFirst}
-      //     className="px-4 sm:px-6 py-3 sm:py-5 bg-primary text-primary-foreground rounded-xl font-bold shadow-sm hover:bg-primary/90 transition-all text-sm sm:text-base w-full sm:w-auto"
-      //   >
-      //     Book Your First Appointment
-      //   </Button>
-      // </Card>
-
-      <Card className="bg-[#1e5cc8] border-0 rounded-xl overflow-hidden shadow-none">
-
-        {/* Top Section */}
-        <CardDescription className="px-5 flex flex-col gap-4">
-
-          <div className="flex justify-between items-center">
-
-          </div>
-
-          {/* Doctor Info */}
-          <div className="flex gap-3 items-center">
-            <CustomAvatar
-              src={appointment.doctorImage}
-              className="w-24 h-24 rounded-lg border border-white/30"
-            />
-
-            <div>
-              <div className="flex justify-center items-center gap-2">
-                <h3 className="text-white text-lg font-semibold leading-tight">
-                  {appointment.doctorName}
-                </h3>
-                <Badge className="bg-white/20 text-white text-[10px] px-2 py-1 rounded-full border-0">
-                  Upcoming Session
-                </Badge>
-              </div>
-              <p className="text-white/80 text-sm">
-                {appointment.doctor.specialty}
-              </p>
-              <p className="text-white/60 text-xs mt-1">
-                {appointment.doctor.experience} •{" "}
-                {appointment.doctor.languages.join(", ")}
-              </p>
-              <div className="flex text-white text-xs mt-2 gap-5">
-
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
-                  <span>{appointment.date}</span>
-                </div>
-
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  <span>{appointment.time}</span>
-                </div>
-
-                <div className="flex items-center gap-1">
-                  <Video className="w-3 h-3" />
-                  <span>{appointment.typeLabel}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </CardDescription>
-
-        {/* Bottom Section */}
-        <CardContent className="bg-[#1b56bd] p-4 flex flex-col gap-4">
-
-          {/* Info Row */}
-
-
-          {/* EXACT BUTTON */}
-          <Button className="w-full bg-white text-black text-sm font-medium py-2 rounded-md hover:bg-gray-100 shadow-none">
-            <Video className="w-4 h-4 mr-2" />
-            Start Video Call
-          </Button>
-
-        </CardContent>
+      <Card className="rounded-[5px] border border-border/50 h-full flex flex-col items-center justify-center text-center  shadow-card-lg">
+        <div className="h-13.75 w-14.5 bg-muted rounded-full flex items-center justify-center">
+          <Calendar className="h-6.5 w-6.5 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-semibold text-primary font-headline">
+          No Upcoming Sessions
+        </h3>
+        <p className="text-base text-muted-foreground px-4">
+          You don&apos;t have any appointments scheduled at the moment.
+        </p>
+        <Button
+          onClick={onBookFirst}
+          className="px-4 sm:px-6 py-3 sm:py-5 bg-primary text-primary-foreground rounded-[5px] font-bold shadow-sm hover:bg-primary/90 transition-all text-sm sm:text-base w-full sm:w-auto"
+        >
+          Book Your First Appointment
+        </Button>
       </Card>
+
+      // <Card className="bg-[#1e5cc8] border-0 rounded-xl overflow-hidden shadow-none">
+
+      //   {/* Top Section */}
+      //   <CardDescription className="px-5 flex flex-col gap-4">
+
+      //     <div className="flex justify-between items-center">
+
+      //     </div>
+
+      //     {/* Doctor Info */}
+      //     <div className="flex gap-3 items-center">
+      //       <CustomAvatar
+      //         src={appointment.doctorImage}
+      //         className="w-24 h-24 rounded-lg border border-white/30"
+      //       />
+
+      //       <div>
+      //         <div className="flex justify-center items-center gap-2">
+      //           <h3 className="text-white text-lg font-semibold leading-tight">
+      //             {appointment.doctorName}
+      //           </h3>
+      //           <Badge className="bg-white/20 text-white text-[10px] px-2 py-1 rounded-full border-0">
+      //             Upcoming Session
+      //           </Badge>
+      //         </div>
+      //         <p className="text-white/80 text-sm">
+      //           {appointment.doctor.specialty}
+      //         </p>
+      //         <p className="text-white/60 text-xs mt-1">
+      //           {appointment.doctor.experience} •{" "}
+      //           {appointment.doctor.languages.join(", ")}
+      //         </p>
+      //         <div className="flex text-white text-xs mt-2 gap-5">
+
+      //           <div className="flex items-center gap-1">
+      //             <Calendar className="w-3 h-3" />
+      //             <span>{appointment.date}</span>
+      //           </div>
+
+      //           <div className="flex items-center gap-1">
+      //             <Clock className="w-3 h-3" />
+      //             <span>{appointment.time}</span>
+      //           </div>
+
+      //           <div className="flex items-center gap-1">
+      //             <Video className="w-3 h-3" />
+      //             <span>{appointment.typeLabel}</span>
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+
+      //   </CardDescription>
+
+      //   {/* Bottom Section */}
+      //   <CardContent className="bg-[#1b56bd] p-4 flex flex-col gap-4">
+
+      //     {/* Info Row */}
+
+
+      //     {/* EXACT BUTTON */}
+      //     <Button className="w-full bg-white text-black text-sm font-medium py-2 rounded-md hover:bg-gray-100 shadow-none">
+      //       <Video className="w-4 h-4 mr-2" />
+      //       Start Video Call
+      //     </Button>
+
+      //   </CardContent>
+      // </Card>
     );
   }
 

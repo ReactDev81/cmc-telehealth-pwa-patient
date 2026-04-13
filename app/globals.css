@@ -56,24 +56,24 @@
   --color-primary-container: #013220;
   --color-on-primary: #ffffff;
   --color-on-primary-container: #6f9c84;
-  
+
   --color-surface: #f7f9fb;
   --color-surface-container: #eceef0;
   --color-surface-container-low: #f2f4f6;
   --color-surface-container-lowest: #ffffff;
   --color-surface-tint: #3b6751;
-  
+
   --color-on-surface: #191c1e;
   --color-on-surface-variant: #414943;
-  
+
   --color-secondary-container: #d1e4d7;
   --color-on-secondary-container: #55675c;
-  
+
   --color-tertiary-fixed: #ffdad9;
   --color-on-tertiary-fixed: #340f12;
-  
+
   --color-outline-variant: #c1c8c2;
-  
+
   --radius-2xl: 1.5rem;
   --radius-3xl: 2rem;
 }
@@ -211,7 +211,6 @@
     line-height: 1.5;
   }
 
-
 }
 
 .html-content h3 {
@@ -300,11 +299,26 @@
   }
 
 
+
+
   .text-primary-strong {
     @apply text-primary font-semibold;
   }
 
   .text-muted-light {
     @apply text-gray-400;
+  }
+
+  .shadow-card-sm {
+    box-shadow: 0px 1px 10px 0px #0000000A;
+  }
+
+  .shadow-card {
+    box-shadow: 0px 1px 17px 0px #0000000D;
+  }
+
+  .shadow-card-lg {
+    box-shadow: 0px 1px 17px 0px #0000000D;
+    border: 1px solid #E7E8EB;
   }
 }
