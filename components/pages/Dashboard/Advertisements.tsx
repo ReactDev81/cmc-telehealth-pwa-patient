@@ -123,7 +123,7 @@ export function Advertisements({ ads }: AdvertisementsProps) {
                                 href={ad.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-white border flex items-center gap-1.5 sm:gap-2 border-gray-300 text-[#103228] px-3 sm:px-4 py-1.5 text-xs sm:text-sm rounded-md font-medium hover:bg-gray-100 transition-colors duration-100 shrink-0"
+                                className="bg-white border flex items-center gap-1.5 sm:gap-2 border-gray-300 text-[#103228] px-3 sm:px-4 py-1.5 md:text-xs text-sm rounded-[5px] font-medium hover:bg-gray-100 transition-colors duration-100 shrink-0"
                             >
                                 <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                                 View
@@ -155,7 +155,7 @@ export function Advertisements({ ads }: AdvertisementsProps) {
                         items={ads}
                         contentClassName="-ml-3 sm:-ml-4 md:-ml-6 py-3 sm:py-4 px-1"
                         basisClassName="pl-3 sm:pl-4 md:pl-6 basis-full sm:basis-1/2 lg:basis-1/3"
-                        dotClassName="bg-white/50 opacity-60 hover:bg-white/80 h-1 sm:h-1.5"
+                        dotClassName="bg-gray-300 opacity-100 hover:bg-gray-400 h-1 sm:h-1.5"
                         activeDotClassName="bg-primary opacity-100 h-1 sm:h-1.5"
                         renderItem={(ad) => <AdvertisementCard key={ad.id} ad={ad} />}
                     />

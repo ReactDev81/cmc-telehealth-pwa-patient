@@ -12,10 +12,12 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
-import { TerminalSquareIcon, BotIcon, BookOpenIcon, Settings2Icon, FrameIcon, PieChartIcon, MapIcon } from "lucide-react"
+import { LayoutDashboard, Stethoscope, CalendarCheck, FileText, User, Pill } from "lucide-react"
 import Image from "next/image"
 import icon from "@/public/assets/icon/logo-light.png"
+import iconSmall from "@/public/assets/icon/app-icon.png"
 
 // This is sample data.
 // const data = {
@@ -186,7 +188,24 @@ const data = {
   teams: [
     {
       name: "CMC Team",
-      logo: <Image src={icon} alt="Logo" width={200} height={200} className="w-full h-full object-contain rounded-lg" />,
+      logo: (
+        <Image
+          src={icon}
+          alt="Logo"
+          width={200}
+          height={200}
+          className="w-full h-full object-contain rounded-lg"
+        />
+      ),
+      collapsedLogo: (
+        <Image
+          src={iconSmall}
+          alt="Logo Small"
+          width={200}
+          height={200}
+          className="w-full h-40 scale-200 object-contain rounded-lg"
+        />
+      ),
       plan: "Enterprise",
     },
   ],
@@ -194,22 +213,27 @@ const data = {
     {
       title: "Dashboard",
       url: "/",
-      icon: <TerminalSquareIcon />,
+      icon: <LayoutDashboard />,
     },
     {
       title: "Find Doctors",
       url: "/find-doctors",
-      icon: <BotIcon />,
+      icon: <Stethoscope />,
     },
     {
       title: "My Appointments",
       url: "/appointments",
-      icon: <BookOpenIcon />,
+      icon: <CalendarCheck />,
     },
     {
       title: "Medical Reports",
       url: "/medical-records",
-      icon: <Settings2Icon />,
+      icon: <FileText />,
+    },
+    {
+      title: "My Medicine",
+      url: "/my-medicines",
+      icon: <Pill />,
     },
 
 
@@ -237,7 +261,7 @@ const data = {
 
     {
       title: "Person Info",
-      icon: <FrameIcon />,
+      icon: <User />,
       items: [
         {
           title: "Notifications",
@@ -261,26 +285,33 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
   return (
-    <Sidebar collapsible="icon" {...props}
-      className="w-68.75 min-w-68.75"
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      className="transition-all duration-300 [--sidebar-width:17rem] [--sidebar-width-icon:4.5rem]"
     >
-      
       <SidebarHeader className="border-b">
         {data?.teams?.length > 0 && (
           <TeamSwitcher teams={data.teams} />
         )}
       </SidebarHeader>
-      <SidebarContent>
-        <div className="px-5 text-xs font-semibold text-gray-400/80 mt-6 mb-2">
-          Main Nav
-        </div>
+
+      <SidebarContent className="mt-5">
+        {!isCollapsed && (
+          <div className="px-5 mt-6 mb-2 text-xs font-semibold text-gray-400/80">
+            Main Nav
+          </div>
+        )}
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   )

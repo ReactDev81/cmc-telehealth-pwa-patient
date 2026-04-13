@@ -94,7 +94,7 @@ export function AvailableDoctors({
 
           <Button
             onClick={() => router.push(`/find-doctors/${doc.id}`)}
-            className="w-full h-8 rounded-[5px] bg-primary text-white text-xs font-medium"
+            className="w-full md:h-8 h-9 rounded-[5px] bg-primary text-white md:text-xs text-sm font-medium"
           >
             Book Your Appointment
           </Button>

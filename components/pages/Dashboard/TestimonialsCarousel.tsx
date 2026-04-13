@@ -3,8 +3,10 @@
 import { CustomAvatar } from "@/components/custom/custom-avatar";
 import { SectionHeader } from "@/components/custom/SectionHeader";
 import { DashboardCarousel } from "@/components/pages/Dashboard/dashboard-carousel";
+import { Separator } from "@/components/ui";
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 
 export interface Testimonial {
@@ -124,6 +126,7 @@ export function TestimonialsCarousel({
               </h5>
               <ReadMoreText text={t.feedback} maxLength={70} />
             </div>
+            <Separator className="bg-gray-200 h-[1px] w-full mb-3" />
 
             <div className="mt-auto flex items-center sm:items-center justify-between gap-3 sm:gap-4">
               <p className="text-[10px] sm:text-xs font-bold text-on-surface-variant">

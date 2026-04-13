@@ -172,26 +172,24 @@ export default function Notifications() {
     const tabsWithContent = tabs.map(tab => ({ ...tab, content: renderNotifications() }));
 
     return (
-        <div className="container max-w-4xl mx-auto">
+        <div className="w-full mx-auto">
             <div className="mb-6">
                 <h1 className="text-4xl font-bold text-primary mb-2">Notifications</h1>
-                <p className="text-muted-foreground ">
+                <p className="text-muted-foreground">
                     Stay updated on your health journey. Here you'll find reminders, test results, and messages from your clinical team.
                 </p>
             </div>
 
-            <div className="flex-1 flex items-center justify-between mb-4 gap-4">
-                <div className="flex">
-                    <CustomTabs
-                        tabs={tabsWithContent}
-                        defaultTab="all"
-                        activeTab={activeTab}
-                        onTabChange={setActiveTab}
-                        color="primary"
-                        tabsTriggerClassName="px-6 py-2 rounded-lg hover:bg-gray-200 text-xs"
-                        tabsListClassName="bg-transparent gap-1 p-0 w-50! ml-0"
-                    />
-
+            <CustomTabs
+                variant="pill"
+                activeTabBg="#013220"
+                activeTabColor="white"
+                tabs={tabsWithContent}
+                defaultTab="all"
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                tabsListClassName="w-full max-w-md!"
+                rightSlot={
                     <Button
                         variant="ghost"
                         size="sm"
@@ -202,8 +200,8 @@ export default function Notifications() {
                         <CircleCheck className="h-4 w-4" />
                         Mark all as read
                     </Button>
-                </div>
-            </div>
+                }
+            />
         </div>
     );
 }

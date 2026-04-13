@@ -1,5 +1,6 @@
 'use client';
 import { FileText, Pill } from 'lucide-react';
+import Link from 'next/link';
 
 const PreAppointmentChecklist = () => {
     return (
@@ -24,24 +25,28 @@ const PreAppointmentChecklist = () => {
                 {/* Right Section - Action Cards */}
                 <div className="flex flex-row sm:flex-row justify-center sm:justify-end gap-3 sm:gap-4">
                     {/* Medical Records Card */}
-                    <div className="group bg-white/10 p-3 sm:p-4 rounded-2xl sm:rounded-[24px] flex flex-col items-center justify-center gap-2 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 border border-white/10 hover:bg-white/20 transition-all duration-300 cursor-pointer">
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <FileText className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-white" />
+                    <Link href="/medical-records">
+                        <div className="group bg-white/10 p-3 sm:p-4 rounded-2xl sm:rounded-[24px] flex flex-col items-center justify-center gap-2 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 border border-white/10 hover:bg-white/20 transition-all duration-300 cursor-pointer">
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <FileText className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-white" />
+                            </div>
+                            <span className="text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-center leading-tight">
+                                Medical Records
+                            </span>
                         </div>
-                        <span className="text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-center leading-tight">
-                            Medical Records
-                        </span>
-                    </div>
+                    </Link>
 
                     {/* Medications List Card */}
-                    <div className="group bg-white/10 p-3 sm:p-4 rounded-2xl sm:rounded-[24px] flex flex-col items-center justify-center gap-2 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 border border-white/10 hover:bg-white/20 transition-all duration-300 cursor-pointer">
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <Pill className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-white" />
+                    <Link href="/my-medicines">
+                        <div className="group bg-white/10 p-3 sm:p-4 rounded-2xl sm:rounded-[24px] flex flex-col items-center justify-center gap-2 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 border border-white/10 hover:bg-white/20 transition-all duration-300 cursor-pointer">
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <Pill className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-white" />
+                            </div>
+                            <span className="text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-center leading-tight">
+                                Meds List
+                            </span>
                         </div>
-                        <span className="text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-center leading-tight">
-                            Meds List
-                        </span>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>

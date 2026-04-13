@@ -81,6 +81,15 @@ export interface UpcomingAppointment {
   appointment_end_time_formatted: string;
   consultation_type: string;
   consultation_type_label: string;
+  video_consultation?: {
+    id: string;
+    room_id: string;
+    status: string;
+    join_url: string;
+    can_join: boolean;
+    started_at: string;
+    ended_at: string;
+  };
   status: string;
   status_label: string;
   fee_amount: string;

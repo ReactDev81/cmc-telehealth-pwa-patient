@@ -11,6 +11,7 @@ import { MappedAppointment } from "@/types/home";
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AppSidebar } from "@/components/app-sidebar";
 
 type Page = string;
 
@@ -34,11 +35,13 @@ export default function Home() {
 		time: appt.appointment_time_formatted,
 		type: appt.consultation_type,
 		typeLabel: appt.consultation_type_label,
+		joinUrl: appt.video_consultation?.join_url,
 		doctor: {
 			specialty: appt.doctor.department,
 			experience: appt.doctor.years_experience,
 			languages: appt.doctor.languages_known,
 		},
+
 	}));
 	// Map API advertisements → Advertisement shape
 	const advertisements = (homeData?.advertisements ?? []).map((ad) => ({
@@ -86,7 +89,7 @@ export default function Home() {
 				<div>
 					<h1 className="text-[24px]  font-bold tracking-tight text-primary">
 						Welcome back{user?.first_name || user?.last_name ? "," : ""}{" "}
-						<span className="text-foreground">
+						<span className="text-primary">
 							{user?.first_name ?? ""} {user?.last_name ?? ""}
 						</span>
 					</h1>
@@ -102,18 +105,19 @@ export default function Home() {
 						window.open("/find-doctors", "_blank");
 						setPage && setPage("/find-doctors");
 					}}
-					className="flex items-center justify-center gap-2 px-3 font-semibold py-4.5 text-xs rounded-[5px] bg-primary text-white hover:bg-primary/90 shadow-md transition-all"
+					className="flex items-center justify-center gap-2 px-3 font-semibold py-4.5 text-sm md:text-xs rounded-[5px] bg-primary text-white hover:bg-primary/90 shadow-md transition-all"
 				>
 					<Plus className="w-4 h-4eretrtt" />
 					Book Appointment
 				</Button>
 
 			</header>
-			<div className="flex flex-col   lg:flex-row gap-5 items-stretch">
+			<div className="flex flex-col lg:flex-row gap-5 items-stretch">
 
 				{/* Left - 40% */}
 				<div className="w-full lg:basis-[45%]">
 					<UpcomingAppointments
+					
 						appointments={appointments}
 						onViewAll={() => setPage && setPage("my-appointments")}
 						onStartCall={(id) => setPage && setPage("live-session")}
@@ -124,6 +128,7 @@ export default function Home() {
 				{/* Right - 60% */}
 				<div className="w-full lg:basis-[55%]">
 					<QuickLinks
+						
 						reportSummary="Blood Work Result: Normal"
 						prescriptionSummary="2 Active medications • Refill ready"
 						onViewReports={() => router.push("/reviews")}

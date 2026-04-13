@@ -109,48 +109,27 @@ export default function QuickLinks({
         //     </Card>
         // </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full items-stretch">
 
             {cards.map((item, index) => (
                 <Card
                     key={index}
-                    className="rounded-[5px] shadow-card-lg h-full"
+                    className="rounded-[5px] shadow-card-lg h-full flex flex-col"
                 >
-                    <CardContent className="py-3.75 px-5">
+                    <CardContent className="py-3.75 px-5 h-full flex flex-col">
                         <div className="flex items-start justify-between">
-                            {/* Left content */}
-                            <div className="">
+                            <div>
                                 <p className="text-sm font-normal text-[#3a3a3a]">
                                     {item.title}
                                 </p>
-
-
                             </div>
 
-                            {/* Right icon */}
                             <div
                                 className={`flex h-13.75 w-14.5 shrink-0 items-center justify-center rounded-[6px] ${item.iconBg}`}
                             >
                                 <FileText className={`h-6.5 w-6.5 ${item.iconColor}`} />
                             </div>
                         </div>
-
-                        {/* <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-sm font-normal text-[#3a3a3a]">{item.title}</p>
-                                <div className="">
-                                    <h3 className="sm:text-[18px]  font-bold text-[#222]">
-                                        {item.heading}
-                                    </h3>
-                                    <p className="mt-0 text-sm text-[#4a4a4a]">{item.subtext}</p>
-                                </div>
-                            </div>
-                            <div
-                                className={`flex h-13.75 w-14.5 items-center justify-center rounded-[6px] ${item.iconBg}`}
-                            >
-                                <FileText className={`h-6.5 w-6.5 ${item.iconColor}`} />
-                            </div>
-                        </div> */}
 
                         <div>
                             <h3 className="sm:text-[18px] font-bold leading-tight text-[#222]">
@@ -162,23 +141,23 @@ export default function QuickLinks({
                             </p>
                         </div>
 
-                        <div className="mt-5">
-                                <div className="h-1 w-full overflow-hidden rounded-full bg-[#d9dde3]">
-                                    <div
-                                        className={`h-full ${item.progressColor}`}
-                                        style={{ width: item.progress }}
-                                    />
-                                </div>
-
-                                <div className="mt-3 flex items-center justify-between text-[14px] text-[#2f2f2f]">
-                                    <p className="font-normal">
-                                        Active : <span className="font-medium">{item.active}</span>
-                                    </p>
-                                    <p className="font-normal">
-                                        Inctive : <span className="font-medium">{item.inactive}</span>
-                                    </p>
-                                </div>
+                        <div className="mt-auto pt-5">
+                            <div className="h-1 w-full overflow-hidden rounded-full bg-[#d9dde3]">
+                                <div
+                                    className={`h-full ${item.progressColor}`}
+                                    style={{ width: item.progress }}
+                                />
                             </div>
+
+                            <div className="mt-3 flex items-center justify-between text-[14px] text-[#2f2f2f]">
+                                <p className="font-normal">
+                                    Active : <span className="font-medium">{item.active}</span>
+                                </p>
+                                <p className="font-normal">
+                                    Inactive : <span className="font-medium">{item.inactive}</span>
+                                </p>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             ))}
@@ -254,3 +233,22 @@ export default function QuickLinks({
         </div >
     );
 }
+
+
+
+{/* <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-sm font-normal text-[#3a3a3a]">{item.title}</p>
+                                <div className="">
+                                    <h3 className="sm:text-[18px]  font-bold text-[#222]">
+                                        {item.heading}
+                                    </h3>
+                                    <p className="mt-0 text-sm text-[#4a4a4a]">{item.subtext}</p>
+                                </div>
+                            </div>
+                            <div
+                                className={`flex h-13.75 w-14.5 items-center justify-center rounded-[6px] ${item.iconBg}`}
+                            >
+                                <FileText className={`h-6.5 w-6.5 ${item.iconColor}`} />
+                            </div>
+                        </div> */}

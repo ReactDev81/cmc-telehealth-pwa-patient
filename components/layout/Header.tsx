@@ -137,9 +137,9 @@ export function Header() {
         <>
             <header
                 className={cn(
-                    "sticky top-0 z-50 w-full border-b transition-all duration-300",
+                    "sticky top-0  w-full border-b transition-all duration-300",
                     isScrolled
-                        ? "bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border-border/50 shadow-lg"
+                        ? "bg-background/95 backdrop-blur-md supports-backdrop-filter:bg-background/60 shadow-lg"
                         : "bg-background border-border shadow-sm",
                 )}
             >
@@ -308,7 +308,7 @@ export function Header() {
                                     <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                                 </Button>
                                 {unreadData > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-none shadow-lg">
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.5 rounded-full min-w-4.5 text-center leading-none shadow-lg">
                                         {unreadData > 99 ? "99+" : unreadData}
                                     </span>
                                 )}
@@ -318,7 +318,7 @@ export function Header() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="lg:hidden h-8 w-8 sm:h-9 sm:w-9 shrink-0"
+                            className="lg:hidden shrink-0"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         >
                             <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -327,10 +327,10 @@ export function Header() {
                         {/* User Section */}
                         <div className="md:flex hidden items-center gap-2">
                             <div className="hidden sm:flex flex-col items-end">
-                                <span className="text-sm font-semibold text-foreground truncate max-w-[120px] md:max-w-[150px]">
+                                <span className="text-sm font-semibold text-foreground truncate max-w-30 md:max-w-37.5">
                                     {name}
                                 </span>
-                                <span className="text-xs text-muted-foreground truncate max-w-[120px] md:max-w-[150px]">
+                                <span className="text-xs text-muted-foreground truncate max-w-30 md:max-w-37.5">
                                     {user?.email}
                                 </span>
                             </div>
