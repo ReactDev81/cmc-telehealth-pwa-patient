@@ -17,20 +17,32 @@ cd cmc-telehealth-pwa-patient
 ```
 
 ### 2. Environment Variables
-Ensure you have a `.env` file in the root directory. This is required by `docker-compose.yml` to pass configuration variables into the container. Follow the .env.sample file to create your .env file. 
+You do not need to commit a `.env` file to GitHub for production.
+
+For this project, `NEXT_PUBLIC_API_BASE_URL` is a client-exposed Next.js variable, which means it is baked into the app during `npm run build`. The Dockerfile creates `.env.production` inside the image during the build using the `NEXT_PUBLIC_API_BASE_URL` build argument.
+
+That means your VPS or CI/CD pipeline must provide `NEXT_PUBLIC_API_BASE_URL` before `docker compose up --build` or `docker build` runs.
 
 ### 3. Build and Start the Container
 Use Docker Compose to build the image and run the container in detached mode:
 ```bash
+export NEXT_PUBLIC_API_BASE_URL=https://telehealthwebapplive.cmcludhiana.in/api/v2
 docker-compose up --build -d
 ```
 *This command uses the `Dockerfile` to install dependencies, build the optimized Next.js app, and start the application server.*
 
+If you want to build manually without Docker Compose:
+```bash
+docker build \
+  --build-arg NEXT_PUBLIC_API_BASE_URL=https://telehealthwebapplive.cmcludhiana.in/api/v2 \
+  -t cmc-telehealth-pwa-patient .
+```
+
 ### 4. Access the Application
 Once the container is up and running, open your web browser and navigate to:
-**[http://localhost:8000](http://localhost:8000)**
+**[http://localhost:8001](http://localhost:8001)**
 
-*(Note: The Docker configuration maps the exposed Next.js server to port `8000` on your host machine).*
+*(Note: The Docker configuration maps the exposed Next.js server to port `8001` on your host machine).*
 
 ### 5. Managing the Container
 To view logs:
