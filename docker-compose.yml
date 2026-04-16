@@ -1,17 +1,11 @@
 services:
-  app:
-    image: cmc-telehealth-pwa-patient-app:latest
+  cmc-telehealth-pwa-patient:
     build:
-      context: https://github.com/ReactDev81/cmc-telehealth-pwa-doctor.git#main
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
-
-    environment:
-      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
+      context: .
 
     container_name: cmc-telehealth-pwa-patient
-    restart: unless-stopped
 
     ports:
-      - "8001:8000"
+      - "8001:3000"
+
+    restart: always
